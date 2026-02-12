@@ -24,9 +24,9 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             // Store user data in localStorage
             localStorage.setItem('currentUser', JSON.stringify(result.user));
             
-            // Redirect to dashboard after short delay
+            // Redirect to authenticated welcome page after short delay
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = 'welcome-auth.html';
             }, 1000);
         } else {
             showMessage(result.message || 'Login failed. Please check your credentials.', 'error');
@@ -80,6 +80,8 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
 function showMessage(message, type = 'error') {
     const messageContainer = document.getElementById('messageContainer');
     
+    if (!messageContainer) return;
+    
     const messageDiv = document.createElement('div');
     messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
     messageDiv.textContent = message;
@@ -98,9 +100,10 @@ function showMessage(message, type = 'error') {
 // Check if user is already logged in
 function checkAuth() {
     const currentUser = localStorage.getItem('currentUser');
+    const currentPage = window.location.pathname;
     
-    if (currentUser && window.location.pathname.includes('login.html')) {
-        // User is already logged in, redirect to dashboard
+    // If already logged in and on login/register page, redirect to dashboard
+    if (currentUser && (currentPage.includes('login.html') || currentPage.includes('register.html'))) {
         window.location.href = 'index.html';
     }
 }

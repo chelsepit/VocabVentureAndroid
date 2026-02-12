@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - VocabVenture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/stories.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Components (Settings & Navigation) -->
+    <div class="components">
+        <!-- Settings Menu -->
+        <div class="settings-dropdown">
+            <button class="settings-button" id="settingsBtn" aria-label="Open settings">
+                <img src="assets/images/icons/setting-icon.svg" alt="Settings" class="w-8 h-8">
+            </button>
+
+            <div class="settings-menu" id="settingsMenu">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="font-bold text-gray-800" style="color: #6e4324; font-size: 1.2rem;">Sound</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Volume</label>
+                    <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+                    <div class="flex justify-between text-sm text-gray-600 mt-1">
+                        <span>0</span>
+                        <span id="volumeValue">70</span>
+                        <span>100</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice Selection</label>
+                    <div class="flex gap-3">
+                        <button class="voice-btn active" id="boyVoice" data-voice="boy" style="color: #6e4324; font-size: 1.2rem;">Boy</button>
+                        <button class="voice-btn" id="girlVoice" data-voice="girl" style="color: #6e4324; font-size: 1.2rem;">Girl</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Burger Navigation -->
+        <div class="burger-dropdown">
+            <button class="burger-button" id="burgerBtn" aria-label="Open menu">
+                <img src="assets/images/icons/burger-menu.svg" alt="Menu" class="w-8 h-8">
+            </button>
+
+            <div class="burger-menu" id="burgerMenu">
+                <div class="mb-1">
+                    <a href="badges.html" class="header-font font-semibold">Badge</a>
+                </div>
+                <div class="mb-1">
+                    <a href="profile.html" class="header-font font-semibold">Personal</a>
+                </div>
+                <div>
+                    <a href="library.html" class="header-font font-semibold">Library</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Library Container -->
+    <div class="library-container">
+        <!-- Header Section -->
+        <div class="library-header">
+            <div class="library-title-wrapper">
+                <h1 class="header-font text-4xl md:text-5xl text-white drop-shadow-lg">
+                    What do you want to <span class="italic title-font">read</span> today?
+                </h1>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="genre-search-bar-container">
+                <img src="assets/images/icons/search-icon.svg" class="search-icon" alt="Search">
+                <input type="text" class="genre-search-bar" placeholder="Search" id="searchInput">
+                <img src="assets/images/icons/x-icon.svg" alt="Clear" class="x-icon" id="clearSearch">
+            </div>
+
+            <!-- Genre Navigation -->
+            <div class="genre-nav">
+                <button type="button" class="genre-tag" data-genre="folktales">
+                    <img src="assets/images/icons/folktales-icon.svg" alt="Folktales">
+                    <span>Folktales</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="myths">
+                    <img src="assets/images/icons/myths-icon.svg" alt="Myths">
+                    <span>Myths</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="fables">
+                    <img src="assets/images/icons/fables-icon.svg" alt="Fables">
+                    <span>Fables</span>
+                </button>
+                <button type="button" class="genre-tag active" data-genre="short-stories">
+                    <img src="assets/images/icons/short-stories-icon.svg" alt="Short Stories">
+                    <span>Short Stories</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="legends">
+                    <img src="assets/images/icons/legends-icon.svg" alt="Legends">
+                    <span>Legends</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Wrapper -->
+        <div class="library-content-wrapper">
+            <!-- Recent Section -->
+            <section class="bookshelf-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent</h2>
+                    <a href="#" class="view-all-link">view all...</a>
+                </div>
+
+                <div class="book-grid" id="recentBooks">
+                    <div class="book-item" data-story-id="1">
+                        <img src="assets/images/books/folktales/folktale-book-1.png" alt="Book 1">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;" data-progress="1"></div>
+                        </div>
+                    </div>
+                    <div class="book-item" data-story-id="2">
+                        <img src="assets/images/books/folktales/folktale-book-2.png" alt="Book 2">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;" data-progress="2"></div>
+                        </div>
+                    </div>
+                    <div class="book-item" data-story-id="3">
+                        <img src="assets/images/books/folktales/folktale-book-3.png" alt="Book 3">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;" data-progress="3"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Short Story Section -->
+            <section class="bookshelf-section">
+                <div class="section-header">
+                    <h2 class="section-title">Short Story</h2>
+                    <a href="#" class="view-all-link">view all...</a>
+                </div>
+
+                <div class="book-grid">
+                    <div class="book-item" data-story-id="4">
+                        <img src="assets/images/books/folktales/folktale-book-4.png" alt="Story 1">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="book-item" data-story-id="5">
+                        <img src="assets/images/books/folktales/folktale-book-5.png" alt="Story 2">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="book-item" data-story-id="1">
+                        <img src="assets/images/books/folktales/folktale-book-1.png" alt="Story 3">
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/components.js"></script>
+    <script src="js/library.js"></script>
+</body>
+</html>
