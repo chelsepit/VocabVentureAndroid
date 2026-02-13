@@ -20,14 +20,14 @@
     },
 
     {
-      "id": 2,
+      "id": 7,
       "title": "The Origin of Rice",
       "genre": "folktales",
       "coverImage": "assets/images/books/folktales/folktale-book-2.png",
       "isActive": false
     },
     {
-      "id": 3,
+      "id": 13,
       "title": "The Monkey and The Turtle",
       "genre": "folktales",
       "coverImage": "assets/images/books/folktales/folktale-book-3.png",
@@ -56,7 +56,7 @@
     },
 
     {
-      "id": 7,
+      "id": 2,
       "title": "The Origin of the Rainbow",
       "genre": "myths",
       "coverImage": "assets/images/books/myths/myth-book-1.png",
@@ -101,7 +101,7 @@
     },
 
     {
-      "id": 13,
+      "id": 3,
       "title": "The Butterfly & The Caterpillar",
       "genre": "fables",
       "coverImage": "assets/images/books/fables/fable-book-1.png",
