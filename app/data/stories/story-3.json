@@ -19,7 +19,8 @@
           "pronunciation": "res·ted",
           "definition": "Stopped for a while to regain energy",
           "synonym": "Relaxed",
-          "audio": "assets/audio/vocabulary/rested.mp3"
+          "audio-boy": "assets/audio/story-3/boy/rested.mp3",
+          "audio-girl": "assets/audio/story-3/girl/rested.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-1.mp3",
@@ -35,7 +36,8 @@
           "pronunciation": "sipped",
           "definition": "Drank a small amount of liquid at a time",
           "synonym": "Drank",
-          "audio": "assets/audio/vocabulary/sipped.mp3"
+          "audio-boy": "assets/audio/story-3/boy/sipped.mp3",
+          "audio-girl": "assets/audio/story-3/girl/sipped.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-2.mp3",
@@ -51,7 +53,8 @@
           "pronunciation": "a·shamed",
           "definition": "Feeling bad or embarrassed about something",
           "synonym": "Humiliated",
-          "audio": "assets/audio/vocabulary/ashamed.mp3"
+          "audio-boy": "assets/audio/story-3/boy/ashamed.mp3",
+          "audio-girl": "assets/audio/story-3/girl/ashamed.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-3.mp3",
@@ -67,14 +70,16 @@
           "pronunciation": "crawl·ing",
           "definition": "Moving slowly with the body close to the ground",
           "synonym": "Creeping",
-          "audio": "assets/audio/vocabulary/crawling.mp3"
+          "audio-boy": "assets/audio/story-3/boy/crawling.mp3",
+          "audio-girl": "assets/audio/story-3/girl/crawling.mp3"
         },
         {
           "word": "munched",
           "pronunciation": "munched",
           "definition": "Chewed or ate something steadily and noisily",
           "synonym": "Crunched",
-          "audio": "assets/audio/vocabulary/munched.mp3"
+          "audio-boy": "assets/audio/story-3/boy/munched.mp3",
+          "audio-girl": "assets/audio/story-3/girl/munched.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-4.mp3",
@@ -90,14 +95,16 @@
           "pronunciation": "wings",
           "definition": "The parts of a creature used for flying",
           "synonym": "Pinions",
-          "audio": "assets/audio/vocabulary/wings.mp3"
+          "audio-boy": "assets/audio/story-3/boy/wings.mp3",
+          "audio-girl": "assets/audio/story-3/girl/wings.mp3"
         },
         {
           "word": "asked",
           "pronunciation": "asked",
           "definition": "Spoke to someone to get information",
           "synonym": "Inquired",
-          "audio": "assets/audio/vocabulary/asked.mp3"
+          "audio-boy": "assets/audio/story-3/boy/asked.mp3",
+          "audio-girl": "assets/audio/story-3/girl/asked.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-5.mp3",
@@ -121,14 +128,16 @@
           "pronunciation": "grow",
           "definition": "To get bigger or more advanced over time",
           "synonym": "Develop",
-          "audio": "assets/audio/vocabulary/grow.mp3"
+          "audio-boy": "assets/audio/story-3/boy/grow.mp3",
+          "audio-girl": "assets/audio/story-3/girl/grow.mp3"
         },
         {
           "word": "bright",
           "pronunciation": "bright",
           "definition": "Giving off or reflecting a lot of light",
           "synonym": "Radiant",
-          "audio": "assets/audio/vocabulary/bright.mp3"
+          "audio-boy": "assets/audio/story-3/boy/bright.mp3",
+          "audio-girl": "assets/audio/story-3/girl/bright.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-7.mp3",
@@ -144,7 +153,8 @@
           "pronunciation": "proud",
           "definition": "Feeling deep satisfaction in your achievements",
           "synonym": "Honored",
-          "audio": "assets/audio/vocabulary/proud.mp3"
+          "audio-boy": "assets/audio/story-3/boy/proud.mp3",
+          "audio-girl": "assets/audio/story-3/girl/proud.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-3/boy/segment-8.mp3",
@@ -217,7 +227,7 @@
     "questions": [
       {
         "id": 1,
-        "question": "The caterpillar felt ashamed after laughing at others.",
+        "question": "The butterfly felt ashamed after looking down at the caterpillar.",
         "underlinedWord": "ashamed",
         "questionPrompt": "What does ashamed mean?",
         "options": [
@@ -230,7 +240,7 @@
       },
       {
         "id": 2,
-        "question": "The caterpillar sipped water from a leaf.",
+        "question": "The butterfly sipped nectar from the rose.",
         "underlinedWord": "sipped",
         "questionPrompt": "What does sipped mean?",
         "options": [
@@ -243,7 +253,7 @@
       },
       {
         "id": 3,
-        "question": "The caterpillar asked the butterfly a question.",
+        "question": "The butterfly asked the caterpillar a question.",
         "underlinedWord": "asked",
         "questionPrompt": "What does asked mean?",
         "options": [
@@ -256,7 +266,7 @@
       },
       {
         "id": 4,
-        "question": "The butterfly looked bright in the sunlight.",
+        "question": "The butterfly's wings looked bright in the sunlight.",
         "underlinedWord": "bright",
         "questionPrompt": "What does bright mean?",
         "options": [
@@ -269,7 +279,7 @@
       },
       {
         "id": 5,
-        "question": "The butterfly felt proud after it changed.",
+        "question": "The butterfly felt proud of her beautiful wings.",
         "underlinedWord": "proud",
         "questionPrompt": "What does proud mean?",
         "options": [
