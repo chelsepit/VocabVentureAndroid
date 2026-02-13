@@ -1,0 +1,384 @@
+/* =========================
+   SETTINGS COMPONENT
+   ========================= */
+.settings-dropdown {
+    position: relative;
+    z-index: 100;
+}
+
+.settings-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.settings-button img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.settings-button:hover {
+    transform: rotate(90deg) scale(1.1);
+    background: white;
+}
+
+.settings-menu {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    min-width: 250px;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.settings-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   BURGER NAV COMPONENT
+   ========================= */
+.burger-dropdown {
+    position: relative;
+    z-index: 100;
+}
+
+.burger-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.burger-button img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.burger-button:hover {
+    transform: scale(1.1);
+    background: white;
+}
+
+.burger-menu {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    min-width: 140px;
+    max-width: 160px;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.burger-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.burger-menu a,
+.burger-menu > div {
+    display: block;
+    padding: 10px 8px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #6e4324;
+    white-space: nowrap;
+}
+
+.burger-menu a:hover {
+    background: #FFD93D;
+    transform: translateX(3px);
+}
+
+/* =========================
+   SETTINGS CONTROLS (Toggles, Sliders)
+   ========================= */
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #FFD93D;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(22px);
+}
+
+/* Volume Slider */
+.volume-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #FF6B35;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #FF6B35;
+    cursor: pointer;
+    border: none;
+}
+
+/* Voice Selection Buttons */
+.voice-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 2px solid #FFD93D;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    flex: 1;
+}
+
+.voice-btn.active {
+    background: #FFD93D;
+    color: #333;
+}
+
+.voice-btn:hover {
+    transform: scale(1.05);
+}
+
+/* =========================
+   UTILITY CLASSES FOR COMPONENTS
+   ========================= */
+.w-8 {
+    width: 2rem;
+}
+
+.h-8 {
+    height: 2rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+    margin-bottom: 0.75rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mt-1 {
+    margin-top: 0.25rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.block {
+    display: block;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.header-font {
+    font-family: 'header-font', 'Nunito', sans-serif;
+}
+
+/* =========================
+   RESPONSIVE ADJUSTMENTS
+   ========================= */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .components {
+        top: 15px;
+        left: 15px;
+        gap: 10px;
+    }
+
+    .settings-button,
+    .burger-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    .settings-button img,
+    .burger-button img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .settings-menu {
+        min-width: 200px;
+        top: 50px;
+    }
+
+    .burger-menu {
+        min-width: 130px;
+        top: 50px;
+        padding: 10px;
+    }
+
+    .burger-menu a,
+    .burger-menu > div {
+        padding: 8px 10px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+    .components {
+        top: 10px;
+        left: 10px;
+        gap: 8px;
+    }
+
+    .settings-button,
+    .burger-button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .settings-button img,
+    .burger-button img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .settings-menu {
+        min-width: 180px;
+        padding: 15px;
+    }
+
+    .burger-menu {
+        min-width: 120px;
+        padding: 8px;
+    }
+
+    .burger-menu a,
+    .burger-menu > div {
+        padding: 7px 8px;
+        font-size: 1rem;
+    }
+}
