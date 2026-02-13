@@ -4,17 +4,20 @@
     </button>
 
     <div class="burger-menu" id="burgerMenu">
-        <div class="mb-1">
-            <a href="badges.html" class="header-font font-semibold">Badge</a>
-        </div>
-        <div class="mb-1">
-            <a href="profile.html" class="header-font font-semibold">Personal</a>
-        </div>
-        <div>
-            <a href="../dashboard/library.html" class="header-font font-semibold">Library</a>
-        </div>
-        <div>
-            <a href="../dashboard/library.html" class="header-font font-semibold">Logout</a>
-        </div>
+        <a href="badges.html" class="burger-menu-item header-font font-semibold">Badge</a>
+        <a href="personal-library.html" class="burger-menu-item header-font font-semibold">Personal Library</a>
+        <div class="burger-menu-item header-font font-semibold logout-item" onclick="handleLogout()">Logout</div>
     </div>
 </div>
+
+<script>
+function handleLogout() {
+    console.log('Logging out...');
+    
+    // Clear user data
+    localStorage.removeItem('currentUser');
+    
+    // Redirect to welcome page (unauthenticated)
+    window.location.href = '../dashboard/welcome.html';
+}
+</script>

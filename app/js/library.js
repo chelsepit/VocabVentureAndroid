@@ -20,9 +20,10 @@ async function loadProgress() {
                 storyId: storyId
             });
             
-            // Calculate story progress (14 segments per story)
+            // Calculate story progress (varies by story)
+            const totalSegments = getTotalSegments(storyId);
             const completedSegments = storyProgress.filter(p => p.completed).length;
-            const percentage = Math.round((completedSegments / 14) * 100);
+            const percentage = Math.round((completedSegments / totalSegments) * 100);
             
             // Update progress bars
             const progressBars = document.querySelectorAll(`[data-progress="${storyId}"]`);
@@ -33,6 +34,16 @@ async function loadProgress() {
     } catch (error) {
         console.error('Error loading progress:', error);
     }
+}
+
+// Get total segments for each story
+function getTotalSegments(storyId) {
+    const segments = {
+        1: 13, // Tinguian story
+        2: 14, // Bighari story
+        3: 10  // Butterfly story
+    };
+    return segments[storyId] || 14;
 }
 
 // Load progress on page load
@@ -84,7 +95,7 @@ if (searchInput && clearSearch) {
 }
 
 // ============================================
-// BOOK ITEM CLICK HANDLERS
+// BOOK ITEM CLICK HANDLERS - UPDATED!
 // ============================================
 const bookItems = document.querySelectorAll('.book-item');
 bookItems.forEach(item => {
@@ -92,11 +103,21 @@ bookItems.forEach(item => {
         const storyId = this.dataset.storyId;
         
         if (storyId) {
-            // Navigate to story viewer
-            // TODO: Implement story viewer page
-            alert(`Opening story ${storyId}...\n\nStory viewer coming soon!`);
-            // window.location.href = `story-viewer.html?id=${storyId}`;
+            console.log('Opening story:', storyId);
+            
+            // Navigate to story viewer with story ID
+            window.location.href = `../stories/story-viewer.html?id=${storyId}`;
         }
+    });
+    
+    // Add hover effect
+    item.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.transition = 'transform 0.3s ease';
+    });
+    
+    item.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
     });
 });
 

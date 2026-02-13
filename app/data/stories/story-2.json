@@ -22,22 +22,25 @@
           "audio": "assets/audio/vocabulary/grace.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-1.mp3",
-      "illustration": "assets/images/story-2/segment-1.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-2/segment-1.mp4"
     },
     {
       "id": 2,
       "text": "One day Bathala thought of making a journey to the earth. He said to himself, \"My people on earth have been very good to me. I would like to make them happy.\"",
       "vocabulary": [],
-      "audio": "assets/audio/story-2/segment-2.mp3",
-      "illustration": "assets/images/story-2/segment-2.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-2/segment-2.mp4"
     },
     {
       "id": 3,
       "text": "Bathala commanded his messenger to call all his children to heaven. He wanted to see them before he went down to earth.",
       "vocabulary": [],
-      "audio": "assets/audio/story-2/segment-3.mp3",
-      "illustration": "assets/images/story-2/segment-3.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-2/segment-3.mp4"
     },
     {
       "id": 4,
@@ -51,8 +54,9 @@
           "audio": "assets/audio/vocabulary/maiden.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-4.mp3",
-      "illustration": "assets/images/story-2/segment-4.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-2/segment-4.mp4"
     },
     {
       "id": 5,
@@ -66,22 +70,25 @@
           "audio": "assets/audio/vocabulary/blaze.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-5.mp3",
-      "illustration": "assets/images/story-2/segment-5.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-2/segment-5.mp4"
     },
     {
       "id": 6,
       "text": "Bathala's children were now all seated. Looking at one empty seat, Bathala said, \"Bighari is not here again. Did my messenger tell her about this meeting?\"",
       "vocabulary": [],
-      "audio": "assets/audio/story-2/segment-6.mp3",
-      "illustration": "assets/images/story-2/segment-6.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-2/segment-6.mp4"
     },
     {
       "id": 7,
       "text": "\"Panginoon, I looked for Bighari but she was nowhere to be found,\" said the messenger who looked very tired. \"Perhaps, she is among the flowers in some distant land on earth,\" someone whispered. The others exchanged glances, for they knew that Bighari, who was the goddess of flowers, loved to play among the flowers in the garden.",
       "vocabulary": [],
-      "audio": "assets/audio/story-2/segment-7.mp3",
-      "illustration": "assets/images/story-2/segment-7.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-2/segment-7.mp4"
     },
     {
       "id": 8,
@@ -95,8 +102,9 @@
           "audio": "assets/audio/vocabulary/tardiness.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-8.mp3",
-      "illustration": "assets/images/story-2/segment-8.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-2/segment-8.mp4"
     },
     {
       "id": 9,
@@ -110,15 +118,17 @@
           "audio": "assets/audio/vocabulary/exile.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-9.mp3",
-      "illustration": "assets/images/story-2/segment-9.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-2/segment-9.mp4"
     },
     {
       "id": 10,
       "text": "At that very moment, Bighari was having a delightful time among the flowers in a faraway garden on earth. When it was time for her to return to her heavenly home, she could not find her way out. She was worried about her father.",
       "vocabulary": [],
-      "audio": "assets/audio/story-2/segment-10.mp3",
-      "illustration": "assets/images/story-2/segment-10.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-2/segment-10.mp4"
     },
     {
       "id": 11,
@@ -132,8 +142,9 @@
           "audio": "assets/audio/vocabulary/offended.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-11.mp3",
-      "illustration": "assets/images/story-2/segment-11.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-11.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-11.mp3",
+      "illustration": "assets/videos/story-2/segment-11.mp4"
     },
     {
       "id": 12,
@@ -154,8 +165,9 @@
           "audio": "assets/audio/vocabulary/admire.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-12.mp3",
-      "illustration": "assets/images/story-2/segment-12.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-12.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-12.mp3",
+      "illustration": "assets/videos/story-2/segment-12.mp4"
     },
     {
       "id": 13,
@@ -169,8 +181,9 @@
           "audio": "assets/audio/vocabulary/bower.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-13.mp3",
-      "illustration": "assets/images/story-2/segment-13.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-13.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-13.mp3",
+      "illustration": "assets/videos/story-2/segment-13.mp4"
     },
     {
       "id": 14,
@@ -184,8 +197,9 @@
           "audio": "assets/audio/vocabulary/decked.mp3"
         }
       ],
-      "audio": "assets/audio/story-2/segment-14.mp3",
-      "illustration": "assets/images/story-2/segment-14.png"
+      "audio-boy": "assets/audio/story-2/boy/segment-14.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-14.mp3",
+      "illustration": "assets/videos/story-2/segment-14.mp4"
     }
   ],
   

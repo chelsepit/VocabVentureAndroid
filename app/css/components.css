@@ -9,20 +9,21 @@
     align-items: center;
     z-index: 1000;
     display: flex;
-    justify-content: space-between; /* Spreads left-group and speaker apart */
-    pointer-events: none;
-    /* background-color: cyan; */ /* Remove debug color */
+    justify-content: space-between;
+    pointer-events: none; /* Container doesn't block clicks */
 }
 
 .left-group {
     display: flex;
     align-items: center;
-    gap: 15px; /* Keeps settings and burger close together */
-    pointer-events: auto;
+    gap: 15px;
+    pointer-events: none; /* Group doesn't block clicks */
 }
 
-.components > * {
-    pointer-events: auto;
+/* Make sure children can receive clicks */
+.components > *,
+.left-group > * {
+    pointer-events: auto; /* Re-enable clicks for children */
 }
 
 /* =========================
@@ -31,6 +32,7 @@
 .settings-dropdown {
     position: relative;
     display: inline-block;
+    pointer-events: auto; /* Explicitly enable */
 }
 
 .settings-button {
@@ -44,6 +46,8 @@
     border: none;
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto; /* Explicitly enable */
+    z-index: 1001;
 }
 
 .settings-button img {
@@ -51,6 +55,7 @@
     height: 35px;
     object-fit: contain;
     transition: transform 0.5s ease;
+    pointer-events: none; /* Image shouldn't block button clicks */
 }
 
 .settings-button:hover {
@@ -73,12 +78,13 @@
     padding: 20px;
     min-width: 280px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    pointer-events: auto; /* Menu can receive clicks */
     
     /* Hidden State */
     display: none;
     opacity: 0;
     transform: translateY(-20px) scale(0.95);
-    z-index: 1001;
+    z-index: 1002;
 }
 
 /* Visible State */
@@ -86,12 +92,10 @@
     display: block;
     opacity: 1;
     transform: translateY(0) scale(1);
-    animation: fadeIn 0.2s ease-out; /* Triggers the animation */
+    animation: fadeIn 0.2s ease-out;
 }
 
-
 /*Back Button*/
-
 .back-button {
     position: absolute;
     top: 20px;
@@ -151,12 +155,12 @@
     }
 }
 
-
 /* =========================
    BURGER NAV COMPONENT
    ========================= */
 .burger-dropdown {
     position: relative;
+    pointer-events: auto; /* Explicitly enable */
 }
 
 .burger-button {
@@ -170,12 +174,15 @@
     border: none;
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto; /* Explicitly enable */
+    z-index: 1001;
 }
 
 .burger-button img {
-    width: 35px; /* Match settings icon size */
+    width: 35px;
     height: 35px;
     object-fit: contain;
+    pointer-events: none; /* Image shouldn't block button clicks */
 }
 
 .burger-button:hover {
@@ -193,13 +200,14 @@
     border-radius: 15px;
     padding: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    min-width: 160px;
+    min-width: 180px;
+    pointer-events: auto; /* Menu can receive clicks */
     
     /* Hidden State */
     display: none;
     opacity: 0;
     transform: translateY(-20px) scale(0.95);
-    z-index: 1001;
+    z-index: 1002;
 }
 
 /* Visible State */
@@ -207,10 +215,12 @@
     display: block;
     opacity: 1;
     transform: translateY(0) scale(1);
-    animation: fadeIn 0.2s ease-out; /* FIX: Added this line! */
+    animation: fadeIn 0.2s ease-out;
 }
 
+/* FIXED: Burger menu items - unified styling */
 .burger-menu a,
+.burger-menu-item,
 .burger-menu > div {
     display: block;
     padding: 12px 15px;
@@ -225,10 +235,32 @@
     cursor: pointer;
 }
 
-.burger-menu a:hover {
+/* Remove margin from last item */
+.burger-menu a:last-child,
+.burger-menu-item:last-child,
+.burger-menu > div:last-child {
+    margin-bottom: 0;
+}
+
+/* Hover states */
+.burger-menu a:hover,
+.burger-menu-item:hover,
+.burger-menu > div:hover {
     background: #FFD93D;
     color: #333;
     transform: translateX(5px);
+}
+
+/* Special styling for logout */
+.logout-item {
+    border-top: 2px solid #f0f0f0;
+    margin-top: 5px;
+    padding-top: 12px;
+}
+
+.logout-item:hover {
+    background: #FF6B35;
+    color: white;
 }
 
 /* =========================
@@ -337,6 +369,7 @@ input:checked + .toggle-slider:before {
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-left: auto;
+    pointer-events: auto;
 }
 
 .speak-button-icon {
@@ -344,6 +377,7 @@ input:checked + .toggle-slider:before {
     height: 35px;
     object-fit: contain;
     cursor: pointer;
+    pointer-events: none;
 }
 
 /* =========================
@@ -516,6 +550,11 @@ input:checked + .toggle-slider:before {
     .def-meaning {
         font-size: 1rem;
     }
+    
+    .components {
+        top: 20px;
+        left: 20px;
+    }
 }
 
 /* =========================
@@ -534,15 +573,14 @@ input:checked + .toggle-slider:before {
 .w-8 { width: 2rem; }
 .h-8 { height: 2rem; }
 
-/* FIX: THIS WAS MISSING! */
+/* Animation for menus */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@media (max-width: 768px) {
-    .components {
-        top: 20px;
-        left: 20px;
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px) scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
     }
 }
