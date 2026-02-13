@@ -23,35 +23,35 @@
       "id": 2,
       "title": "The Origin of Rice",
       "genre": "folktales",
-      "coverImage": "assets/images/books/folktales/folktale-dummy.png",
+      "coverImage": "assets/images/books/folktales/folktale-book-2.png",
       "isActive": false
     },
     {
       "id": 3,
       "title": "The Monkey and The Turtle",
       "genre": "folktales",
-      "coverImage": "assets/images/books/folktales/folktale-dummy.png",
+      "coverImage": "assets/images/books/folktales/folktale-book-3.png",
       "isActive": false
     },
     {
       "id": 4,
       "title": "The Grasshopper And The Ant",
       "genre": "folktales",
-      "coverImage": "assets/images/books/folktales/folktale-dummy.png",
+      "coverImage": "assets/images/books/folktales/folktale-book-4.png",
       "isActive": false
     },
     {
       "id": 5,
       "title": "Why The Carabao Is Strong",
       "genre": "folktales",
-      "coverImage": "assets/images/books/folktales/folktale-dummy.png",
+      "coverImage": "assets/images/books/folktales/folktale-book-5.png",
       "isActive": false
     },
     {
       "id": 6,
       "title": "The Lion and The Mouse",
       "genre": "folktales",
-      "coverImage": "assets/images/books/folktales/folktale-dummy.png",
+      "coverImage": "assets/images/books/folktales/folktale-book-6.png",
       "isActive": false
     },
 
@@ -61,7 +61,7 @@
       "genre": "myths",
       "coverImage": "assets/images/books/myths/myth-book-1.png",
       "isActive": true,
-      "dataFile": "stories/story-7.json"
+      "dataFile": "stories/story-2.json"
     },
 
     {
@@ -106,7 +106,7 @@
       "genre": "fables",
       "coverImage": "assets/images/books/fables/fable-book-1.png",
       "isActive": true,
-      "dataFile": "stories/story-13.json"
+      "dataFile": "stories/story-3.json"
     },
 
     {
