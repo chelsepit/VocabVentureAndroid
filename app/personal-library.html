@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library - VocabVenture</title>
+    <title>Personal Library - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -62,6 +62,9 @@
                     <a href="badges.html" class="header-font font-semibold">Badge</a>
                 </div>
                 <div class="mb-1">
+                    <a href="library.html" class="header-font font-semibold">Library</a>
+                </div>
+                <div>
                     <a href="personal-library.html" class="header-font font-semibold">Personal Library</a>
                 </div>
             </div>
@@ -72,99 +75,75 @@
     <div class="library-container">
         <!-- Header Section -->
         <div class="library-header">
+            <!-- Back Button -->
+            <a href="library.html" class="back-button">
+                <span class="back-arrow">←</span>
+                <span class="header-font" style="color: white; font-size: 1.2rem; font-weight: 600;">Back</span>
+            </a>
+            
             <div class="library-title-wrapper">
                 <h1 class="header-font text-4xl md:text-5xl text-white drop-shadow-lg">
                     What do you want to <span class="italic title-font">read</span> today?
                 </h1>
             </div>
-
-            <!-- Search Bar -->
-            <div class="genre-search-bar-container">
-                <img src="assets/images/icons/search-icon.svg" class="search-icon" alt="Search">
-                <input type="text" class="genre-search-bar" placeholder="Search" id="searchInput">
-                <img src="assets/images/icons/x-icon.svg" alt="Clear" class="x-icon" id="clearSearch">
-            </div>
-
-            <!-- Genre Navigation -->
-            <div class="genre-nav">
-                <button type="button" class="genre-tag" data-genre="folktales">
-                    <img src="assets/images/icons/folktales-icon.svg" alt="Folktales">
-                    <span>Folktales</span>
-                </button>
-                <button type="button" class="genre-tag" data-genre="myths">
-                    <img src="assets/images/icons/myths-icon.svg" alt="Myths">
-                    <span>Myths</span>
-                </button>
-                <button type="button" class="genre-tag" data-genre="fables">
-                    <img src="assets/images/icons/fables-icon.svg" alt="Fables">
-                    <span>Fables</span>
-                </button>
-                <button type="button" class="genre-tag active" data-genre="short-stories">
-                    <img src="assets/images/icons/short-stories-icon.svg" alt="Short Stories">
-                    <span>Short Stories</span>
-                </button>
-                <button type="button" class="genre-tag" data-genre="legends">
-                    <img src="assets/images/icons/legends-icon.svg" alt="Legends">
-                    <span>Legends</span>
-                </button>
-            </div>
         </div>
 
-        <!-- Content Wrapper -->
+        <!-- Recent Reads Wrapper -->
         <div class="library-content-wrapper">
-            <!-- Recent Section -->
+            <!-- Recent Reads Section -->
             <section class="bookshelf-section">
                 <div class="section-header">
-                    <h2 class="section-title">Recent</h2>
-                    <a href="#" class="view-all-link">view all...</a>
+                    <h2 class="section-title">Recent Reads</h2>
                 </div>
 
-                <div class="book-grid" id="recentBooks">
+                <div class="book-grid" id="recentReads">
                     <div class="book-item" data-story-id="1">
                         <img src="assets/images/books/folktales/folktale-book-1.png" alt="Book 1">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;" data-progress="1"></div>
+                            <div class="progress-fill" style="width: 45%;" data-progress="1"></div>
                         </div>
                     </div>
                     <div class="book-item" data-story-id="2">
                         <img src="assets/images/books/folktales/folktale-book-2.png" alt="Book 2">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;" data-progress="2"></div>
+                            <div class="progress-fill" style="width: 65%;" data-progress="2"></div>
                         </div>
                     </div>
                     <div class="book-item" data-story-id="3">
                         <img src="assets/images/books/folktales/folktale-book-3.png" alt="Book 3">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;" data-progress="3"></div>
+                            <div class="progress-fill" style="width: 30%;" data-progress="3"></div>
                         </div>
                     </div>
                 </div>
             </section>
+        </div>
 
-            <!-- Short Story Section -->
+        <!-- Completed Books Wrapper -->
+        <div class="library-content-wrapper">
+            <!-- Completed Books Section -->
             <section class="bookshelf-section">
                 <div class="section-header">
-                    <h2 class="section-title">Short Story</h2>
-                    <a href="#" class="view-all-link">view all...</a>
+                    <h2 class="section-title">Completed Books</h2>
                 </div>
 
-                <div class="book-grid">
+                <div class="book-grid" id="completedBooks">
                     <div class="book-item" data-story-id="4">
-                        <img src="assets/images/books/folktales/folktale-book-4.png" alt="Story 1">
+                        <img src="assets/images/books/folktales/folktale-book-4.png" alt="Completed Book 1">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;"></div>
+                            <div class="progress-fill" style="width: 100%;"></div>
                         </div>
                     </div>
                     <div class="book-item" data-story-id="5">
-                        <img src="assets/images/books/folktales/folktale-book-5.png" alt="Story 2">
+                        <img src="assets/images/books/folktales/folktale-book-5.png" alt="Completed Book 2">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;"></div>
+                            <div class="progress-fill" style="width: 100%;"></div>
                         </div>
                     </div>
-                    <div class="book-item" data-story-id="1">
-                        <img src="assets/images/books/folktales/folktale-book-1.png" alt="Story 3">
+                    <div class="book-item" data-story-id="6">
+                        <img src="assets/images/books/folktales/folktale-book-1.png" alt="Completed Book 3">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 0%;"></div>
+                            <div class="progress-fill" style="width: 100%;"></div>
                         </div>
                     </div>
                 </div>
@@ -173,6 +152,6 @@
     </div>
 
     <script src="js/components.js"></script>
-    <script src="js/library.js"></script>
+    <script src="js/personal-library.js"></script>
 </body>
 </html>
