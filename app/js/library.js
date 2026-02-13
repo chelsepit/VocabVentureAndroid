@@ -52,23 +52,98 @@ loadProgress();
 // ============================================
 // GENRE FILTERING
 // ============================================
-const genreTags = document.querySelectorAll('.genre-tag');
-genreTags.forEach(tag => {
-    tag.addEventListener('click', function() {
-        // Remove active class from all tags
-        genreTags.forEach(t => t.classList.remove('active'));
-        
-        // Add active class to clicked tag
-        this.classList.add('active');
-        
-        // Get selected genre
-        const genre = this.dataset.genre;
-        console.log('Selected genre:', genre);
-        
-        // TODO: Filter books by genre
-        // For now, just log it
+(() => {
+    const DATA_PATH = "../../data/stories-index.json";
+
+    const libraryContainer = document.getElementById("libraryContent");
+    const genreTags = document.querySelectorAll(".genre-tag");
+
+    if (!libraryContainer) {
+        console.error("libraryContent container not found");
+        return;
+    }
+
+    let allStories = [];
+
+    // 1. Load JSON
+    fetch(DATA_PATH)
+        .then(res => res.json())
+        .then(data => {
+            allStories = data.stories;
+            renderLibrary(allStories);
+        })
+        .catch(err => console.error("Failed to load stories:", err));
+
+    // 2. Render shelves
+    function renderLibrary(stories) {
+        libraryContainer.innerHTML = "";
+
+        const grouped = groupByGenre(stories);
+
+        Object.keys(grouped).forEach(genre => {
+            const section = document.createElement("section");
+            section.className = "bookshelf-section";
+
+            section.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">${formatGenre(genre)}</h2>
+                    <a href="#" class="view-all-link">view all...</a>
+                </div>
+                <div class="book-grid">
+                    ${grouped[genre].map(renderBook).join("")}
+                </div>
+            `;
+
+            libraryContainer.appendChild(section);
+        });
+    }
+
+    // 3. Render single book
+    function renderBook(story) {
+        const lockedStyle = story.isActive ? "" : "style='opacity:0.5; cursor:not-allowed'";
+        const lockOverlay = story.isActive ? "" : `<div class="coming-soon">Coming Soon</div>`;
+
+        return `
+            <div class="book-item"
+                 data-id="${story.id}"
+                 ${lockedStyle}>
+                <div class="book-cover-wrapper">
+                    <img src="../../${story.coverImage}" alt="${story.title}">
+                    ${lockOverlay}
+                </div>
+            </div>
+        `;
+    }
+
+    // 4. Group by genre
+    function groupByGenre(stories) {
+        return stories.reduce((acc, story) => {
+            if (!acc[story.genre]) acc[story.genre] = [];
+            acc[story.genre].push(story);
+            return acc;
+        }, {});
+    }
+
+    // 5. Genre button filtering
+    genreTags.forEach(tag => {
+        tag.addEventListener("click", () => {
+            genreTags.forEach(t => t.classList.remove("active"));
+            tag.classList.add("active");
+
+            const genre = tag.dataset.genre;
+            const filtered = allStories.filter(s => s.genre === genre);
+            renderLibrary(filtered);
+        });
     });
-});
+
+    // 6. Helpers
+    function formatGenre(genre) {
+        return genre
+            .replace("-", " ")
+            .replace(/\b\w/g, l => l.toUpperCase());
+    }
+})();
+
 
 // ============================================
 // SEARCH FUNCTIONALITY
