@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/selected-genre.css">
 </head>
 <body>
     <div class="components">
@@ -36,7 +36,7 @@
             </div>
 
             <div class="genre-nav">
-                <button type="button" class="genre-tag" data-genre="folktales" onclick="window.location.href='story-genre.html'">
+                <button type="button" class="genre-tag active" data-genre="folktales">
                     <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales">
                     <span>Folktales</span>
                 </button>
@@ -59,7 +59,8 @@
             </div>
         </div>
 
-        <div class="library-content-wrapper" id="libraryContent"></div>
+        <div id="selected-genre-container" style="width: 100%; display: flex; justify-content: center;"></div>
+    </div>
 
     <script>
         function loadComponent(elementId, filePath) {
