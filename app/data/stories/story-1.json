@@ -22,15 +22,17 @@
           "audio": "assets/audio/vocabulary/harvest.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-1.mp3",
-      "illustration": "assets/images/story-1/segment-1.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-1/segment-1.mp4"
     },
     {
       "id": 2,
       "text": "For food they had only the things that grew in the forests and fish from the streams.",
       "vocabulary": [],
-      "audio": "assets/audio/story-1/segment-2.mp3",
-      "illustration": "assets/images/story-1/segment-2.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-1/segment-2.mp4"
     },
     {
       "id": 3,
@@ -44,8 +46,9 @@
           "audio": "assets/audio/vocabulary/cured.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-3.mp3",
-      "illustration": "assets/images/story-1/segment-3.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-1/segment-3.mp4"
     },
     {
       "id": 4,
@@ -59,8 +62,9 @@
           "audio": "assets/audio/vocabulary/spirit.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-4.mp3",
-      "illustration": "assets/images/story-1/segment-4.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-1/segment-4.mp4"
     },
     {
       "id": 5,
@@ -74,15 +78,17 @@
           "audio": "assets/audio/vocabulary/servants.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-5.mp3",
-      "illustration": "assets/images/story-1/segment-5.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-1/segment-5.mp4"
     },
     {
       "id": 6,
       "text": "Dayapan, a woman who lived in Caalang, had been sick for seven years. One day when she went to the spring to bathe...",
       "vocabulary": [],
-      "audio": "assets/audio/story-1/segment-6.mp3",
-      "illustration": "assets/images/story-1/segment-6.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-1/segment-6.mp4"
     },
     {
       "id": 7,
@@ -96,8 +102,9 @@
           "audio": "assets/audio/vocabulary/sugar-cane.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-7.mp3",
-      "illustration": "assets/images/story-1/segment-7.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-1/segment-7.mp4"
     },
     {
       "id": 8,
@@ -118,15 +125,17 @@
           "audio": "assets/audio/vocabulary/commanded.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-8.mp3",
-      "illustration": "assets/images/story-1/segment-8.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-1/segment-8.mp4"
     },
     {
       "id": 9,
       "text": "While she was trying to plant them in the ground the Spirit again entered her body and showed her just what to do.",
       "vocabulary": [],
-      "audio": "assets/audio/story-1/segment-9.mp3",
-      "illustration": "assets/images/story-1/segment-9.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-1/segment-9.mp4"
     },
     {
       "id": 10,
@@ -140,8 +149,9 @@
           "audio": "assets/audio/vocabulary/plenty.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-10.mp3",
-      "illustration": "assets/images/story-1/segment-10.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-1/segment-10.mp4"
     },
     {
       "id": 11,
@@ -155,8 +165,9 @@
           "audio": "assets/audio/vocabulary/ceremony.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-11.mp3",
-      "illustration": "assets/images/story-1/segment-11.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-11.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-11.mp3",
+      "illustration": "assets/videos/story-1/segment-11.mp4"
     },
     {
       "id": 12,
@@ -170,15 +181,17 @@
           "audio": "assets/audio/vocabulary/wept.mp3"
         }
       ],
-      "audio": "assets/audio/story-1/segment-12.mp3",
-      "illustration": "assets/images/story-1/segment-12.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-12.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-12.mp3",
+      "illustration": "assets/videos/story-1/segment-12.mp4"
     },
     {
       "id": 13,
       "text": "Dayapan called all the people together, and told them the things that the spirit had taught her; and they could see that she had been made well.",
       "vocabulary": [],
-      "audio": "assets/audio/story-1/segment-13.mp3",
-      "illustration": "assets/images/story-1/segment-13.png"
+      "audio-boy": "assets/audio/story-1/boy/segment-13.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-13.mp3",
+      "illustration": "assets/videos/story-1/segment-13.mp4"
     }
   ],
   

@@ -22,8 +22,9 @@
           "audio": "assets/audio/vocabulary/rested.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-1.mp3",
-      "illustration": "assets/images/story-3/segment-1.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-3/segment-1.mp4"
     },
     {
       "id": 2,
@@ -37,8 +38,9 @@
           "audio": "assets/audio/vocabulary/sipped.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-2.mp3",
-      "illustration": "assets/images/story-3/segment-2.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-3/segment-2.mp4"
     },
     {
       "id": 3,
@@ -52,8 +54,9 @@
           "audio": "assets/audio/vocabulary/ashamed.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-3.mp3",
-      "illustration": "assets/images/story-3/segment-3.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-3/segment-3.mp4"
     },
     {
       "id": 4,
@@ -74,8 +77,9 @@
           "audio": "assets/audio/vocabulary/munched.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-4.mp3",
-      "illustration": "assets/images/story-3/segment-4.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-3/segment-4.mp4"
     },
     {
       "id": 5,
@@ -96,15 +100,17 @@
           "audio": "assets/audio/vocabulary/asked.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-5.mp3",
-      "illustration": "assets/images/story-3/segment-5.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-3/segment-5.mp4"
     },
     {
       "id": 6,
       "text": "The caterpillar walked ahead. Then he said, \"Eight days ago, young butterfly, you were the same as I am.\"",
       "vocabulary": [],
-      "audio": "assets/audio/story-3/segment-6.mp3",
-      "illustration": "assets/images/story-3/segment-6.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-3/segment-6.mp4"
     },
     {
       "id": 7,
@@ -125,8 +131,9 @@
           "audio": "assets/audio/vocabulary/bright.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-7.mp3",
-      "illustration": "assets/images/story-3/segment-7.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-3/segment-7.mp4"
     },
     {
       "id": 8,
@@ -140,22 +147,25 @@
           "audio": "assets/audio/vocabulary/proud.mp3"
         }
       ],
-      "audio": "assets/audio/story-3/segment-8.mp3",
-      "illustration": "assets/images/story-3/segment-8.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-3/segment-8.mp4"
     },
     {
       "id": 9,
       "text": "\"Each caterpillar is given a chance to become a butterfly.\"",
       "vocabulary": [],
-      "audio": "assets/audio/story-3/segment-9.mp3",
-      "illustration": "assets/images/story-3/segment-9.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-3/segment-9.mp4"
     },
     {
       "id": 10,
       "text": "\"We are but the same.\"",
       "vocabulary": [],
-      "audio": "assets/audio/story-3/segment-10.mp3",
-      "illustration": "assets/images/story-3/segment-10.png"
+      "audio-boy": "assets/audio/story-3/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-3/segment-10.mp4"
     }
   ],
   
