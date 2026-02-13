@@ -53,6 +53,69 @@
     transform: translateY(0);
 }
 
+
+/*Back Button*/
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 50;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(5px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.back-arrow {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+/* Responsive adjustments for back button */
+@media (max-width: 768px) {
+    .back-button {
+        right: 15px;
+        padding: 8px 15px;
+        font-size: 1rem;
+    }
+    
+    .back-arrow {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        right: 10px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .back-arrow {
+        font-size: 1.2rem;
+    }
+}
+
+
 /* =========================
    BURGER NAV COMPONENT
    ========================= */
