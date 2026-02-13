@@ -23,7 +23,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: visible;
+    overflow-y: auto; /* Changed from visible to auto */
+    padding-bottom: 50px; /* Add padding at bottom */
 }
 
 /* Fallback gradient if image doesn't load */
@@ -42,18 +43,11 @@
    LIBRARY HEADER & TITLE
    ========================= */
 .library-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: relative; /* Changed from absolute to relative */
+    width: 100%;
     z-index: 5;
     padding: 20px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%);
-    pointer-events: none;
-}
-
-.library-header * {
-    pointer-events: auto;
 }
 
 .library-title-wrapper {
@@ -143,6 +137,7 @@
     display: flex;
     justify-content: center;
     margin-top: 30px;
+    margin-bottom: 30px; /* Add bottom margin */
     gap: 70px;
     flex-wrap: wrap;
 }
@@ -179,12 +174,12 @@
 /* =========================
    BOOKSHELF CONTENT WRAPPER
    ========================= */
-.library-content-wrapper {
+.selected-genre-wrapper {
     position: relative;
-    margin-top: 200px;
+    margin-top: 20px; /* Reduced from 180px */
     margin-bottom: 50px;
-    width: 90%;
-    max-width: 1100px;
+    width: 95%;
+    max-width: 1200px;
     padding: 40px;
     background-color: rgba(255, 255, 255, 0.244);
     backdrop-filter: blur(8px);
@@ -195,18 +190,18 @@
     gap: 60px;
 }
 
-.bookshelf-section {
+.selected-bookshelf-section {
     width: 100%;
 }
 
-.section-header {
+.selected-section-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 25px;
 }
 
-.section-title {
+.selected-section-title {
     font-family: 'header-font', 'Nunito', sans-serif;
     font-size: 2.5rem;
     color: #451a03;
@@ -214,7 +209,7 @@
     font-weight: 700;
 }
 
-.view-all-link {
+.selected-view-all-link {
     font-style: italic;
     color: #78350f;
     text-decoration: none;
@@ -222,20 +217,20 @@
     transition: color 0.3s ease;
 }
 
-.view-all-link:hover {
+.selected-view-all-link:hover {
     color: #451a03;
 }
 
 /* =========================
    BOOK GRID & PROGRESS
    ========================= */
-.book-grid {
+.selected-book-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
 }
 
-.book-item {
+.selected-book-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -243,22 +238,22 @@
     transition: transform 0.3s ease;
 }
 
-.book-item:hover {
+.selected-book-item:hover {
     transform: translateY(-5px);
 }
 
-.book-item img {
+.selected-book-item img {
     width: 100%;
     max-width: 200px;
     filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
     transition: transform 0.3s ease;
 }
 
-.book-item:hover img {
+.selected-book-item:hover img {
     transform: scale(1.05);
 }
 
-.progress-container {
+.selected-progress-container {
     width: 85%;
     height: 14px;
     background-color: #1a202c;
@@ -268,7 +263,7 @@
     overflow: hidden;
 }
 
-.progress-fill {
+.selected-progress-fill {
     height: 100%;
     background-color: #22d3ee;
     border-radius: 10px;
@@ -278,102 +273,121 @@
 /* =========================
    RESPONSIVE DESIGN
    ========================= */
+
+/* Tablet & Smaller Laptops */
 @media (max-width: 1024px) {
-    .library-content-wrapper {
-        margin-top: 350px;
+    .selected-genre-wrapper {
+        margin-top: 20px;
         padding: 30px;
     }
-    
-    .section-title {
+    .selected-section-title {
         font-size: 2rem;
+    }
+    .genre-nav {
+        gap: 40px;
     }
 }
 
-@media (max-width: 1025px) {
-    .library-content-wrapper {
-        margin-top: 350px;
-        padding: 30px;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-}
-@media (min-width: 1026px) and (max-width: 1199px) {
-    .library-content-wrapper {
-        margin-top: 350px;
-        padding: 30px;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-}
-
+/* Mobile Devices (Tablets/Large Phones) */
 @media (max-width: 768px) {
-    .book-grid {
+    .library-title-wrapper {
+        margin-top: 20px;
+    }
+    
+    .text-4xl {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+    
+    /* Genre navigation */
+    .genre-nav {
+        gap: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .genre-tag img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .genre-tag span {
+        font-size: 0.9rem;
+    }
+    
+    /* Search bar */
+    .genre-search-bar {
+        width: 250px;
+        padding: 8px 20px 8px 50px;
+    }
+    
+    /* Book grid */
+    .selected-book-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
     
-    .library-content-wrapper {
-        margin-top: 350px;
+    .selected-genre-wrapper {
+        margin-top: 20px;
         padding: 20px;
-        gap: 50px;
+        gap: 30px;
     }
     
-    .section-title {
+    .selected-section-title {
         font-size: 1.8rem;
-    }
-    
-    .genre-nav {
-        gap: 25px;
-    }
-    
-    .genre-tag img {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .genre-search-bar {
-        width: 250px;
     }
 }
 
+/* Small Phones */
 @media (max-width: 480px) {
-    .book-grid {
+    .library-title-wrapper {
+        margin-top: 10px;
+    }
+    
+    .text-4xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
+    
+    /* Tighter genre navigation */
+    .genre-nav {
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .genre-tag img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .genre-tag span {
+        font-size: 0.75rem;
+    }
+    
+    /* Search bar */
+    .genre-search-bar {
+        width: 200px;
+        padding: 6px 15px 6px 45px;
+        font-size: 0.9rem;
+    }
+    
+    .search-icon {
+        width: 30px;
+    }
+    
+    /* Single column for books */
+    .selected-book-grid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
     
-    .library-content-wrapper {
-        margin-top: 350px;
+    .selected-genre-wrapper {
+        margin-top: 20px;
         padding: 15px;
+        width: 90%;
     }
     
-    .section-title {
+    .selected-section-title {
         font-size: 1.5rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .library-content-wrapper {
-        max-width: 1200px;
-        margin-top: 350px;
-        padding: 60px;
-    }
-
-    .genre-tag img {
-        width: 80px;
-        height: 80px;
-    }
-
-    .book-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 60px;
-    }
-
-    .section-title {
-        font-size: 3rem;
     }
 }
