@@ -1,0 +1,332 @@
+{
+  "id": 2,
+  "title": "Bighari: The Rainbow Goddess",
+  "genre": "myth",
+  "culture": "Philippine",
+  "difficulty": "beginner",
+  "coverImage": "assets/images/books/myths/myth-book-1.png",
+  "totalSegments": 14,
+  "estimatedTime": "10-12 minutes",
+  "description": "A Filipino myth about Bighari, the goddess of flowers, and how the rainbow came to be after she was exiled from heaven.",
+  
+  "segments": [
+    {
+      "id": 1,
+      "text": "A long, long time ago people prayed to Bathala and offered him gifts for they believed that he was God and the source of all graces.",
+      "vocabulary": [
+        {
+          "word": "grace",
+          "pronunciation": "grace",
+          "definition": "A special gift or blessing",
+          "synonym": "Gift",
+          "audio": "assets/audio/vocabulary/grace.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-2/segment-1.mp4"
+    },
+    {
+      "id": 2,
+      "text": "One day Bathala thought of making a journey to the earth. He said to himself, \"My people on earth have been very good to me. I would like to make them happy.\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-2/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-2/segment-2.mp4"
+    },
+    {
+      "id": 3,
+      "text": "Bathala commanded his messenger to call all his children to heaven. He wanted to see them before he went down to earth.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-2/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-2/segment-3.mp4"
+    },
+    {
+      "id": 4,
+      "text": "First, the daughters came. They were such lovely maidens and among them were Tala, the morning star; Liwayway, the dawn and Tag-ani, the goddess of harvest.",
+      "vocabulary": [
+        {
+          "word": "maiden",
+          "pronunciation": "mai·den",
+          "definition": "Young women, especially unmarried ones",
+          "synonym": "Girls",
+          "audio": "assets/audio/vocabulary/maiden.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-2/segment-4.mp4"
+    },
+    {
+      "id": 5,
+      "text": "A loud noise and a blinding blaze accompanied the arrival of his sons Kidlat, the lightning; Hangin, the wind; and Araw, the sun. All the other sons came hurrying. They knew that when Bathala called, they would lose no time in coming.",
+      "vocabulary": [
+        {
+          "word": "blaze",
+          "pronunciation": "blaze",
+          "definition": "A very bright, strong fire or light",
+          "synonym": "Fire",
+          "audio": "assets/audio/vocabulary/blaze.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-2/segment-5.mp4"
+    },
+    {
+      "id": 6,
+      "text": "Bathala's children were now all seated. Looking at one empty seat, Bathala said, \"Bighari is not here again. Did my messenger tell her about this meeting?\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-2/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-2/segment-6.mp4"
+    },
+    {
+      "id": 7,
+      "text": "\"Panginoon, I looked for Bighari but she was nowhere to be found,\" said the messenger who looked very tired. \"Perhaps, she is among the flowers in some distant land on earth,\" someone whispered. The others exchanged glances, for they knew that Bighari, who was the goddess of flowers, loved to play among the flowers in the garden.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-2/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-2/segment-7.mp4"
+    },
+    {
+      "id": 8,
+      "text": "Bathala was indeed very angry. \"This will not do,\" he strongly said. \"How many times has she been late? I will not allow tardiness among my children. If Bighari prefers to be with her children, she can stay with them forever.\"",
+      "vocabulary": [
+        {
+          "word": "tardiness",
+          "pronunciation": "tar·di·ness",
+          "definition": "The quality of being late or slow to arrive",
+          "synonym": "Lateness",
+          "audio": "assets/audio/vocabulary/tardiness.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-2/segment-8.mp4"
+    },
+    {
+      "id": 9,
+      "text": "His children were afraid. They looked at one another in silence. After a brief pause, Bathala continued, \"From now on, Bighari will remain forever wherever she is right now to live there alone.\" Bathala's children were saddened by those angry words. They loved their beautiful and kind sister Bighari. But no one could protest Bathala's decision to exile Bighari from his heavenly kingdom.",
+      "vocabulary": [
+        {
+          "word": "exile",
+          "pronunciation": "e·xile",
+          "definition": "Being forced to live away from home or being sent away",
+          "synonym": "Banish",
+          "audio": "assets/audio/vocabulary/exile.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-2/segment-9.mp4"
+    },
+    {
+      "id": 10,
+      "text": "At that very moment, Bighari was having a delightful time among the flowers in a faraway garden on earth. When it was time for her to return to her heavenly home, she could not find her way out. She was worried about her father.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-2/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-2/segment-10.mp4"
+    },
+    {
+      "id": 11,
+      "text": "When the messenger came to tell her of Bathala's anger, she sobbed and said, \"I'm not sorry to lose my place in the heavenly kingdom. I grieve because I have offended my father.\" The messenger was very sorry for her, but there was nothing he could do.",
+      "vocabulary": [
+        {
+          "word": "offended",
+          "pronunciation": "o·ffen·ded",
+          "definition": "Feeling hurt or upset because of something someone said or did",
+          "synonym": "Hurt",
+          "audio": "assets/audio/vocabulary/offended.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-11.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-11.mp3",
+      "illustration": "assets/videos/story-2/segment-11.mp4"
+    },
+    {
+      "id": 12,
+      "text": "So the flower garden on earth became Bighari's home. The flowers bloomed all the more and gave forth beautiful colors never seen before. Everybody around was so delighted. The people who were living nearby saw that the garden grew lovelier everyday. Soon Bighari had many friends. They came to see the flowers and admire their beauty. The people loved Bighari more and more.",
+      "vocabulary": [
+        {
+          "word": "delighted",
+          "pronunciation": "de·light·ed",
+          "definition": "Feeling very happy or pleased",
+          "synonym": "Happy",
+          "audio": "assets/audio/vocabulary/delighted.mp3"
+        },
+        {
+          "word": "admire",
+          "pronunciation": "ad·mire",
+          "definition": "To look at something with pleasure",
+          "synonym": "Appreciate",
+          "audio": "assets/audio/vocabulary/admire.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-12.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-12.mp3",
+      "illustration": "assets/videos/story-2/segment-12.mp4"
+    },
+    {
+      "id": 13,
+      "text": "One day somebody suggested: \"Let us build a bower in Bighari's garden so that we can see the beautiful flowers even from afar.\" So the people built a bower. It was high and it arched over the entrance of the garden.",
+      "vocabulary": [
+        {
+          "word": "bower",
+          "pronunciation": "bo·wer",
+          "definition": "A pleasant shady place under trees or climbing plants in a garden or wood",
+          "synonym": "Sanctuary",
+          "audio": "assets/audio/vocabulary/bower.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-13.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-13.mp3",
+      "illustration": "assets/videos/story-2/segment-13.mp4"
+    },
+    {
+      "id": 14,
+      "text": "Soon the arch was decked all over with blossoms of red, yellow, pink, orange, blue, and white. Thereafter, whenever the goddess of flowers goes on a journey we can see the lovely many-colored arch in the sky—the rainbow.",
+      "vocabulary": [
+        {
+          "word": "decked",
+          "pronunciation": "decked",
+          "definition": "Decorate or adorn brightly or festively",
+          "synonym": "Adorned",
+          "audio": "assets/audio/vocabulary/decked.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-2/boy/segment-14.mp3",
+      "audio-girl": "assets/audio/story-2/girl/segment-14.mp3",
+      "illustration": "assets/videos/story-2/segment-14.mp4"
+    }
+  ],
+  
+  "quiz1": {
+    "title": "Pic-A-Word",
+    "description": "Choose the correct word to complete each sentence",
+    "questions": [
+      {
+        "id": 1,
+        "question": "People prayed to Bathala because they believed he was the source of all __________.",
+        "options": ["Fires", "Graces", "Gardens"],
+        "correctAnswer": 1,
+        "explanation": "Grace is a special gift or blessing."
+      },
+      {
+        "id": 2,
+        "question": "Bathala's daughters were beautiful __________.",
+        "options": ["Maidens", "Servants", "Messengers"],
+        "correctAnswer": 0,
+        "explanation": "Maiden means young women, especially unmarried ones."
+      },
+      {
+        "id": 3,
+        "question": "A loud noise and a blinding __________ came with the arrival of Bathala's sons.",
+        "options": ["Grace", "Bower", "Blaze"],
+        "correctAnswer": 2,
+        "explanation": "Blaze is a very bright, strong fire or light."
+      },
+      {
+        "id": 4,
+        "question": "Bathala did not allow __________ among his children.",
+        "options": ["Delight", "Tardiness", "Grace"],
+        "correctAnswer": 1,
+        "explanation": "Tardiness is the quality of being late or slow to arrive."
+      },
+      {
+        "id": 5,
+        "question": "Bathala decided to __________ Bighari from heaven.",
+        "options": ["Exile", "Admire", "Deck"],
+        "correctAnswer": 0,
+        "explanation": "Exile means being forced to live away from home or being sent away."
+      }
+    ]
+  },
+  
+  "quiz2": {
+    "title": "Decode the Word",
+    "description": "Read each sentence and choose what the underlined word means",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Bighari offended her father and felt sad.",
+        "underlinedWord": "offended",
+        "questionPrompt": "What does offended mean?",
+        "options": [
+          "Felt hurt or upset",
+          "Felt happy",
+          "Felt sleepy"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Offended means feeling hurt or upset because of something someone said or did."
+      },
+      {
+        "id": 2,
+        "question": "Everybody around was so delighted to see the flowers bloom.",
+        "underlinedWord": "delighted",
+        "questionPrompt": "What does delighted mean?",
+        "options": [
+          "Angry",
+          "Tired",
+          "Very happy or pleased"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Delighted means feeling very happy or pleased."
+      },
+      {
+        "id": 3,
+        "question": "People came to admire Bighari's flowers.",
+        "underlinedWord": "admire",
+        "questionPrompt": "What does admire mean?",
+        "options": [
+          "To take something",
+          "To hide something",
+          "To look at something with pleasure"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Admire means to look at something with pleasure."
+      },
+      {
+        "id": 4,
+        "question": "They built a bower in Bighari's garden.",
+        "underlinedWord": "bower",
+        "questionPrompt": "What does bower mean?",
+        "options": [
+          "A small house",
+          "A leafy shelter or arch in a garden",
+          "A type of tree"
+        ],
+        "correctAnswer": 1,
+        "explanation": "A bower is a pleasant shady place under trees or climbing plants in a garden or wood."
+      },
+      {
+        "id": 5,
+        "question": "The arch was decked all over with colorful blossoms.",
+        "underlinedWord": "decked",
+        "questionPrompt": "What does decked mean?",
+        "options": [
+          "Decorated or covered",
+          "Broken",
+          "Thrown away"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Decked means to decorate or adorn brightly or festively."
+      }
+    ]
+  },
+  
+  "vocabularySummary": [
+    "grace",
+    "maiden",
+    "blaze",
+    "tardiness",
+    "exile",
+    "offended",
+    "delighted",
+    "admire",
+    "bower",
+    "decked"
+  ]
+}

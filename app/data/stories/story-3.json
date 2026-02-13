@@ -1,0 +1,300 @@
+{
+  "id": 3,
+  "title": "The Butterfly & The Caterpillar",
+  "genre": "fable",
+  "culture": "Universal",
+  "difficulty": "beginner",
+  "coverImage": "assets/images/books/fables/fable-book-1.png",
+  "totalSegments": 10,
+  "estimatedTime": "6-8 minutes",
+  "description": "A moral fable about a proud butterfly who forgot where she came from, and a wise caterpillar who reminds her that everyone has the potential to transform.",
+  
+  "segments": [
+    {
+      "id": 1,
+      "text": "One summer morning, a butterfly rested on a beautiful rose.",
+      "vocabulary": [
+        {
+          "word": "rested",
+          "pronunciation": "res·ted",
+          "definition": "Stopped for a while to regain energy",
+          "synonym": "Relaxed",
+          "audio": "assets/audio/vocabulary/rested.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-3/segment-1.mp4"
+    },
+    {
+      "id": 2,
+      "text": "While she sipped the sweet from the flower, she saw a caterpillar crawl up the garden wall.",
+      "vocabulary": [
+        {
+          "word": "sipped",
+          "pronunciation": "sipped",
+          "definition": "Drank a small amount of liquid at a time",
+          "synonym": "Drank",
+          "audio": "assets/audio/vocabulary/sipped.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-3/segment-2.mp4"
+    },
+    {
+      "id": 3,
+      "text": "\"Horrors!\" the butterfly exclaimed, \"Stop! Come near me. I'm ashamed to be seen where you are.\"",
+      "vocabulary": [
+        {
+          "word": "ashamed",
+          "pronunciation": "a·shamed",
+          "definition": "Feeling bad or embarrassed about something",
+          "synonym": "Humiliated",
+          "audio": "assets/audio/vocabulary/ashamed.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-3/segment-3.mp4"
+    },
+    {
+      "id": 4,
+      "text": "The caterpillar continued crawling. He munched on the leaf without listening to the butterfly's cry.",
+      "vocabulary": [
+        {
+          "word": "crawling",
+          "pronunciation": "crawl·ing",
+          "definition": "Moving slowly with the body close to the ground",
+          "synonym": "Creeping",
+          "audio": "assets/audio/vocabulary/crawling.mp3"
+        },
+        {
+          "word": "munched",
+          "pronunciation": "munched",
+          "definition": "Chewed or ate something steadily and noisily",
+          "synonym": "Crunched",
+          "audio": "assets/audio/vocabulary/munched.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-3/segment-4.mp4"
+    },
+    {
+      "id": 5,
+      "text": "\"Where are your wings? What are you eating?\" the butterfly asked.",
+      "vocabulary": [
+        {
+          "word": "wings",
+          "pronunciation": "wings",
+          "definition": "The parts of a creature used for flying",
+          "synonym": "Pinions",
+          "audio": "assets/audio/vocabulary/wings.mp3"
+        },
+        {
+          "word": "asked",
+          "pronunciation": "asked",
+          "definition": "Spoke to someone to get information",
+          "synonym": "Inquired",
+          "audio": "assets/audio/vocabulary/asked.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-3/segment-5.mp4"
+    },
+    {
+      "id": 6,
+      "text": "The caterpillar walked ahead. Then he said, \"Eight days ago, young butterfly, you were the same as I am.\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-3/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-3/segment-6.mp4"
+    },
+    {
+      "id": 7,
+      "text": "\"One night from today, my wings will grow. I would fly and see all the bright and beautiful flowers.\"",
+      "vocabulary": [
+        {
+          "word": "grow",
+          "pronunciation": "grow",
+          "definition": "To get bigger or more advanced over time",
+          "synonym": "Develop",
+          "audio": "assets/audio/vocabulary/grow.mp3"
+        },
+        {
+          "word": "bright",
+          "pronunciation": "bright",
+          "definition": "Giving off or reflecting a lot of light",
+          "synonym": "Radiant",
+          "audio": "assets/audio/vocabulary/bright.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-3/segment-7.mp4"
+    },
+    {
+      "id": 8,
+      "text": "\"I'm sure my wings would be brighter and more beautiful than yours. So go, fly, but try not to be so proud.\"",
+      "vocabulary": [
+        {
+          "word": "proud",
+          "pronunciation": "proud",
+          "definition": "Feeling deep satisfaction in your achievements",
+          "synonym": "Honored",
+          "audio": "assets/audio/vocabulary/proud.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-3/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-3/segment-8.mp4"
+    },
+    {
+      "id": 9,
+      "text": "\"Each caterpillar is given a chance to become a butterfly.\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-3/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-3/segment-9.mp4"
+    },
+    {
+      "id": 10,
+      "text": "\"We are but the same.\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-3/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-3/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-3/segment-10.mp4"
+    }
+  ],
+  
+  "quiz1": {
+    "title": "Pic-a-Word",
+    "description": "Choose the correct word to complete each sentence",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Each caterpillar will grow _______ someday.",
+        "options": ["wings", "rested", "munched"],
+        "correctAnswer": 0,
+        "explanation": "Wings are the parts of a creature used for flying."
+      },
+      {
+        "id": 2,
+        "question": "In the garden, the butterfly _______ on a flower.",
+        "options": ["proud", "rested", "bright"],
+        "correctAnswer": 1,
+        "explanation": "Rested means stopped for a while to regain energy."
+      },
+      {
+        "id": 3,
+        "question": "The caterpillar started _______ up the garden wall.",
+        "options": ["sipped", "asked", "crawling"],
+        "correctAnswer": 2,
+        "explanation": "Crawling means moving slowly with the body close to the ground."
+      },
+      {
+        "id": 4,
+        "question": "The little caterpillar _______ on the green leaf all morning.",
+        "options": ["proud", "munched", "bright"],
+        "correctAnswer": 1,
+        "explanation": "Munched means chewed or ate something steadily and noisily."
+      },
+      {
+        "id": 5,
+        "question": "The caterpillar reminded the butterfly that everyone gets a chance to _______ into something beautiful.",
+        "options": ["grow", "bright", "ashamed"],
+        "correctAnswer": 0,
+        "explanation": "Grow means to get bigger or more advanced over time."
+      }
+    ]
+  },
+  
+  "quiz2": {
+    "title": "Decode the Word",
+    "description": "Read each sentence and choose what the underlined word means",
+    "questions": [
+      {
+        "id": 1,
+        "question": "The caterpillar felt ashamed after laughing at others.",
+        "underlinedWord": "ashamed",
+        "questionPrompt": "What does ashamed mean?",
+        "options": [
+          "Feeling happy",
+          "Feeling bad or embarrassed about something",
+          "Feeling excited"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Ashamed means feeling bad or embarrassed about something."
+      },
+      {
+        "id": 2,
+        "question": "The caterpillar sipped water from a leaf.",
+        "underlinedWord": "sipped",
+        "questionPrompt": "What does sipped mean?",
+        "options": [
+          "Drank a small amount of liquid at a time",
+          "Spilled water",
+          "Threw water away"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Sipped means drank a small amount of liquid at a time."
+      },
+      {
+        "id": 3,
+        "question": "The caterpillar asked the butterfly a question.",
+        "underlinedWord": "asked",
+        "questionPrompt": "What does asked mean?",
+        "options": [
+          "Walked away quietly",
+          "Spoke to someone to get information",
+          "Slept for a long time"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Asked means spoke to someone to get information."
+      },
+      {
+        "id": 4,
+        "question": "The butterfly looked bright in the sunlight.",
+        "underlinedWord": "bright",
+        "questionPrompt": "What does bright mean?",
+        "options": [
+          "Very dark",
+          "Giving off or reflecting a lot of light",
+          "Very heavy"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Bright means giving off or reflecting a lot of light."
+      },
+      {
+        "id": 5,
+        "question": "The butterfly felt proud after it changed.",
+        "underlinedWord": "proud",
+        "questionPrompt": "What does proud mean?",
+        "options": [
+          "Feeling deep satisfaction in your achievements",
+          "Feeling scared",
+          "Feeling tired"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Proud means feeling deep satisfaction in your achievements."
+      }
+    ]
+  },
+  
+  "vocabularySummary": [
+    "rested",
+    "sipped",
+    "ashamed",
+    "crawling",
+    "munched",
+    "wings",
+    "asked",
+    "grow",
+    "bright",
+    "proud"
+  ],
+  
+  "moralLesson": "Do not be proud and forget where you came from. Everyone has the potential to transform and become something beautiful. We should treat others with kindness and remember our own humble beginnings."
+}
