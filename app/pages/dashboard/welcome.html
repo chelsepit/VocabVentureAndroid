@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/auth.css">
 </head>
 <body>
     <div class="auth-wrapper">
@@ -20,9 +20,9 @@
                 <p class="text-lg text-gray-700 mb-8">
                     Welcome to <span class="title-font">VocabVenture</span> — a playful way to grow your words.
                 </p>
-                <a href="login.html" class="inline-block submit-btn title-font font-semibold">
+                <button class="inline-block submit-btn title-font font-semibold" onclick="goToLogin()" style="border: none; cursor: pointer; background: inherit; padding: inherit;">
                     Get Started 🚀
-                </a>
+                </button>
             </div>
             <div class="mt-10 border-t pt-6">
                 <p class="mt-6 text-gray-700 flex items-center justify-center gap-1">
@@ -31,5 +31,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function goToLogin() {
+            window.location.href = '../auth/login.html';
+        }
+    </script>
 </body>
 </html>

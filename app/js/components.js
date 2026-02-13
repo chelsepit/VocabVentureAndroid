@@ -1,6 +1,6 @@
-// components.js - Settings and Navigation Menu Components
+window.initializeComponents = function() {
+    console.log('Initializing components...'); // Debug message to prove it runs
 
-document.addEventListener('DOMContentLoaded', function() {
     // ============================================
     // SETTINGS MENU COMPONENT
     // ============================================
@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Sound Toggle
         const soundToggle = document.getElementById('soundToggle');
         if (soundToggle) {
-            // Load saved preference
             const savedSound = localStorage.getItem('sound_enabled');
             if (savedSound !== null) {
                 soundToggle.checked = savedSound === 'true';
@@ -55,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const volumeValue = document.getElementById('volumeValue');
 
         if (volumeSlider && volumeValue) {
-            // Load saved preference
             const savedVolume = localStorage.getItem('volume');
             if (savedVolume) {
                 volumeSlider.value = savedVolume;
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (boyVoice && girlVoice) {
-            // Load saved preference
             const savedVoice = localStorage.getItem('selected_voice') || 'boy';
             selectVoice(savedVoice);
 
@@ -127,10 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+};
 
 // ============================================
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS (Keep these global)
 // ============================================
 
 // Get current user
@@ -143,7 +140,8 @@ function getCurrentUser() {
 function requireAuth() {
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = 'login.html';
+        // Fix the path: since we are inside "pages/dashboard", we go up to "pages/auth"
+        window.location.href = '../auth/login.html'; 
         return false;
     }
     return true;

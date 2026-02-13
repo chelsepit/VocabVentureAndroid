@@ -5,7 +5,7 @@ const { ipcRenderer } = require('electron');
 // Check authentication
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (!currentUser) {
-    window.location.href = 'login.html';
+    window.location.href = 'pages/auth/login.html';
 }
 
 // ============================================

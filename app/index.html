@@ -181,7 +181,7 @@
 
         if (!currentUser) {
             // Not logged in, redirect to login
-            window.location.href = 'login.html';
+            window.location.href = 'pages/auth/login.html';
         } else {
             // Display user name
             document.getElementById('userName').textContent = currentUser.username;
@@ -236,7 +236,7 @@
             localStorage.removeItem('currentUser');
             
             // Redirect to welcome page
-            window.location.href = 'welcome.html';
+            window.location.href = 'pages/dashboard/welcome.html';
         }
     </script>
 </body>
