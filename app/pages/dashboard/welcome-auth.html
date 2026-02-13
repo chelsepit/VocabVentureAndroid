@@ -7,16 +7,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/welcome-page.css">
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/welcome-page.css">
+    <link rel="stylesheet" href="../../css/components.css">
 </head>
 <body>
     <!-- Settings Menu Component -->
     <div class="components">
         <div class="settings-dropdown">
-            <button class="settings-button" id="settingsBtn" aria-label="Open settings">
-                <img src="assets/images/icons/setting-icon.svg" alt="Settings" class="w-8 h-8">
+        <button class="settings-button" 
+            style="position: absolute; top: 20px; left: 20px; z-index: 1000;" 
+            id="settingsBtn" 
+            aria-label="Open settings">                
+                <img src="../../assets/images/icons/setting-icon.svg" alt="Settings" class="w-8 h-8">
             </button>
 
             <div class="settings-menu" id="settingsMenu">
@@ -78,7 +81,7 @@
         </div>
     </div>
 
-    <script src="js/components.js"></script>
+    <script src="../../js/components.js"></script>
     <script>
         const { ipcRenderer } = require('electron');
 
@@ -87,7 +90,7 @@
 
         if (!currentUser) {
             // Not logged in, redirect to login
-            window.location.href = 'login.html';
+            window.location.href = '../auth/login.html';
         } else {
             // Extract first name from full name
             const firstName = currentUser.username.split(' ')[0];
@@ -100,7 +103,7 @@
 
             setTimeout(() => {
                 button.style.transform = '';
-                window.location.href = 'library.html';
+                window.location.href = '../dashboard/library.html';
             }, 150);
         }
     </script>

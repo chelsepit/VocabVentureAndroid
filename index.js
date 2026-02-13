@@ -22,7 +22,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
     
     // Load welcome page initially (or login.html if you prefer)
-    mainWindow.loadFile('app/welcome.html');
+    mainWindow.loadFile('app/pages/dashboard/welcome.html');
 
     mainWindow.on('closed', () => {
         mainWindow = null;
