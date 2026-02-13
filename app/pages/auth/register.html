@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - VocabVenture</title>
+    <title>Register - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/auth.css">
 </head>
 <body>
     <div class="auth-wrapper">
@@ -18,22 +18,22 @@
                 <h1 class="title-font text-4xl font-extrabold mb-2" style="color: var(--orange-accent);">
                     📚 VocabVenture
                 </h1>
-                <p class="text-gray-600 text-lg" id="pageSubtitle">Welcome back! Let's continue learning!</p>
+                <p class="text-gray-600 text-lg" id="pageSubtitle">Create your account to start learning!</p>
             </div>
 
             <!-- Error/Success Messages -->
             <div id="messageContainer"></div>
 
-            <!-- LOGIN FORM -->
-            <form id="loginForm">
+            <!-- REGISTRATION FORM -->
+            <form id="registerForm">
                 <div class="mb-6">
                     <label class="block text-gray-700 font-bold mb-2 text-lg">
-                        What's your name? 👋
+                        What's your full name? 👋
                     </label>
                     <input
                         type="text"
                         name="name"
-                        id="loginName"
+                        id="registerName"
                         class="input-field"
                         placeholder="Enter your first and last name"
                         required
@@ -48,26 +48,26 @@
                     <input
                         type="date"
                         name="birthdate"
-                        id="loginBirthdate"
+                        id="registerBirthdate"
                         class="input-field"
                         required>
                 </div>
 
                 <button type="submit" class="submit-btn title-font">
-                    Let's Start! 🚀
+                    Create Account 🌟
                 </button>
             </form>
 
-            <!-- Toggle between Login and Register -->
+            <!-- Toggle to Login -->
             <div class="toggle-mode">
                 <p class="text-gray-600">
-                    New here?
-                    <a href="register.html" class="toggle-link">Register Now</a>
+                    Already have an account?
+                    <a href="login.html" class="toggle-link">Login Here</a>
                 </p>
             </div>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script src="../../js/auth.js"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             
             // Redirect to authenticated welcome page after short delay
             setTimeout(() => {
-                window.location.href = 'welcome-auth.html';
+                window.location.href = '../dashboard/welcome-auth.html';
             }, 1000);
         } else {
             showMessage(result.message || 'Login failed. Please check your credentials.', 'error');
@@ -104,7 +104,7 @@ function checkAuth() {
     
     // If already logged in and on login/register page, redirect to dashboard
     if (currentUser && (currentPage.includes('login.html') || currentPage.includes('register.html'))) {
-        window.location.href = 'index.html';
+        window.location.href = '../../index.html';
     }
 }
 
