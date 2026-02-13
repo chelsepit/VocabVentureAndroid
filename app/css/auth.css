@@ -9,7 +9,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(135deg, #FFE5B4 0%, #FFD93D 50%, #FFA500 100%);
+    background: url('../assets/images/backgrounds/auth-bg.svg') no-repeat center center;
+    background-size: cover;
     min-height: 100vh;
     display: flex;
     align-items: center;

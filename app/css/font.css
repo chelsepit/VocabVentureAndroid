@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'accent-font';
+    src: url('/app/assets/fonts/Schoolbell/Schoolbell-Regular.ttf');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'header-font';
+    src: url('/app/assets/fonts/Lexend/Lexend-VariableFont_wght.ttf');
+}
+@font-face {
+    font-family: 'body-font';
+    src: url('/app/assets/fonts/Fredoka/Fredoka-VariableFont_wdth\,wght.ttf');
+}
+
+.title-font { font-family: 'accent-font', cursive; }
+.header-font { font-family: 'header-font'; }
+.body-font { font-family: 'body-font'; }
