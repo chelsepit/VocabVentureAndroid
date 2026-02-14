@@ -528,68 +528,99 @@ class VocabVentureDB {
     // ============================================
     // BADGE METHODS - REFINED
     // ============================================
-    
-    awardBadge(userId, storyId, badgeType, badgeCategory) {
-        try {
+awardBadge(userId, storyId, badgeType, badgeCategory) {
+    try {
+        // Check if user already has a badge for this category
+        const existingBadge = this.getStoryBadge(userId, storyId, badgeCategory);
+        
+        // Badge hierarchy: bronze < silver < gold
+        const badgeHierarchy = { 'bronze': 1, 'silver': 2, 'gold': 3 };
+        
+        if (existingBadge) {
+            const existingLevel = badgeHierarchy[existingBadge.badge_type] || 0;
+            const newLevel = badgeHierarchy[badgeType] || 0;
+            
+            // Only update if the new badge is better
+            if (newLevel > existingLevel) {
+                console.log(`Upgrading badge for story ${storyId} ${badgeCategory}: ${existingBadge.badge_type} → ${badgeType}`);
+                
+                // Update the badge type (keeps original earned_at timestamp)
+                const stmt = this.db.prepare(`
+                    UPDATE user_badges 
+                    SET badge_type = ?
+                    WHERE user_id = ? AND story_id = ? AND badge_category = ?
+                `);
+                return stmt.run(badgeType, userId, storyId, badgeCategory);
+            } else {
+                console.log(`Badge already exists with same or better level: ${existingBadge.badge_type}`);
+                return null; // Don't downgrade or duplicate
+            }
+        } else {
+            // No existing badge, insert new one
+            console.log(`Awarding new ${badgeType} badge for story ${storyId} ${badgeCategory}`);
+            
             const stmt = this.db.prepare(`
-                INSERT OR REPLACE INTO user_badges (user_id, story_id, badge_type, badge_category)
+                INSERT INTO user_badges (user_id, story_id, badge_type, badge_category)
                 VALUES (?, ?, ?, ?)
             `);
             return stmt.run(userId, storyId, badgeType, badgeCategory);
-        } catch (error) {
-            console.error('Error awarding badge:', error);
-            return null;
         }
+    } catch (error) {
+        console.error('Error awarding badge:', error);
+        return null;
     }
+}
 
-    getUserBadges(userId, storyId = null) {
-        if (storyId) {
-            const stmt = this.db.prepare(`
-                SELECT * FROM user_badges 
-                WHERE user_id = ? AND story_id = ?
-                ORDER BY earned_at DESC
-            `);
-            return stmt.all(userId, storyId);
-        } else {
-            const stmt = this.db.prepare(`
-                SELECT * FROM user_badges 
-                WHERE user_id = ?
-                ORDER BY earned_at DESC
-            `);
-            return stmt.all(userId);
-        }
-    }
+getStoryBadge(userId, storyId, badgeCategory) {
+    const stmt = this.db.prepare(`
+        SELECT * FROM user_badges 
+        WHERE user_id = ? AND story_id = ? AND badge_category = ?
+    `);
+    return stmt.get(userId, storyId, badgeCategory);
+}
 
-    getStoryBadge(userId, storyId, badgeCategory) {
-        const stmt = this.db.prepare(`
-            SELECT * FROM user_badges 
-            WHERE user_id = ? AND story_id = ? AND badge_category = ?
-        `);
-        return stmt.get(userId, storyId, badgeCategory);
-    }
+// Get all badges ordered by earned_at (oldest first)
+getAllUserBadgesOrdered(userId) {
+    const stmt = this.db.prepare(`
+        SELECT 
+            ub.*,
+            CASE 
+                WHEN ub.badge_category = 'story-completion' THEN 'Story Complete'
+                WHEN ub.badge_category = 'quiz-1' THEN 'Quiz 1'
+                WHEN ub.badge_category = 'quiz-2' THEN 'Quiz 2'
+                ELSE ub.badge_category
+            END as badge_label
+        FROM user_badges ub
+        WHERE user_id = ?
+        ORDER BY earned_at ASC
+    `);
+    return stmt.all(userId);
+}
 
-    hasBadge(userId, storyId, badgeCategory) {
-        const stmt = this.db.prepare(`
-            SELECT COUNT(*) as count FROM user_badges 
-            WHERE user_id = ? AND story_id = ? AND badge_category = ?
-        `);
-        const result = stmt.get(userId, storyId, badgeCategory);
-        return result.count > 0;
-    }
-
-    getAllUserBadges(userId) {
-        const stmt = this.db.prepare(`
-            SELECT * FROM user_badges 
-            WHERE user_id = ?
-            ORDER BY earned_at DESC
-        `);
-        return stmt.all(userId);
-    }
-
-    // ============================================
-    // ANALYTICS METHODS
-    // ============================================
+// Get badge statistics
+getBadgeStats(userId) {
+    const stmt = this.db.prepare(`
+        SELECT 
+            badge_type,
+            COUNT(*) as count
+        FROM user_badges
+        WHERE user_id = ?
+        GROUP BY badge_type
+    `);
+    const stats = stmt.all(userId);
     
+    return {
+        gold: stats.find(s => s.badge_type === 'gold')?.count || 0,
+        silver: stats.find(s => s.badge_type === 'silver')?.count || 0,
+        bronze: stats.find(s => s.badge_type === 'bronze')?.count || 0,
+        total: stats.reduce((sum, s) => sum + s.count, 0)
+    };
+}
+
+// ============================================
+// ANALYTICS METHODS
+// ============================================
+
     getOverallProgress(userId) {
         const stmt = this.db.prepare(`
             SELECT 

@@ -226,6 +226,24 @@ ipcMain.handle('badge:getAll', async (event, userId) => {
     }
 });
 
+ipcMain.handle('badge:getAllOrdered', async (event, userId) => {
+    try {
+        return db.getAllUserBadgesOrdered(userId);
+    } catch (error) {
+        console.error('Get ordered badges error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('badge:getStats', async (event, userId) => {
+    try {
+        return db.getBadgeStats(userId);
+    } catch (error) {
+        console.error('Get badge stats error:', error);
+        return { gold: 0, silver: 0, bronze: 0, total: 0 };
+    }
+});
+
 ipcMain.handle('badge:getStory', async (event, { userId, storyId }) => {
     try {
         return db.getUserBadges(userId, storyId);

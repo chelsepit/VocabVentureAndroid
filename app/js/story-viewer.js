@@ -104,6 +104,15 @@ function loadSegment(index) {
     
     videoSource.src = '../../' + segment.illustration;
     video.load();
+    
+    // Remove loop and stop on last frame
+    video.loop = false;
+    
+    // When video ends, keep it on the last frame
+    video.onended = () => {
+        video.currentTime = video.duration;
+    };
+    
     video.play();
     
     // Update text content with interactive words
