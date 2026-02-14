@@ -1,4 +1,4 @@
-// story-viewer.js - Dynamic Story Viewer with SEGMENT COMPLETION TRACKING
+// story-viewer.js - Dynamic Story Viewer with REAL-TIME VOLUME CONTROL
 
 let currentStory = null;
 let currentSegmentIndex = 0;
@@ -72,6 +72,39 @@ async function initStoryViewer() {
     
     // Setup navigation buttons
     setupNavigation();
+    
+    // ⭐ NEW: Setup real-time volume control
+    setupVolumeControl();
+}
+
+// ⭐ NEW: Setup real-time volume control
+function setupVolumeControl() {
+    // Wait for components to load
+    setTimeout(() => {
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        
+        if (volumeSlider && volumeValue) {
+            // Update volume in real-time as slider moves
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value;
+                
+                // Update display
+                volumeValue.textContent = volume;
+                
+                // Save to localStorage
+                localStorage.setItem('volume', volume);
+                
+                // Update currently playing audio immediately
+                if (currentAudio) {
+                    currentAudio.volume = parseInt(volume) / 100;
+                    console.log(`🔊 Volume adjusted to ${volume}%`);
+                }
+            });
+            
+            console.log('✅ Volume control initialized');
+        }
+    }, 500); // Wait for components to load
 }
 
 // Load a specific segment
@@ -91,7 +124,7 @@ function loadSegment(index) {
     // Save last viewed segment to database
     saveLastViewedSegment(index + 1); // Save as 1-indexed
     
-    // ⭐ NEW: Mark this segment as completed
+    // ⭐ Mark this segment as completed
     markSegmentAsCompleted(index + 1);
     
     // Update segment counter
@@ -151,7 +184,7 @@ async function saveLastViewedSegment(segmentNumber) {
     }
 }
 
-// ⭐ NEW: Mark segment as completed in progress table
+// ⭐ Mark segment as completed in progress table
 async function markSegmentAsCompleted(segmentNumber) {
     try {
         const { ipcRenderer } = require('electron');
@@ -232,8 +265,12 @@ function playSegmentAudio(audioPath) {
     
     // Create new audio instance
     currentAudio = new Audio('../../' + audioPath);
+    
+    // Set volume from localStorage
     const volume = parseInt(localStorage.getItem('volume') || '70') / 100;
     currentAudio.volume = volume;
+    
+    console.log(`🔊 Playing audio at ${Math.round(volume * 100)}% volume`);
     
     // Play the audio
     currentAudio.play().catch(error => {
