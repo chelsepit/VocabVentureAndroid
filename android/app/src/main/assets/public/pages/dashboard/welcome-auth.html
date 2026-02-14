@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - VocabVenture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/welcome-page.css">
+    <link rel="stylesheet" href="../../css/components.css">
+</head>
+<body>
+    <!-- Settings Menu Component -->
+    <div class="components">
+        <div class="settings-dropdown">
+        <button class="settings-button" 
+            style="position: absolute; top: 20px; left: 20px; z-index: 1000;" 
+            id="settingsBtn" 
+            aria-label="Open settings">                
+                <img src="../../assets/images/icons/setting-icon.svg" alt="Settings" class="w-8 h-8">
+            </button>
+
+            <div class="settings-menu" id="settingsMenu">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="font-bold text-gray-800" style="color: #6e4324; font-size: 1.2rem;">Sound</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Volume</label>
+                    <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+                    <div class="flex justify-between text-sm text-gray-600 mt-1">
+                        <span>0</span>
+                        <span id="volumeValue">70</span>
+                        <span>100</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice Selection</label>
+                    <div class="flex gap-3">
+                        <button class="voice-btn active" id="boyVoice" data-voice="boy" style="color: #6e4324; font-size: 1.2rem;">Boy</button>
+                        <button class="voice-btn" id="girlVoice" data-voice="girl" style="color: #6e4324; font-size: 1.2rem;">Girl</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Scene -->
+    <div class="welcome-background"></div>
+
+    <!-- Welcome Content -->
+    <div class="welcome-content">
+        <div class="text-center mt-10 fade-in">
+            <!-- Main Greeting -->
+            <h1 class="header-font text-4xl md:text-6xl font-extrabold mb-2" style="color: #000000;">
+                Hello, <span id="userName">Student</span>!
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="body-font text-3xl md:text-4xl text-black mt-2">
+                Your Word Journey Starts Here
+            </p>
+        </div>
+
+        <div class="flex-grow"></div>
+
+        <!-- Start Reading Button -->
+        <div class="mb-12 fade-in" style="animation-delay: 0.3s;">
+            <button class="start-button header-font font-extrabold" onclick="startReading()">
+                Start Reading
+            </button>
+        </div>
+    </div>
+
+    <script src="../../js/components.js"></script>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Get current user
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (!currentUser) {
+            // Not logged in, redirect to login
+            if (window.navigateTo) {
+                window.navigateTo('login');
+            } else {
+                window.location.href = '../auth/login.html';
+            }
+        } else {
+            // Extract first name from full name
+            const firstName = currentUser.username.split(' ')[0];
+            document.getElementById('userName').textContent = firstName;
+        }
+
+        function startReading() {
+            const button = event.target;
+            button.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                button.style.transform = '';
+                if (window.navigateTo) {
+                    window.navigateTo('library');
+                } else {
+                    window.location.href = '../dashboard/library.html';
+                }
+            }, 150);
+        }
+    </script>
+</body>
+</html>

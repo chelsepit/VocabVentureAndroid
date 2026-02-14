@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VocabVenture</title>
+    
+    <!-- Preconnect to fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/auth.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/welcome-page.css">
+    <link rel="stylesheet" href="./css/stories.css">
+    <link rel="stylesheet" href="./css/badge.css">
+    <link rel="stylesheet" href="./css/book-stories.css">
+    
+    <!-- Capacitor -->
+    <script src="capacitor://go/capacitor.js"></script>
+    
+    <meta name="theme-color" content="#000">
+</head>
+<body>
+    <!-- Main content container where pages will be loaded -->
+    <div id="app-container"></div>
+
+    <!-- Global Navigation Components -->
+    <div id="global-nav"></div>
+
+    <!-- Router Script - handles page navigation -->
+    <script>
+        // Simple Router for VocabVenture
+        class VocabRouter {
+            constructor() {
+                this.container = document.getElementById('app-container');
+                this.navContainer = document.getElementById('global-nav');
+                this.currentPage = null;
+                this.history = [];
+                
+                // Initialize routing
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 VocabRouter initialized');
+                // Load the welcome page by default
+                await this.navigate('welcome');
+            }
+
+            async navigate(page, params = {}) {
+                console.log(`📄 Navigating to: ${page}`, params);
+                
+                let pageFile = '';
+                
+                // Map page names to file paths
+                const pageMap = {
+                    'welcome': './pages/dashboard/welcome.html',
+                    'login': './pages/auth/login.html',
+                    'register': './pages/auth/register.html',
+                    'dashboard': './pages/dashboard/welcome-auth.html',
+                    'library': './pages/dashboard/library.html',
+                    'badge': './pages/dashboard/badge.html',
+                    'story-genre': './pages/dashboard/story-genre.html',
+                    'story-viewer': './pages/dashboard/story-viewer.html',
+                    'decode-the-world': './pages/stories/decode-the-world.html',
+                    'pick-a-world': './pages/stories/pick-a-world.html',
+                    'pick-a-word-quiz': './pages/stories/pick-a-word-quiz.html',
+                    'lets-review': './pages/stories/lets-review.html',
+                    'finish-book': './pages/stories/finish-book.html',
+                    'fables': './pages/stories/fables.html',
+                    'game-result': './pages/stories/game-result.html',
+                    'decode-the-world-game': './pages/stories/decode-the-world-game.html'
+                };
+
+                pageFile = pageMap[page] || `./pages/${page}.html`;
+
+                try {
+                    const response = await fetch(pageFile);
+                    if (!response.ok) {
+                        throw new Error(`Page not found: ${pageFile}`);
+                    }
+
+                    const html = await response.text();
+                    
+                    // Extract the body content using a temporary container
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    
+                    // Get all content from the fetched HTML
+                    const content = tempDiv.innerHTML;
+                    
+                    // Clear and update the container
+                    this.container.innerHTML = content;
+                    this.currentPage = page;
+                    
+                    // Add to history
+                    this.history.push(page);
+                    
+                    // Reinitialize components after loading new page
+                    this.initializePageScripts();
+                    
+                } catch (error) {
+                    console.error('❌ Error loading page:', error);
+                    this.container.innerHTML = `<div class="error-container" style="padding: 20px; text-align: center;"><h2>Page not found</h2><p>${error.message}</p></div>`;
+                }
+            }
+
+            initializePageScripts() {
+                // Reinitialize component handlers after page load
+                if (window.initializeComponents) {
+                    window.initializeComponents();
+                }
+                
+                // Load page-specific external scripts
+                const scriptElements = this.container.querySelectorAll('script[src]');
+                scriptElements.forEach(script => {
+                    const newScript = document.createElement('script');
+                    newScript.src = script.src;
+                    newScript.async = false; // Maintain script order
+                    document.head.appendChild(newScript);
+                });
+
+                // Execute inline scripts after external scripts are loaded
+                setTimeout(() => {
+                    const inlineScripts = this.container.querySelectorAll('script:not([src])');
+                    inlineScripts.forEach(script => {
+                        try {
+                            eval(script.innerHTML);
+                        } catch (error) {
+                            console.error('Script execution error:', error);
+                        }
+                    });
+                }, 100);
+            }
+
+            goBack() {
+                if (this.history.length > 1) {
+                    this.history.pop(); // Remove current page
+                    const previousPage = this.history[this.history.length - 1];
+                    this.navigate(previousPage);
+                }
+            }
+        }
+
+        // Initialize router and expose globally
+        const router = new VocabRouter();
+        window.router = router; // Make router available to all pages
+
+        // Helper navigation function for pages
+        window.navigateTo = function(path) {
+            if (path.includes('../')) {
+                // Handle relative paths like '../dashboard/welcome-auth.html'
+                const cleanPath = path.replace(/\.\.\/pages\/|\.\.\/auth\/|\.\.\/dashboard\/|\.\.\/stories\//g, '').replace('.html', '');
+                router.navigate(cleanPath);
+            } else if (path.includes('/')) {
+                // Handle absolute-ish paths like 'dashboard/welcome-auth.html'
+                const cleanPath = path.replace(/pages\/|auth\/|dashboard\/|stories\//g, '').replace('.html', '');
+                router.navigate(cleanPath);
+            } else {
+                // Handle simple page names like 'login' or 'welcome-auth.html'
+                const cleanPath = path.replace('.html', '');
+                router.navigate(cleanPath);
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,585 @@
+/* =========================
+   COMPONENTS CONTAINER (Holds both buttons)
+   ========================= */
+.components {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    right: 30px; 
+    align-items: center;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none; /* Container doesn't block clicks */
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    pointer-events: none; /* Group doesn't block clicks */
+}
+
+/* Make sure children can receive clicks */
+.components > *,
+.left-group > * {
+    pointer-events: auto; /* Re-enable clicks for children */
+}
+
+/* =========================
+   SETTINGS COMPONENT
+   ========================= */
+.settings-dropdown {
+    position: relative;
+    display: inline-block;
+    pointer-events: auto; /* Explicitly enable */
+}
+
+.settings-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent; 
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto; /* Explicitly enable */
+    z-index: 1001;
+}
+
+.settings-button img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    pointer-events: none; /* Image shouldn't block button clicks */
+}
+
+.settings-button:hover {
+    transform: scale(1.1);
+}
+
+.settings-button:hover img {
+    transform: rotate(90deg);
+}
+
+/* THE SETTINGS MENU */
+.settings-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #6e4324;
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 280px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    pointer-events: auto; /* Menu can receive clicks */
+    
+    /* Hidden State */
+    display: none;
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    z-index: 1002;
+}
+
+/* Visible State */
+.settings-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: fadeIn 0.2s ease-out;
+}
+
+/*Back Button*/
+.back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 50;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(5px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.back-arrow {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+/* Responsive adjustments for back button */
+@media (max-width: 768px) {
+    .back-button {
+        right: 15px;
+        padding: 8px 15px;
+        font-size: 1rem;
+    }
+    
+    .back-arrow {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        right: 10px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .back-arrow {
+        font-size: 1.2rem;
+    }
+}
+
+/* =========================
+   BURGER NAV COMPONENT
+   ========================= */
+.burger-dropdown {
+    position: relative;
+    pointer-events: auto; /* Explicitly enable */
+}
+
+.burger-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto; /* Explicitly enable */
+    z-index: 1001;
+}
+
+.burger-button img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    pointer-events: none; /* Image shouldn't block button clicks */
+}
+
+.burger-button:hover {
+    transform: scale(1.1);
+}
+
+/* THE BURGER MENU */
+.burger-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #6e4324;
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+    pointer-events: auto; /* Menu can receive clicks */
+    
+    /* Hidden State */
+    display: none;
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    z-index: 1002;
+}
+
+/* Visible State */
+.burger-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* FIXED: Burger menu items - unified styling */
+.burger-menu a,
+.burger-menu-item,
+.burger-menu > div {
+    display: block;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #6e4324;
+    cursor: pointer;
+}
+
+/* Remove margin from last item */
+.burger-menu a:last-child,
+.burger-menu-item:last-child,
+.burger-menu > div:last-child {
+    margin-bottom: 0;
+}
+
+/* Hover states */
+.burger-menu a:hover,
+.burger-menu-item:hover,
+.burger-menu > div:hover {
+    background: #FFD93D;
+    color: #333;
+    transform: translateX(5px);
+}
+
+/* Special styling for logout */
+.logout-item {
+    border-top: 2px solid #f0f0f0;
+    margin-top: 5px;
+    padding-top: 12px;
+}
+
+.logout-item:hover {
+    background: #FF6B35;
+    color: white;
+}
+
+/* =========================
+   SETTINGS CONTROLS
+   ========================= */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .toggle-slider {
+    background-color: #FFD93D;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(22px);
+}
+
+.volume-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #eee;
+    outline: none;
+    margin-top: 5px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FF6B35;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.voice-btn {
+    padding: 10px 0;
+    border-radius: 12px;
+    border: 2px solid #eee;
+    background: #f9f9f9;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    font-family: 'Nunito', sans-serif;
+    flex: 1;
+    text-align: center;
+}
+
+.voice-btn.active {
+    background: #FFD93D;
+    border-color: #FFD93D;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(255, 217, 61, 0.4);
+}
+
+/* =========================
+   SPEAK ICON COMPONENT
+   ========================= */
+.speak-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent; 
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-left: auto;
+    pointer-events: auto;
+}
+
+.speak-button-icon {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+/* =========================
+   INTERACTIVE WORD STYLING
+   ========================= */
+.interactive-word {
+    font-weight: 800;
+    color: black;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.interactive-word:hover {
+    font-weight: bold; 
+    cursor: pointer;
+    text-decoration: underline;
+    color: black;
+    transform: scale(1.05);
+    display: inline-block; 
+}
+
+/* =========================
+   DEFINITION CARD POPUP
+   ========================= */
+.definition-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    
+    width: 90%;
+    max-width: 400px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    z-index: 2000;
+    
+    /* HIDDEN STATE */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ACTIVE STATE (Added by JS) */
+.definition-card.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* DEFINITION CARD HEADER */
+.def-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.def-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: black;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.speaker-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.speaker-icon:hover {
+    transform: scale(1.1);
+}
+
+/* PHONETIC TEXT */
+.def-phonetic {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    color: #666;
+    font-style: italic;
+    margin: 0px 0 5px 0;
+}
+
+/* SYNONYM*/
+.def-synonym {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-style: italic;
+    margin: 0 0 15px 0;
+}
+
+/* DEFINITION MEANING */
+.def-meaning {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    color: black;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.2);
+    color: #333;
+}
+
+/* OVERLAY (DARKENS BACKGROUND) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    
+    /* HIDDEN STATE */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* OVERLAY ACTIVE STATE */
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .definition-card {
+        width: 85%;
+        padding: 20px;
+    }
+    
+    .def-title {
+        font-size: 1.5rem;
+    }
+    
+    .def-meaning {
+        font-size: 1rem;
+    }
+    
+    .components {
+        top: 20px;
+        left: 20px;
+    }
+}
+
+/* =========================
+   UTILITIES & ANIMATIONS
+   ========================= */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-3 { gap: 0.75rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.font-bold { font-weight: 700; }
+.text-gray-800 { color: #1f2937; }
+.text-sm { font-size: 0.875rem; }
+.text-gray-600 { color: #4b5563; }
+.w-8 { width: 2rem; }
+.h-8 { height: 2rem; }
+
+/* Animation for menus */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px) scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}

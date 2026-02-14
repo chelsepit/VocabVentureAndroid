@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - VocabVenture</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/selected-genre.css">
+</head>
+<body>
+    <div class="components">
+    <div class="left-group">   
+        <div id="settings-container"></div>
+        <div id="burger-container"></div>
+    </div>
+</div>
+
+    <div class="library-container">
+        <div class="library-header">
+            <div class="library-title-wrapper">
+                <h1 class="header-font text-4xl md:text-5xl text-white drop-shadow-lg">
+                    What do you want to <span class="italic title-font">read</span> today?
+                </h1>
+            </div>
+
+            <div class="genre-search-bar-container">
+                <img src="../../assets/images/icons/search-icon.svg" class="search-icon" alt="Search">
+                <input type="text" class="genre-search-bar" placeholder="Search" id="searchInput">
+                <img src="../../assets/images/icons/x-icon.svg" alt="Clear" class="x-icon" id="clearSearch">
+            </div>
+
+            <div class="genre-nav">
+                <button type="button" class="genre-tag active" data-genre="folktales">
+                    <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales">
+                    <span>Folktales</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="myths">
+                    <img src="../../assets/images/icons/myths-icon.svg" alt="Myths">
+                    <span>Myths</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="fables">
+                    <img src="../../assets/images/icons/fables-icon.svg" alt="Fables">
+                    <span>Fables</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="short-stories">
+                    <img src="../../assets/images/icons/short-stories-icon.svg" alt="Short Stories">
+                    <span>Short Stories</span>
+                </button>
+                <button type="button" class="genre-tag" data-genre="legends">
+                    <img src="../../assets/images/icons/legends-icon.svg" alt="Legends">
+                    <span>Legends</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="selected-genre-container" style="width: 100%; display: flex; justify-content: center;"></div>
+    </div>
+
+    <script>
+        function loadComponent(elementId, filePath) {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                    
+                    // After HTML is inserted, initialize the Javascript for buttons
+                    // (This calls the function we defined in components.js)
+                    if (window.initializeComponents) {
+                        window.initializeComponents();
+                    }
+                })
+                .catch(err => console.error('Error loading component:', err));
+        }
+
+        // Load the files (Paths are relative to THIS file)
+        // We go up one level (..) to 'pages', then into 'components'
+        loadComponent('settings-container', '../components/settings-menu.html');
+        loadComponent('burger-container', '../components/burger-nav.html');
+        loadComponent('selected-genre-container', '../components/selected-genre.html');
+    </script>
+
+    <script src="../../js/components.js"></script>
+    <script src="../../js/library.js"></script>
+</body>
+</html>
