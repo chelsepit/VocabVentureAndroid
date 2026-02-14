@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-package-lock.json
+
 
 # Database files (contains user data)
 database/
@@ -10,7 +10,8 @@ database/
 *.sqlite3
 
 # Electron build output
-dist
+dist/
+dist-electron/
 build/
 out/
 release/
