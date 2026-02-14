@@ -15,24 +15,32 @@ async function loadProgress() {
     try {
         // Get progress for each story
         for (let storyId = 1; storyId <= 30; storyId++) {
-            const storyProgress = await ipcRenderer.invoke('progress:get', {
-                userId: currentUser.id,
-                storyId: storyId
-            });
-            
-            // Calculate story progress (varies by story)
-            const totalSegments = getTotalSegments(storyId);
-            const completedSegments = storyProgress.filter(p => p.completed).length;
-            const percentage = Math.round((completedSegments / totalSegments) * 100);
-            
-            // Update progress bars
-            const progressBars = document.querySelectorAll(`[data-progress="${storyId}"]`);
-            progressBars.forEach(bar => {
-                bar.style.width = percentage + '%';
-            });
+            try {
+                const storyProgress = await ipcRenderer.invoke('progress:get', {
+                    userId: currentUser.id,
+                    storyId: storyId
+                });
+                
+                // Calculate story progress (varies by story)
+                const totalSegments = getTotalSegments(storyId);
+                const completedSegments = storyProgress.filter(p => p.completed).length;
+                const percentage = Math.round((completedSegments / totalSegments) * 100);
+                
+                // Update progress bars - only if they exist
+                const progressBars = document.querySelectorAll(`[data-progress="${storyId}"]`);
+                if (progressBars.length > 0) {
+                    progressBars.forEach(bar => {
+                        bar.style.width = percentage + '%';
+                    });
+                }
+            } catch (err) {
+                // Skip this story if progress load fails, keep default width
+                console.log(`Could not load progress for story ${storyId}:`, err);
+            }
         }
     } catch (error) {
         console.error('Error loading progress:', error);
+        // Don't completely fail if progress database is unavailable
     }
 }
 
@@ -46,8 +54,10 @@ function getTotalSegments(storyId) {
     return segments[storyId] || 14; // Default to 14 segments
 }
 
-// Load progress on page load
-loadProgress();
+// Load progress after a short delay to ensure books are rendered
+setTimeout(() => {
+    loadProgress();
+}, 500);
 
 // ============================================
 // GENRE FILTERING
@@ -113,11 +123,15 @@ loadProgress();
             <div class="book-item ${locked ? "locked" : ""}"
                  data-id="${story.id}"
                  data-active="${story.isActive}"
-                 data-title="${story.title}">
+                 data-title="${story.title}"
+                 data-story-id="${story.id}">
              
                 <div class="book-cover-wrapper">
                     <img src="../../${story.coverImage}" alt="${story.title}">
                     ${locked ? `<div class="coming-soon">Coming Soon</div>` : ""}
+                </div>
+                <div class="progress-container">
+                    <div class="progress-fill" style="width: 35%;" data-progress="${story.id}"></div>
                 </div>
             </div>
         `;

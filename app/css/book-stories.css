@@ -1,3 +1,24 @@
+/* ========================================
+   BOOK/STORY PAGES - Mobile-First Responsive
+   With Responsive Video Handling
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ========================================
+   RESPONSIVE VIDEO BACKGROUND
+   ======================================== */
+
 .video-background {
     position: fixed;
     top: 0;
@@ -6,7 +27,7 @@
     height: 100%;
     overflow: hidden;
     z-index: -1;
-    background-color: #000; /* Optional: adds black bars if aspect ratios don't match */
+    background-color: #000;
 }
 
 .video-background video {
@@ -18,29 +39,63 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
+    aspect-ratio: 16 / 9;
 }
 
+/* Fallback for browsers that don't support aspect-ratio */
+.video-background video {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* ========================================
+   CONTENT OVERLAY (Mobile-First)
+   ======================================== */
+
 .content {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
-    background-color: rgba(255, 255, 255, 0.60);
-    backdrop-filter: blur(2px);
-    color: black;
-    font-family: body-font, arial;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    color: #333;
+    font-family: 'Nunito', sans-serif;
     width: 90%;
-    max-width: 600px;
-    padding: 30px 20px;
-    font-size: 2.5rem;
-    border-radius: 40px;
+    max-width: 500px;
+    padding: 20px;
+    font-size: 16px;
+    border-radius: 24px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
+.content h1,
+.content h2,
+.content h3 {
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
 
-/* Ensure video covers the entire viewport on all screen sizes */
+.content p {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.content p:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================================
+   RESPONSIVE VIDEO ASPECT RATIO HANDLING
+   ======================================== */
+
+/* Handle different device aspect ratios for video cover */
 @media (aspect-ratio: 16/9) {
     .video-background video {
         width: 100%;
@@ -59,5 +114,137 @@
     .video-background video {
         width: 100%;
         height: auto;
+    }
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* Large Mobile: 481px - 767px */
+@media (min-width: 481px) {
+    .content {
+        max-width: 540px;
+        padding: 24px;
+        font-size: 16px;
+        border-radius: 28px;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 28px;
+        margin-bottom: 14px;
+    }
+    
+    .content p {
+        font-size: 15px;
+        margin-bottom: 14px;
+    }
+}
+
+/* Tablet Portrait: 768px - 1023px */
+@media (min-width: 768px) {
+    .content {
+        max-width: 600px;
+        padding: 28px;
+        font-size: 17px;
+        border-radius: 32px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+        max-height: 75vh;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+    
+    .content p {
+        font-size: 16px;
+        margin-bottom: 14px;
+        line-height: 1.7;
+    }
+}
+
+/* Tablet Landscape: 1024px - 1279px */
+@media (min-width: 1024px) {
+    .content {
+        max-width: 700px;
+        padding: 32px;
+        font-size: 18px;
+        border-radius: 36px;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 36px;
+        margin-bottom: 18px;
+    }
+    
+    .content p {
+        font-size: 17px;
+        margin-bottom: 16px;
+    }
+}
+
+/* Laptop: 1280px - 1439px */
+@media (min-width: 1280px) {
+    .content {
+        max-width: 800px;
+        padding: 40px;
+        font-size: 19px;
+        border-radius: 40px;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 40px;
+        margin-bottom: 20px;
+    }
+    
+    .content p {
+        font-size: 18px;
+        margin-bottom: 16px;
+        line-height: 1.8;
+    }
+}
+
+/* Desktop: 1440px+ */
+@media (min-width: 1440px) {
+    .content {
+        max-width: 900px;
+        padding: 48px;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 44px;
+    }
+    
+    .content p {
+        font-size: 20px;
+    }
+}
+
+/* ========================================
+   LANDSCAPE MODE OPTIMIZATION
+   ======================================== */
+
+@media (max-height: 700px) and (orientation: landscape) {
+    .content {
+        max-height: 90vh;
+        padding: 16px 24px;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .content p {
+        font-size: 14px;
+        margin-bottom: 10px;
+        line-height: 1.5;
     }
 }

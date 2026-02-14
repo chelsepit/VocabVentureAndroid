@@ -255,19 +255,21 @@
 
 .selected-progress-container {
     width: 85%;
-    height: 14px;
-    background-color: #1a202c;
-    border-radius: 10px;
-    margin-top: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    height: 12px;
+    background-color: rgba(26, 32, 44, 0.8);
+    border-radius: 8px;
+    margin-top: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .selected-progress-fill {
     height: 100%;
-    background-color: #22d3ee;
-    border-radius: 10px;
-    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #FFD93D 0%, #FF6B35 100%);
+    border-radius: 8px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(255, 217, 61, 0.4);
 }
 
 /* =========================

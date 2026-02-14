@@ -1,0 +1,509 @@
+/* ========================================
+   RESPONSIVE UTILITY CLASSES
+   Mobile-First Responsive Design Utilities
+   ======================================== */
+
+/**
+ * This file contains utility classes for responsive design.
+ * Use these classes to quickly build responsive layouts.
+ * 
+ * Each utility scales with CSS variables that update
+ * at responsive breakpoints automatically.
+ */
+
+/* ========================================
+   DISPLAY UTILITIES
+   ======================================== */
+
+/* Hide on mobile, show on tablet and up */
+.hidden-mobile {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .hidden-mobile {
+        display: block;
+    }
+}
+
+/* Hide on tablet and up, show on mobile */
+.hidden-tablet {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .hidden-tablet {
+        display: none;
+    }
+}
+
+/* Hide on desktop, show on smaller screens */
+.hidden-desktop {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .hidden-desktop {
+        display: none;
+    }
+}
+
+/* Show only on desktop */
+.show-desktop {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .show-desktop {
+        display: block;
+    }
+}
+
+/* ========================================
+   RESPONSIVE SPACING
+   ======================================== */
+
+/* Responsive padding */
+.p-responsive { padding: var(--spacing-lg); }
+.px-responsive { padding-left: var(--spacing-lg); padding-right: var(--spacing-lg); }
+.py-responsive { padding-top: var(--spacing-lg); padding-bottom: var(--spacing-lg); }
+
+/* Responsive margin */
+.m-responsive { margin: var(--spacing-lg); }
+.mx-responsive { margin-left: var(--spacing-lg); margin-right: var(--spacing-lg); }
+.my-responsive { margin-top: var(--spacing-lg); margin-bottom: var(--spacing-lg); }
+
+/* ========================================
+   RESPONSIVE CONTAINER
+   ======================================== */
+
+.container-responsive {
+    width: 100%;
+    max-width: 100%;
+    padding: var(--spacing-lg);
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .container-responsive {
+        max-width: 750px;
+        padding: var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-responsive {
+        max-width: 1000px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .container-responsive {
+        max-width: 1200px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE TEXT
+   ======================================== */
+
+.text-responsive-sm { font-size: var(--font-size-sm); }
+.text-responsive-base { font-size: var(--font-size-base); }
+.text-responsive-lg { font-size: var(--font-size-lg); }
+.text-responsive-xl { font-size: var(--font-size-xl); }
+.text-responsive-2xl { font-size: var(--font-size-2xl); }
+
+/* ========================================
+   RESPONSIVE GRID UTILITIES
+   ======================================== */
+
+/* Auto-responsive grid - items scale based on available space */
+.grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.grid-auto-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.grid-auto-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+/* 2-column grid on mobile, scales up */
+.grid-2-responsive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 481px) {
+    .grid-2-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-2-responsive {
+        gap: var(--spacing-2xl);
+    }
+}
+
+/* 3-column grid on mobile, scales up */
+.grid-3-responsive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .grid-3-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-3-responsive {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2xl);
+    }
+}
+
+/* 4-column grid on mobile, scales up */
+.grid-4-responsive {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 481px) {
+    .grid-4-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .grid-4-responsive {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-4-responsive {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ========================================
+   RESPONSIVE FLEXBOX
+   ======================================== */
+
+/* Stack on mobile, row on tablet and up */
+.flex-responsive {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .flex-responsive {
+        flex-direction: row;
+        gap: var(--spacing-xl);
+    }
+}
+
+/* Center flex items */
+.flex-center-responsive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .flex-center-responsive {
+        flex-direction: row;
+    }
+}
+
+/* Space between flex items */
+.flex-between-responsive {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .flex-between-responsive {
+        flex-direction: row;
+        gap: var(--spacing-2xl);
+    }
+}
+
+/* ========================================
+   RESPONSIVE WIDTH
+   ======================================== */
+
+/* Full width on mobile, constrained on desktop */
+.w-responsive {
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .w-responsive {
+        width: 90%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .w-responsive {
+        width: 85%;
+    }
+}
+
+/* ========================================
+   RESPONSIVE MAX-WIDTH
+   ======================================== */
+
+.max-w-mobile {
+    max-width: 480px;
+}
+
+.max-w-tablet {
+    max-width: 768px;
+}
+
+.max-w-desktop {
+    max-width: 1200px;
+}
+
+.max-w-xl {
+    max-width: 1400px;
+}
+
+/* ========================================
+   RESPONSIVE IMAGES & MEDIA
+   ======================================== */
+
+/* Make images responsive */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsive aspect-ratio containers */
+.aspect-ratio-16-9 {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.aspect-ratio-16-9 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.aspect-ratio-4-3 {
+    position: relative;
+    padding-bottom: 75%;
+    height: 0;
+    overflow: hidden;
+}
+
+.aspect-ratio-4-3 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.aspect-ratio-1-1 {
+    position: relative;
+    padding-bottom: 100%;
+    height: 0;
+    overflow: hidden;
+}
+
+.aspect-ratio-1-1 > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ========================================
+   RESPONSIVE TYPOGRAPHY
+   ======================================== */
+
+/* Responsive heading sizes */
+.h-responsive-xl {
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .h-responsive-xl {
+        font-size: 36px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .h-responsive-xl {
+        font-size: 48px;
+    }
+}
+
+.h-responsive-lg {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+@media (min-width: 768px) {
+    .h-responsive-lg {
+        font-size: 32px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .h-responsive-lg {
+        font-size: 40px;
+    }
+}
+
+/* Responsive lead text */
+.lead-responsive {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+    .lead-responsive {
+        font-size: 18px;
+        line-height: 1.7;
+    }
+}
+
+@media (min-width: 1280px) {
+    .lead-responsive {
+        font-size: 20px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE DISPLAY & SIZES
+   ======================================== */
+
+/* Responsive section padding */
+.section-responsive {
+    padding: var(--spacing-lg) var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .section-responsive {
+        padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1280px) {
+    .section-responsive {
+        padding: 60px 40px;
+    }
+}
+
+/* Responsive gap utilities */
+.gap-responsive {
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .gap-responsive {
+        gap: var(--spacing-xl);
+    }
+}
+
+@media (min-width: 1280px) {
+    .gap-responsive {
+        gap: var(--spacing-2xl);
+    }
+}
+
+/* ========================================
+   RESPONSIVE BORDERS & RADIUS
+   ======================================== */
+
+.rounded-responsive {
+    border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+    .rounded-responsive {
+        border-radius: 16px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .rounded-responsive {
+        border-radius: 20px;
+    }
+}
+
+/* ========================================
+   RESPONSIVE SHADOWS
+   ======================================== */
+
+.shadow-responsive {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+    .shadow-responsive {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+}
+
+@media (min-width: 1280px) {
+    .shadow-responsive {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* ========================================
+   LANDSCAPE MODE UTILITIES
+   ======================================== */
+
+/* Hide on landscape with limited height */
+.hidden-landscape-sm {
+    display: block;
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+    .hidden-landscape-sm {
+        display: none;
+    }
+}
+
+/* Show only on landscape with limited height */
+.show-landscape-sm {
+    display: none;
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+    .show-landscape-sm {
+        display: block;
+    }
+}

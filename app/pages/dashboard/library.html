@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/selected-genre.css">
 </head>
 <body>
     <div class="components">
@@ -36,7 +37,7 @@
             </div>
 
             <div class="genre-nav">
-                <button type="button" class="genre-tag" data-genre="folktales" onclick="window.location.href='story-genre.html'">
+                <button type="button" class="genre-tag active" data-genre="folktales">
                     <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales">
                     <span>Folktales</span>
                 </button>
@@ -84,7 +85,7 @@
         // We go up one level (..) to 'pages', then into 'components'
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('selected-genre-container', '../components/selected-genre.html');
+        loadComponent('libraryContent', '../components/selected-genre.html');
     </script>
 
     <script src="../../js/components.js"></script>
