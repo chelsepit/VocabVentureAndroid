@@ -10,7 +10,8 @@ database/
 *.sqlite3
 
 # Electron build output
-dist
+dist/
+dist-electron/
 build/
 out/
 release/
