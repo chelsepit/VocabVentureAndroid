@@ -109,6 +109,23 @@ ipcMain.handle('progress:save', async (event, { userId, storyId, segmentId }) =>
     }
 });
 
+// ⭐ NEW: Mark individual segment as completed
+ipcMain.handle('progress:markSegmentComplete', async (event, data) => {
+    try {
+        const { userId, storyId, segmentId } = data;
+        
+        // Save to progress table
+        const result = db.saveProgress(userId, storyId, segmentId);
+        
+        console.log(`✅ Segment marked complete: User ${userId}, Story ${storyId}, Segment ${segmentId}`);
+        
+        return { success: true, result };
+    } catch (error) {
+        console.error('Error marking segment complete:', error);
+        return { success: false, error: error.message };
+    }
+});
+
 ipcMain.handle('progress:get', async (event, { userId, storyId }) => {
     try {
         return db.getProgress(userId, storyId);
@@ -136,39 +153,110 @@ ipcMain.handle('progress:getOverall', async (event, userId) => {
     }
 });
 
-ipcMain.handle('progress:saveLastViewed', async (event, { userId, storyId, segmentId }) => {
+ipcMain.handle('progress:saveLastViewed', async (event, data) => {
     try {
-        return db.saveLastViewedSegment(userId, storyId, segmentId);
+        const { userId, storyId, segmentId } = data;
+        
+        // Update last_viewed_segment in progress table
+        const stmt = db.db.prepare(`
+            INSERT INTO progress (user_id, story_id, segment_id, last_viewed_segment, completed)
+            VALUES (?, ?, 1, ?, 0)
+            ON CONFLICT(user_id, story_id, segment_id) 
+            DO UPDATE SET last_viewed_segment = ?
+        `);
+        
+        const result = stmt.run(userId, storyId, segmentId, segmentId);
+        
+        return { success: true };
     } catch (error) {
-        console.error('Save last viewed segment error:', error);
-        throw error;
+        console.error('Error saving last viewed:', error);
+        return { success: false, error: error.message };
     }
 });
 
-ipcMain.handle('progress:getLastViewed', async (event, { userId, storyId }) => {
+ipcMain.handle('progress:getLastViewed', async (event, data) => {
     try {
-        return db.getLastViewedSegment(userId, storyId);
+        const { userId, storyId } = data;
+        
+        const stmt = db.db.prepare(`
+            SELECT last_viewed_segment
+            FROM progress
+            WHERE user_id = ? AND story_id = ?
+            ORDER BY id DESC
+            LIMIT 1
+        `);
+        
+        const result = stmt.get(userId, storyId);
+        
+        return result ? result.last_viewed_segment : 0;
     } catch (error) {
-        console.error('Get last viewed segment error:', error);
+        console.error('Error getting last viewed:', error);
         return 0;
     }
 });
+
 
 // ============================================
 // STORY COMPLETION STATUS HANDLER
 // ============================================
 
-ipcMain.handle('story:getCompletionStatus', async (event, { userId, storyId, totalSegments }) => {
+ipcMain.handle('story:getCompletionStatus', async (event, data) => {
     try {
-        return db.getStoryCompletionStatus(userId, storyId, totalSegments);
-    } catch (error) {
-        console.error('Get completion status error:', error);
+        const { userId, storyId, totalSegments } = data;
+        
+        // Get completed segments count
+        const segmentStmt = db.db.prepare(`
+            SELECT COUNT(*) as count
+            FROM progress
+            WHERE user_id = ? AND story_id = ? AND completed = 1
+        `);
+        
+        const segmentResult = segmentStmt.get(userId, storyId);
+        const completedSegments = segmentResult ? segmentResult.count : 0;
+        
+        // Check if story is fully complete
+        const storyCompleted = completedSegments >= totalSegments;
+        
+        // Check quiz completion
+        const quizStmt = db.db.prepare(`
+            SELECT quiz_number, badge_type
+            FROM quiz_results
+            WHERE user_id = ? AND story_id = ?
+            ORDER BY completed_at DESC
+        `);
+        
+        const quizResults = quizStmt.all(userId, storyId);
+        
+        const quiz1Completed = quizResults.some(q => q.quiz_number === 1);
+        const quiz2Completed = quizResults.some(q => q.quiz_number === 2);
+        
+        // Get last accessed time
+        const lastAccessStmt = db.db.prepare(`
+            SELECT MAX(completed_at) as lastAccessed
+            FROM progress
+            WHERE user_id = ? AND story_id = ?
+        `);
+        
+        const lastAccessResult = lastAccessStmt.get(userId, storyId);
+        const lastAccessed = lastAccessResult ? lastAccessResult.lastAccessed : null;
+        
         return {
-            storyCompleted: false,
+            completedSegments: completedSegments,
+            totalSegments: totalSegments,
+            storyCompleted: storyCompleted,
+            quiz1Completed: quiz1Completed,
+            quiz2Completed: quiz2Completed,
+            lastAccessed: lastAccessed
+        };
+    } catch (error) {
+        console.error('Error getting completion status:', error);
+        return {
             completedSegments: 0,
             totalSegments: totalSegments,
+            storyCompleted: false,
             quiz1Completed: false,
-            quiz2Completed: false
+            quiz2Completed: false,
+            lastAccessed: null
         };
     }
 });

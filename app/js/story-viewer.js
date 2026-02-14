@@ -1,4 +1,4 @@
-// story-viewer.js - Dynamic Story Viewer with finish-book.html Flow
+// story-viewer.js - Dynamic Story Viewer with SEGMENT COMPLETION TRACKING
 
 let currentStory = null;
 let currentSegmentIndex = 0;
@@ -91,6 +91,9 @@ function loadSegment(index) {
     // Save last viewed segment to database
     saveLastViewedSegment(index + 1); // Save as 1-indexed
     
+    // ⭐ NEW: Mark this segment as completed
+    markSegmentAsCompleted(index + 1);
+    
     // Update segment counter
     document.getElementById('currentSegment').textContent = index + 1;
     
@@ -141,10 +144,31 @@ async function saveLastViewedSegment(segmentNumber) {
                 segmentId: segmentNumber
             });
             
-            console.log(`Last viewed segment saved: ${segmentNumber}`);
+            console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
         }
     } catch (error) {
         console.error('Error saving last viewed segment:', error);
+    }
+}
+
+// ⭐ NEW: Mark segment as completed in progress table
+async function markSegmentAsCompleted(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const storyId = getStoryIdFromUrl();
+        
+        if (currentUser) {
+            await ipcRenderer.invoke('progress:markSegmentComplete', {
+                userId: currentUser.id,
+                storyId: storyId,
+                segmentId: segmentNumber
+            });
+            
+            console.log(`✅ Segment ${segmentNumber} marked as completed`);
+        }
+    } catch (error) {
+        console.error('Error marking segment as completed:', error);
     }
 }
 

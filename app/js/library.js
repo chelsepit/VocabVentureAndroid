@@ -17,11 +17,13 @@ let userProgressData = {};
 function calculateProgressPercentage(status) {
     let progress = 0;
     
-    // Story completion: 50%
+    // Story completion: 0-50% (gradual increase based on segments)
     if (status.storyCompleted) {
+        // All segments complete = 50%
         progress += 50;
     } else {
-        // Partial progress for incomplete stories
+        // Gradual progress based on segments completed
+        // Example: 7 out of 13 segments = (7/13) * 50 = 26.9%
         const segmentProgress = (status.completedSegments / status.totalSegments) * 50;
         progress += segmentProgress;
     }
