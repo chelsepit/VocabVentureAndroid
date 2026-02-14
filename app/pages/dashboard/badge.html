@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Badge - VocabVenture</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/badge.css">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/components.css">
+</head>
+
+<body>
+    <div class="components">
+        <div class="left-group">
+            <div id="settings-container"></div>
+            <div id="burger-container"></div>
+        </div>
+    </div>
+    
+    <div class="badge-container">
+        <div class="header-title">
+            My <span class="italic">Badge</span>
+        </div>
+        
+        <div class="badges-grid">
+            <!-- Row 1: Earned badges -->
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 1">
+            </div>
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 2">
+            </div>
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 3">
+            </div>
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 4">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+
+            <!-- Row 2: More badges -->
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 5">
+            </div>
+            <div class="badge-item earned">
+                <img src="../../assets/images/badges/gold-badge.png" alt="Badge 6">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+            <div class="badge-item locked">
+                <img src="../../assets/images/badges/bronze-badge.png" alt="Locked Badge">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadComponent(elementId, filePath) {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                    if (window.initializeComponents) {
+                        window.initializeComponents();
+                    }
+                })
+                .catch(err => console.error('Error loading component:', err));
+        }
+        loadComponent('settings-container', '../components/settings-menu.html');
+        loadComponent('burger-container', '../components/burger-nav.html');
+    </script>
+
+    <script src="../../js/components.js"></script>
+</body>
+
+</html>

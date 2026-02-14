@@ -19,7 +19,8 @@
           "pronunciation": "har·vest",
           "definition": "Gathering crops when they are ready",
           "synonym": "Reap",
-          "audio": "assets/audio/vocabulary/harvest.mp3"
+          "audio-boy": "assets/audio/story-1/boy/harvest.mp3",
+          "audio-girl": "assets/audio/story-1/girl/harvest.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-1.mp3",
@@ -36,16 +37,8 @@
     },
     {
       "id": 3,
-      "text": "Neither did they know how to cure people who became ill or were injured by evil spirits...",
-      "vocabulary": [
-        {
-          "word": "cured",
-          "pronunciation": "cured",
-          "definition": "Made well after being sick",
-          "synonym": "Healed",
-          "audio": "assets/audio/vocabulary/cured.mp3"
-        }
-      ],
+      "text": "Neither did they know how to cure people who became ill or were injured by evil spirits ...",
+      "vocabulary": [],
       "audio-boy": "assets/audio/story-1/boy/segment-3.mp3",
       "audio-girl": "assets/audio/story-1/girl/segment-3.mp3",
       "illustration": "assets/videos/story-1/segment-3.mp4"
@@ -59,7 +52,8 @@
           "pronunciation": "spir·it",
           "definition": "A being that is not human, often in stories or beliefs",
           "synonym": "Soul",
-          "audio": "assets/audio/vocabulary/spirit.mp3"
+          "audio-boy": "assets/audio/story-1/boy/spirit.mp3",
+          "audio-girl": "assets/audio/story-1/girl/spirit.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-4.mp3",
@@ -75,7 +69,8 @@
           "pronunciation": "ser·vants",
           "definition": "People who work for someone else",
           "synonym": "Helper",
-          "audio": "assets/audio/vocabulary/servants.mp3"
+          "audio-boy": "assets/audio/story-1/boy/servants.mp3",
+          "audio-girl": "assets/audio/story-1/girl/servants.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-5.mp3",
@@ -99,7 +94,8 @@
           "pronunciation": "sug·ar·​cane",
           "definition": "A tall plant used to make sugar",
           "synonym": "Sugarcane",
-          "audio": "assets/audio/vocabulary/sugar-cane.mp3"
+          "audio-boy": "assets/audio/story-1/boy/sugar-cane.mp3",
+          "audio-girl": "assets/audio/story-1/girl/sugar-cane.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-7.mp3",
@@ -115,14 +111,16 @@
           "pronunciation": "won·der",
           "definition": "A feeling of surprise or amazement",
           "synonym": "Fascination",
-          "audio": "assets/audio/vocabulary/wonder.mp3"
+          "audio-boy": "assets/audio/story-1/boy/wonder.mp3",
+          "audio-girl": "assets/audio/story-1/girl/wonder.mp3"
         },
         {
           "word": "commanded",
           "pronunciation": "com·mand·​ed",
           "definition": "Told firmly to do something",
           "synonym": "Ordered",
-          "audio": "assets/audio/vocabulary/commanded.mp3"
+          "audio-boy": "assets/audio/story-1/boy/commanded.mp3",
+          "audio-girl": "assets/audio/story-1/girl/commanded.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-8.mp3",
@@ -146,7 +144,8 @@
           "pronunciation": "plen·ty",
           "definition": "More than enough of something",
           "synonym": "Abundance",
-          "audio": "assets/audio/vocabulary/plenty.mp3"
+          "audio-boy": "assets/audio/story-1/boy/plenty.mp3",
+          "audio-girl": "assets/audio/story-1/girl/plenty.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-10.mp3",
@@ -155,14 +154,23 @@
     },
     {
       "id": 11,
-      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again...",
+      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished and she was cured, he told her to take a dog and a cock and go to bathe in the river as a sign that the ceremony was finish. So, she went to the river and tied the dg and the cock near the water.",
       "vocabulary": [
         {
           "word": "ceremony",
           "pronunciation": "cer·e·mo·​ny",
           "definition": "A special event with traditions or rituals",
           "synonym": "Ritual",
-          "audio": "assets/audio/vocabulary/ceremony.mp3"
+          "audio-boy": "assets/audio/story-1/boy/ceremony.mp3",
+          "audio-girl": "assets/audio/story-1/girl/ceremony.mp3"
+        },
+        {
+          "word": "cured",
+          "pronunciation": "cured",
+          "definition": "Made well after being sick",
+          "synonym": "Healed",
+          "audio-boy": "assets/audio/story-1/boy/cured.mp3",
+          "audio-girl": "assets/audio/story-1/girl/cured.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-11.mp3",
@@ -178,7 +186,8 @@
           "pronunciation": "wept",
           "definition": "Cried with strong feelings",
           "synonym": "Cried",
-          "audio": "assets/audio/vocabulary/wept.mp3"
+          "audio-boy": "assets/audio/story-1/boy/wept.mp3",
+          "audio-girl": "assets/audio/story-1/girl/wept.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-12.mp3",

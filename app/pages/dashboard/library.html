@@ -36,7 +36,7 @@
             </div>
 
             <div class="genre-nav">
-                <button type="button" class="genre-tag" data-genre="folktales" onclick="if(window.navigateTo) window.navigateTo('story-genre'); else window.location.href='story-genre.html'">
+                <button type="button" class="genre-tag" data-genre="folktales" onclick="window.location.href='story-genre.html'">
                     <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales">
                     <span>Folktales</span>
                 </button>
@@ -48,7 +48,7 @@
                     <img src="../../assets/images/icons/fables-icon.svg" alt="Fables">
                     <span>Fables</span>
                 </button>
-                <button type="button" class="genre-tag active" data-genre="short-stories">
+                <button type="button" class="genre-tag" data-genre="short-stories">
                     <img src="../../assets/images/icons/short-stories-icon.svg" alt="Short Stories">
                     <span>Short Stories</span>
                 </button>
@@ -84,6 +84,7 @@
         // We go up one level (..) to 'pages', then into 'components'
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
+        loadComponent('selected-genre-container', '../components/selected-genre.html');
     </script>
 
     <script src="../../js/components.js"></script>

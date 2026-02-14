@@ -15,11 +15,12 @@
       "text": "A long, long time ago people prayed to Bathala and offered him gifts for they believed that he was God and the source of all graces.",
       "vocabulary": [
         {
-          "word": "grace",
-          "pronunciation": "grace",
-          "definition": "A special gift or blessing",
-          "synonym": "Gift",
-          "audio": "assets/audio/vocabulary/grace.mp3"
+          "word": "graces",
+          "pronunciation": "grac-es",
+          "definition": "Special gifts or blessings",
+          "synonym": "Gifts",
+          "audio-boy": "assets/audio/story-2/boy/grace.mp3",
+          "audio-girl": "assets/audio/story-2/girl/grace.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-1.mp3",
@@ -47,11 +48,12 @@
       "text": "First, the daughters came. They were such lovely maidens and among them were Tala, the morning star; Liwayway, the dawn and Tag-ani, the goddess of harvest.",
       "vocabulary": [
         {
-          "word": "maiden",
-          "pronunciation": "mai·den",
+          "word": "maidens",
+          "pronunciation": "mai·dens",
           "definition": "Young women, especially unmarried ones",
           "synonym": "Girls",
-          "audio": "assets/audio/vocabulary/maiden.mp3"
+          "audio-boy": "assets/audio/story-2/boy/maiden.mp3",
+          "audio-girl": "assets/audio/story-2/girl/maiden.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-4.mp3",
@@ -67,7 +69,8 @@
           "pronunciation": "blaze",
           "definition": "A very bright, strong fire or light",
           "synonym": "Fire",
-          "audio": "assets/audio/vocabulary/blaze.mp3"
+          "audio-boy": "assets/audio/story-2/boy/blaze.mp3",
+          "audio-girl": "assets/audio/story-2/girl/blaze.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-5.mp3",
@@ -99,7 +102,8 @@
           "pronunciation": "tar·di·ness",
           "definition": "The quality of being late or slow to arrive",
           "synonym": "Lateness",
-          "audio": "assets/audio/vocabulary/tardiness.mp3"
+          "audio-boy": "assets/audio/story-2/boy/tardiness.mp3",
+          "audio-girl": "assets/audio/story-2/girl/tardiness.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-8.mp3",
@@ -112,10 +116,11 @@
       "vocabulary": [
         {
           "word": "exile",
-          "pronunciation": "e·xile",
+          "pronunciation": "ex·ile",
           "definition": "Being forced to live away from home or being sent away",
           "synonym": "Banish",
-          "audio": "assets/audio/vocabulary/exile.mp3"
+          "audio-boy": "assets/audio/story-2/boy/exile.mp3",
+          "audio-girl": "assets/audio/story-2/girl/exile.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-9.mp3",
@@ -136,10 +141,11 @@
       "vocabulary": [
         {
           "word": "offended",
-          "pronunciation": "o·ffen·ded",
-          "definition": "Feeling hurt or upset because of something someone said or did",
+          "pronunciation": "of·fend·ed",
+          "definition": "Made someone feel hurt or upset because of something said or did",
           "synonym": "Hurt",
-          "audio": "assets/audio/vocabulary/offended.mp3"
+          "audio-boy": "assets/audio/story-2/boy/offended.mp3",
+          "audio-girl": "assets/audio/story-2/girl/offended.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-11.mp3",
@@ -155,14 +161,16 @@
           "pronunciation": "de·light·ed",
           "definition": "Feeling very happy or pleased",
           "synonym": "Happy",
-          "audio": "assets/audio/vocabulary/delighted.mp3"
+          "audio-boy": "assets/audio/story-2/boy/delighted.mp3",
+          "audio-girl": "assets/audio/story-2/girl/delighted.mp3"
         },
         {
           "word": "admire",
           "pronunciation": "ad·mire",
           "definition": "To look at something with pleasure",
           "synonym": "Appreciate",
-          "audio": "assets/audio/vocabulary/admire.mp3"
+          "audio-boy": "assets/audio/story-2/boy/admire.mp3",
+          "audio-girl": "assets/audio/story-2/girl/admire.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-12.mp3",
@@ -175,10 +183,11 @@
       "vocabulary": [
         {
           "word": "bower",
-          "pronunciation": "bo·wer",
+          "pronunciation": "bow·er",
           "definition": "A pleasant shady place under trees or climbing plants in a garden or wood",
           "synonym": "Sanctuary",
-          "audio": "assets/audio/vocabulary/bower.mp3"
+          "audio-boy": "assets/audio/story-2/boy/bower.mp3",
+          "audio-girl": "assets/audio/story-2/girl/bower.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-13.mp3",
@@ -192,9 +201,10 @@
         {
           "word": "decked",
           "pronunciation": "decked",
-          "definition": "Decorate or adorn brightly or festively",
+          "definition": "Decorated or adorned brightly or festively",
           "synonym": "Adorned",
-          "audio": "assets/audio/vocabulary/decked.mp3"
+          "audio-boy": "assets/audio/story-2/boy/decked.mp3",
+          "audio-girl": "assets/audio/story-2/girl/decked.mp3"
         }
       ],
       "audio-boy": "assets/audio/story-2/boy/segment-14.mp3",
@@ -318,8 +328,8 @@
   },
   
   "vocabularySummary": [
-    "grace",
-    "maiden",
+    "graces",
+    "maidens",
     "blaze",
     "tardiness",
     "exile",
