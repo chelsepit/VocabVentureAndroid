@@ -49,6 +49,9 @@ class VocabVentureDB {
                 // Migrate user_badges table
                 this.migrateUserBadges();
                 
+                // Add last_viewed_segment column if needed
+                this.migrateProgressTable();
+                
                 // Commit transaction
                 this.db.exec('COMMIT');
                 
@@ -79,6 +82,22 @@ class VocabVentureDB {
         } catch (error) {
             // If tables don't exist, no migration needed
             return false;
+        }
+    }
+
+    migrateProgressTable() {
+        try {
+            // Check if last_viewed_segment column exists
+            const tableInfo = this.db.prepare("PRAGMA table_info(progress)").all();
+            const hasLastViewed = tableInfo.some(col => col.name === 'last_viewed_segment');
+            
+            if (!hasLastViewed) {
+                console.log('  Adding last_viewed_segment column to progress table...');
+                this.db.exec(`ALTER TABLE progress ADD COLUMN last_viewed_segment INTEGER DEFAULT 1`);
+                console.log('    ✓ Column added');
+            }
+        } catch (error) {
+            console.log('    Note: Could not add last_viewed_segment column:', error.message);
         }
     }
 
@@ -242,7 +261,7 @@ class VocabVentureDB {
             )
         `);
 
-        // Create progress table
+        // Create progress table with last_viewed_segment
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS progress (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -251,10 +270,26 @@ class VocabVentureDB {
                 segment_id INTEGER,
                 completed BOOLEAN DEFAULT 0,
                 completed_at DATETIME,
+                last_viewed_segment INTEGER DEFAULT 1,
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 UNIQUE(user_id, story_id, segment_id)
             )
         `);
+        
+        // Ensure last_viewed_segment column exists for existing databases
+        try {
+            const tableInfo = this.db.prepare("PRAGMA table_info(progress)").all();
+            const hasLastViewed = tableInfo.some(col => col.name === 'last_viewed_segment');
+            
+            if (!hasLastViewed) {
+                console.log('Adding last_viewed_segment column to existing progress table...');
+                this.db.exec(`ALTER TABLE progress ADD COLUMN last_viewed_segment INTEGER DEFAULT 1`);
+                console.log('✓ Column added');
+            }
+        } catch (error) {
+            // Column might already exist or table doesn't exist yet
+            console.log('Note: Could not add last_viewed_segment column:', error.message);
+        }
 
         // Create quiz_results table - REFINED with badge_type
         this.db.exec(`
@@ -373,6 +408,29 @@ class VocabVentureDB {
             VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
         `);
         return stmt.run(userId, storyId, segmentId);
+    }
+
+    // Save last viewed segment
+    saveLastViewedSegment(userId, storyId, segmentId) {
+        // Update or insert the last viewed segment
+        const stmt = this.db.prepare(`
+            INSERT INTO progress (user_id, story_id, segment_id, completed, last_viewed_segment)
+            VALUES (?, ?, ?, 0, ?)
+            ON CONFLICT(user_id, story_id, segment_id) 
+            DO UPDATE SET last_viewed_segment = ?
+        `);
+        return stmt.run(userId, storyId, segmentId, segmentId, segmentId);
+    }
+
+    // Get last viewed segment
+    getLastViewedSegment(userId, storyId) {
+        const stmt = this.db.prepare(`
+            SELECT MAX(last_viewed_segment) as last_segment
+            FROM progress 
+            WHERE user_id = ? AND story_id = ?
+        `);
+        const result = stmt.get(userId, storyId);
+        return result && result.last_segment ? result.last_segment : 0;
     }
 
     getProgress(userId, storyId) {
@@ -563,6 +621,26 @@ class VocabVentureDB {
             totalBadges: badges.length,
             totalQuizzes: quizResults.length,
             averageQuizScore: Math.round(avgScore)
+        };
+    }
+
+    // Get comprehensive story progress (for progress bar calculation)
+    getStoryCompletionStatus(userId, storyId, totalSegments) {
+        // Get story completion
+        const storyProgress = this.getProgress(userId, storyId);
+        const completedSegments = storyProgress.filter(p => p.completed).length;
+        const storyCompleted = completedSegments === totalSegments;
+        
+        // Get quiz badges
+        const quiz1Badge = this.getStoryBadge(userId, storyId, 'quiz-1');
+        const quiz2Badge = this.getStoryBadge(userId, storyId, 'quiz-2');
+        
+        return {
+            storyCompleted,
+            completedSegments,
+            totalSegments,
+            quiz1Completed: quiz1Badge !== undefined,
+            quiz2Completed: quiz2Badge !== undefined
         };
     }
 

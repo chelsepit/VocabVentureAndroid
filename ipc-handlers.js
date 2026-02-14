@@ -1,67 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
+// IPC Handlers for VocabVenture - Add these to your index.js
+
+const { ipcMain } = require('electron');
 const VocabVentureDB = require('./app/js/database');
 
 // Initialize database
 const db = new VocabVentureDB();
-
-let mainWindow;
-
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 1280,
-        height: 800,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-
-    // Open DevTools (remove this in production)
-    mainWindow.webContents.openDevTools();
-    
-    // Load welcome page initially
-    mainWindow.loadFile('app/pages/dashboard/welcome.html');
-
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
-
-    // Auto-logout: Clear user session when window is closing
-    mainWindow.on('close', () => {
-        if (mainWindow && mainWindow.webContents) {
-            mainWindow.webContents.executeJavaScript(`
-                localStorage.removeItem('currentUser');
-            `).catch(() => {
-                // Ignore errors if window is already destroyed
-            });
-        }
-    });
-}
-
-// ============================================
-// APP LIFECYCLE
-// ============================================
-
-app.whenReady().then(() => {
-    createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
-});
-
-app.on('window-all-closed', () => {
-    if (db) {
-        db.close();
-        console.log('Database closed');
-    }
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
 
 // ============================================
 // AUTHENTICATION HANDLERS
@@ -69,7 +12,6 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('auth:login', async (event, { name, birthdate }) => {
     try {
-        console.log('Login attempt:', name);
         return db.login(name, birthdate);
     } catch (error) {
         console.error('Login error:', error);
@@ -79,20 +21,10 @@ ipcMain.handle('auth:login', async (event, { name, birthdate }) => {
 
 ipcMain.handle('auth:register', async (event, { name, birthdate }) => {
     try {
-        console.log('Registration attempt:', name);
         return db.register(name, birthdate);
     } catch (error) {
         console.error('Registration error:', error);
         return { success: false, message: 'An error occurred during registration' };
-    }
-});
-
-ipcMain.handle('user:get', async (event, userId) => {
-    try {
-        return db.getUser(userId);
-    } catch (error) {
-        console.error('Get user error:', error);
-        return null;
     }
 });
 
@@ -118,24 +50,7 @@ ipcMain.handle('progress:get', async (event, { userId, storyId }) => {
     }
 });
 
-ipcMain.handle('progress:getAll', async (event, userId) => {
-    try {
-        return db.getAllProgress(userId);
-    } catch (error) {
-        console.error('Get all progress error:', error);
-        return [];
-    }
-});
-
-ipcMain.handle('progress:getOverall', async (event, userId) => {
-    try {
-        return db.getOverallProgress(userId);
-    } catch (error) {
-        console.error('Get overall progress error:', error);
-        return { completed: 0, total: 42, percentage: 0 };
-    }
-});
-
+// Save last viewed segment
 ipcMain.handle('progress:saveLastViewed', async (event, { userId, storyId, segmentId }) => {
     try {
         return db.saveLastViewedSegment(userId, storyId, segmentId);
@@ -145,6 +60,7 @@ ipcMain.handle('progress:saveLastViewed', async (event, { userId, storyId, segme
     }
 });
 
+// Get last viewed segment
 ipcMain.handle('progress:getLastViewed', async (event, { userId, storyId }) => {
     try {
         return db.getLastViewedSegment(userId, storyId);
@@ -257,38 +173,17 @@ ipcMain.handle('user:getStats', async (event, userId) => {
     }
 });
 
-ipcMain.handle('stats:get', async (event, userId) => {
-    try {
-        return db.getUserStats(userId);
-    } catch (error) {
-        console.error('Get stats error:', error);
-        return null;
-    }
-});
-
 // ============================================
-// CLEANUP HANDLERS
+// CLEANUP ON APP QUIT
 // ============================================
 
 process.on('exit', () => {
-    if (db) {
-        db.close();
-        console.log('Database connection closed on exit');
-    }
+    db.close();
+    console.log('Database connection closed');
 });
 
+// Handle graceful shutdown
 app.on('will-quit', () => {
-    if (db) {
-        db.close();
-        console.log('Database connection closed on app quit');
-    }
-});
-
-// Handle app errors
-process.on('uncaughtException', (error) => {
-    console.error('Uncaught exception:', error);
-});
-
-process.on('unhandledRejection', (error) => {
-    console.error('Unhandled rejection:', error);
+    db.close();
+    console.log('Database connection closed on app quit');
 });

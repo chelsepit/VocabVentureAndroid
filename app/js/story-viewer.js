@@ -38,6 +38,13 @@ function stopCurrentAudio() {
     }
 }
 
+// Get segment from URL (for resume functionality)
+function getSegmentFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const segment = parseInt(urlParams.get('segment'));
+    return segment && segment > 0 ? segment - 1 : 0; // Convert to 0-indexed
+}
+
 // Initialize story viewer
 async function initStoryViewer() {
     const storyId = getStoryIdFromUrl();
@@ -47,7 +54,12 @@ async function initStoryViewer() {
     if (!story) return;
     
     currentStory = story;
-    currentSegmentIndex = 0;
+    
+    // Check if resuming from a specific segment
+    const resumeSegment = getSegmentFromUrl();
+    currentSegmentIndex = resumeSegment;
+    
+    console.log('Starting at segment:', currentSegmentIndex + 1);
     
     // Update page title
     document.title = story.title + ' - VocabVenture';
@@ -55,8 +67,8 @@ async function initStoryViewer() {
     // Update total segments display
     document.getElementById('totalSegments').textContent = story.totalSegments;
     
-    // Load first segment
-    loadSegment(0);
+    // Load the starting segment
+    loadSegment(currentSegmentIndex);
     
     // Setup navigation buttons
     setupNavigation();
@@ -75,6 +87,9 @@ function loadSegment(index) {
     const segment = currentStory.segments[index];
     
     console.log('Loading segment:', index + 1, segment);
+    
+    // Save last viewed segment to database
+    saveLastViewedSegment(index + 1); // Save as 1-indexed
     
     // Update segment counter
     document.getElementById('currentSegment').textContent = index + 1;
@@ -101,6 +116,27 @@ function loadSegment(index) {
     
     // Update navigation buttons
     updateNavigationButtons();
+}
+
+// Save last viewed segment to database
+async function saveLastViewedSegment(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const storyId = getStoryIdFromUrl();
+        
+        if (currentUser) {
+            await ipcRenderer.invoke('progress:saveLastViewed', {
+                userId: currentUser.id,
+                storyId: storyId,
+                segmentId: segmentNumber
+            });
+            
+            console.log(`Last viewed segment saved: ${segmentNumber}`);
+        }
+    } catch (error) {
+        console.error('Error saving last viewed segment:', error);
+    }
 }
 
 // Update story text with interactive vocabulary words
