@@ -1,6 +1,19 @@
 # Dependencies
 node_modules/
+android/app/build/
+android/.gradle/
+android/local.properties
+*.keystore
+*.jks
 
+# Gradle
+.gradle/
+**/build/
+!gradle-wrapper.jar
+
+# Don't ignore gradle wrapper
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 
 # Database files (contains user data)
 database/

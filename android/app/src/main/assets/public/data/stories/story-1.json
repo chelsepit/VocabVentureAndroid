@@ -1,0 +1,333 @@
+{
+  "id": 1,
+  "title": "How the Tinguian Learned to Plant",
+  "genre": "folktale",
+  "culture": "Philippine",
+  "difficulty": "beginner",
+  "coverImage": "assets/images/books/folktales/folktale-book-1.png",
+  "totalSegments": 13,
+  "estimatedTime": "8-10 minutes",
+  "description": "An ancient Filipino folktale about how the Tinguian people learned agriculture from the sky spirit Kaboniyan.",
+  
+  "segments": [
+    {
+      "id": 1,
+      "text": "In the very old times, the Tinguian did not know how to plant and harvest as they do now.",
+      "vocabulary": [
+        {
+          "word": "harvest",
+          "pronunciation": "har·vest",
+          "definition": "Gathering crops when they are ready",
+          "synonym": "Reap",
+          "audio-boy": "assets/audio/story-1/boy/harvest.mp3",
+          "audio-girl": "assets/audio/story-1/girl/harvest.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-1.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-1.mp3",
+      "illustration": "assets/videos/story-1/segment-1.mp4"
+    },
+    {
+      "id": 2,
+      "text": "For food they had only the things that grew in the forests and fish from the streams.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-2.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-2.mp3",
+      "illustration": "assets/videos/story-1/segment-2.mp4"
+    },
+    {
+      "id": 3,
+      "text": "Neither did they know how to cure people who became ill or were injured by evil spirits ...",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-3.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-3.mp3",
+      "illustration": "assets/videos/story-1/segment-3.mp4"
+    },
+    {
+      "id": 4,
+      "text": "Then Kadaklan, the Great Spirit who lives in the sky, saw that the people often were hungry and sick...",
+      "vocabulary": [
+        {
+          "word": "spirit",
+          "pronunciation": "spir·it",
+          "definition": "A being that is not human, often in stories or beliefs",
+          "synonym": "Soul",
+          "audio-boy": "assets/audio/story-1/boy/spirit.mp3",
+          "audio-girl": "assets/audio/story-1/girl/spirit.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-4.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-4.mp3",
+      "illustration": "assets/videos/story-1/segment-4.mp4"
+    },
+    {
+      "id": 5,
+      "text": "...and he sent one of his servants, Kaboniyan, to the earth to teach them many things.",
+      "vocabulary": [
+        {
+          "word": "servants",
+          "pronunciation": "ser·vants",
+          "definition": "People who work for someone else",
+          "synonym": "Helper",
+          "audio-boy": "assets/audio/story-1/boy/servants.mp3",
+          "audio-girl": "assets/audio/story-1/girl/servants.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-5.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-5.mp3",
+      "illustration": "assets/videos/story-1/segment-5.mp4"
+    },
+    {
+      "id": 6,
+      "text": "Dayapan, a woman who lived in Caalang, had been sick for seven years. One day when she went to the spring to bathe...",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-6.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-6.mp3",
+      "illustration": "assets/videos/story-1/segment-6.mp4"
+    },
+    {
+      "id": 7,
+      "text": "...there entered her body a spirit who had rice and sugar-cane with him, and he said to her: \"Dayapan, take these to your home...\"",
+      "vocabulary": [
+        {
+          "word": "sugar-cane",
+          "pronunciation": "sug·ar·​cane",
+          "definition": "A tall plant used to make sugar",
+          "synonym": "Sugarcane",
+          "audio-boy": "assets/audio/story-1/boy/sugar-cane.mp3",
+          "audio-girl": "assets/audio/story-1/girl/sugar-cane.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-7.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-7.mp3",
+      "illustration": "assets/videos/story-1/segment-7.mp4"
+    },
+    {
+      "id": 8,
+      "text": "Dayapan was filled with wonder at these strange things, but she took the rice and the cane and went home as she was commanded.",
+      "vocabulary": [
+        {
+          "word": "wonder",
+          "pronunciation": "won·der",
+          "definition": "A feeling of surprise or amazement",
+          "synonym": "Fascination",
+          "audio-boy": "assets/audio/story-1/boy/wonder.mp3",
+          "audio-girl": "assets/audio/story-1/girl/wonder.mp3"
+        },
+        {
+          "word": "commanded",
+          "pronunciation": "com·mand·​ed",
+          "definition": "Told firmly to do something",
+          "synonym": "Ordered",
+          "audio-boy": "assets/audio/story-1/boy/commanded.mp3",
+          "audio-girl": "assets/audio/story-1/girl/commanded.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-8.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-8.mp3",
+      "illustration": "assets/videos/story-1/segment-8.mp4"
+    },
+    {
+      "id": 9,
+      "text": "While she was trying to plant them in the ground the Spirit again entered her body and showed her just what to do.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-9.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-9.mp3",
+      "illustration": "assets/videos/story-1/segment-9.mp4"
+    },
+    {
+      "id": 10,
+      "text": "Since then, the Tinguian have planted crops every year... they have plenty to eat.",
+      "vocabulary": [
+        {
+          "word": "plenty",
+          "pronunciation": "plen·ty",
+          "definition": "More than enough of something",
+          "synonym": "Abundance",
+          "audio-boy": "assets/audio/story-1/boy/plenty.mp3",
+          "audio-girl": "assets/audio/story-1/girl/plenty.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-10.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-10.mp3",
+      "illustration": "assets/videos/story-1/segment-10.mp4"
+    },
+    {
+      "id": 11,
+      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished and she was cured, he told her to take a dog and a cock and go to bathe in the river as a sign that the ceremony was finish. So, she went to the river and tied the dg and the cock near the water.",
+      "vocabulary": [
+        {
+          "word": "ceremony",
+          "pronunciation": "cer·e·mo·​ny",
+          "definition": "A special event with traditions or rituals",
+          "synonym": "Ritual",
+          "audio-boy": "assets/audio/story-1/boy/ceremony.mp3",
+          "audio-girl": "assets/audio/story-1/girl/ceremony.mp3"
+        },
+        {
+          "word": "cured",
+          "pronunciation": "cured",
+          "definition": "Made well after being sick",
+          "synonym": "Healed",
+          "audio-boy": "assets/audio/story-1/boy/cured.mp3",
+          "audio-girl": "assets/audio/story-1/girl/cured.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-11.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-11.mp3",
+      "illustration": "assets/videos/story-1/segment-11.mp4"
+    },
+    {
+      "id": 12,
+      "text": "...while she was bathing the dog ate the cock. Dayapan wept bitterly at this and waited a long time for Kaboniyan...",
+      "vocabulary": [
+        {
+          "word": "wept",
+          "pronunciation": "wept",
+          "definition": "Cried with strong feelings",
+          "synonym": "Cried",
+          "audio-boy": "assets/audio/story-1/boy/wept.mp3",
+          "audio-girl": "assets/audio/story-1/girl/wept.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-12.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-12.mp3",
+      "illustration": "assets/videos/story-1/segment-12.mp4"
+    },
+    {
+      "id": 13,
+      "text": "Dayapan called all the people together, and told them the things that the spirit had taught her; and they could see that she had been made well.",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-13.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-13.mp3",
+      "illustration": "assets/videos/story-1/segment-13.mp4"
+    }
+  ],
+  
+  "quiz1": {
+    "title": "Pic-a-Word",
+    "description": "Choose the correct word to complete each sentence",
+    "questions": [
+      {
+        "id": 1,
+        "question": "The farmers ____________ the crops.",
+        "options": ["Cursed", "Harvest", "Wept"],
+        "correctAnswer": 1,
+        "explanation": "Harvest means gathering crops when they are ready."
+      },
+      {
+        "id": 2,
+        "question": "The field has rice and __________.",
+        "options": ["Cured", "Plenty", "Sugar Cane"],
+        "correctAnswer": 2,
+        "explanation": "Sugar-cane is the tall plant that the spirit gave to Dayapan."
+      },
+      {
+        "id": 3,
+        "question": "Dayapan __________ bitterly when the dog ate the cock.",
+        "options": ["Harvest", "Wept", "Wonder"],
+        "correctAnswer": 1,
+        "explanation": "Wept means cried with strong feelings."
+      },
+      {
+        "id": 4,
+        "question": "A _________ entered Dayapan's body and taught her how to plant crops.",
+        "options": ["Field", "Farmer", "Spirit"],
+        "correctAnswer": 2,
+        "explanation": "A spirit is a being that is not human, often in stories or beliefs."
+      },
+      {
+        "id": 5,
+        "question": "Dayapan was filled with ___________ at the strange things she learned.",
+        "options": ["Wonder", "Hunger", "Injury"],
+        "correctAnswer": 0,
+        "explanation": "Wonder is a feeling of surprise or amazement."
+      }
+    ]
+  },
+  
+  "quiz2": {
+    "title": "Decode the Word",
+    "description": "Read each sentence and choose what the underlined word means",
+    "questions": [
+      {
+        "id": 1,
+        "question": "After the ceremony was finished, Dayapan was cured.",
+        "underlinedWord": "cured",
+        "questionPrompt": "What does cured mean?",
+        "options": [
+          "Still sick",
+          "Hurt Badly",
+          "Made well again"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Cured means made well after being sick."
+      },
+      {
+        "id": 2,
+        "question": "The spirit commanded Dayapan to plant the rice and sugar cane.",
+        "underlinedWord": "commanded",
+        "questionPrompt": "What does commanded mean?",
+        "options": [
+          "Asked politely",
+          "Ordered to do something",
+          "Forget about"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Commanded means told firmly to do something."
+      },
+      {
+        "id": 3,
+        "question": "Because they followed Kaboniyan's teaching, the people had plenty to eat.",
+        "underlinedWord": "plenty",
+        "questionPrompt": "What does plenty mean?",
+        "options": [
+          "Exactly enough",
+          "Very little",
+          "More than enough"
+        ],
+        "correctAnswer": 2,
+        "explanation": "Plenty means more than enough of something."
+      },
+      {
+        "id": 4,
+        "question": "Dayapan prepared the ceremony called Sayung to become well.",
+        "underlinedWord": "ceremony",
+        "questionPrompt": "What does ceremony mean?",
+        "options": [
+          "A simple game",
+          "A special ritual or formal act",
+          "A kind of food"
+        ],
+        "correctAnswer": 1,
+        "explanation": "Ceremony is a special event with traditions or rituals."
+      },
+      {
+        "id": 5,
+        "question": "Kaboniyan was one of the servants of Kadaklan sent to help the people.",
+        "underlinedWord": "servants",
+        "questionPrompt": "What does servants mean?",
+        "options": [
+          "Helpers who work for someone",
+          "Enemies",
+          "Visitors"
+        ],
+        "correctAnswer": 0,
+        "explanation": "Servants are people who work for someone else."
+      }
+    ]
+  },
+  
+  "vocabularySummary": [
+    "harvest",
+    "cured",
+    "spirit",
+    "servants",
+    "sugar-cane",
+    "wonder",
+    "commanded",
+    "plenty",
+    "ceremony",
+    "wept"
+  ]
+}

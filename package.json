@@ -10,12 +10,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
     "@electron/rebuild": "^4.0.3",
     "electron": "^40.4.0",
     "electron-rebuild": "^3.2.9",
     "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
-    "better-sqlite3": "^12.6.2"
+    "@capacitor-community/sqlite": "^8.0.0",
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/ios": "^8.1.0",
+    "better-sqlite3": "^12.6.2",
+    "electron-builder": "^26.7.0"
   }
 }

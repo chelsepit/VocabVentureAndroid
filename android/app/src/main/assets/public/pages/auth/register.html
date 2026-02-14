@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - VocabVenture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/auth.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="login-card">
+            <!-- Logo/Title -->
+            <div class="text-center mb-8">
+                <h1 class="title-font text-4xl font-extrabold mb-2" style="color: var(--orange-accent);">
+                    VocabVenture
+                </h1>
+                <p class="text-gray-600 text-lg" id="pageSubtitle">Create your account to start learning!</p>
+            </div>
+
+            <!-- Error/Success Messages -->
+            <div id="messageContainer"></div>
+
+            <!-- REGISTRATION FORM -->
+            <form id="registerForm">
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-bold mb-2 text-lg">
+                        What's your full name?
+                    </label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="registerName"
+                        class="input-field"
+                        placeholder="Enter your first and last name"
+                        required
+                        autofocus>
+                    <p class="text-sm text-gray-500 mt-1">Example: Jan Louise or CHELSIE FAITH</p>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-gray-700 font-bold mb-2 text-lg">
+                        When is your birthday?
+                    </label>
+                    <input
+                        type="date"
+                        name="birthdate"
+                        id="registerBirthdate"
+                        class="input-field"
+                        required>
+                </div>
+
+                <button type="submit" class="submit-btn title-font">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Toggle to Login -->
+            <div class="toggle-mode">
+                <p class="text-gray-600">
+                    Already have an account?
+                    <a href="javascript:void(0)" onclick="if(window.navigateTo) window.navigateTo('login'); else window.location.href='login.html';" class="toggle-link">Login Here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/auth.js"></script>
+</body>
+</html>
