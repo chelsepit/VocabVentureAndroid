@@ -12,12 +12,222 @@ class VocabVentureDB {
 
         // Initialize database
         const dbPath = path.join(dbDir, 'vocabventure.db');
+        const dbExists = fs.existsSync(dbPath);
+        
         this.db = new Database(dbPath);
         
-        // Create tables
+        // Run migration if database already exists
+        if (dbExists) {
+            this.migrateIfNeeded();
+        }
+        
+        // Create tables (will only create if they don't exist)
         this.initializeTables();
         
         console.log('Database initialized at:', dbPath);
+    }
+
+    migrateIfNeeded() {
+        try {
+            // Check if migrations are needed
+            const needsMigration = this.checkIfMigrationNeeded();
+            
+            if (!needsMigration) {
+                console.log('Database schema is up to date');
+                return;
+            }
+            
+            console.log('Running database migration...');
+            
+            // Start transaction
+            this.db.exec('BEGIN TRANSACTION');
+            
+            try {
+                // Migrate quiz_results table
+                this.migrateQuizResults();
+                
+                // Migrate user_badges table
+                this.migrateUserBadges();
+                
+                // Commit transaction
+                this.db.exec('COMMIT');
+                
+                console.log('✅ Database migration completed successfully!');
+            } catch (error) {
+                this.db.exec('ROLLBACK');
+                throw error;
+            }
+        } catch (error) {
+            console.error('Migration error:', error);
+            // Continue anyway - tables will be recreated if needed
+        }
+    }
+
+    checkIfMigrationNeeded() {
+        try {
+            // Check if quiz_results has new columns
+            const quizTableInfo = this.db.prepare("PRAGMA table_info(quiz_results)").all();
+            const hasQuizNumber = quizTableInfo.some(col => col.name === 'quiz_number');
+            const hasBadgeType = quizTableInfo.some(col => col.name === 'badge_type');
+            
+            // Check if user_badges has new columns
+            const badgeTableInfo = this.db.prepare("PRAGMA table_info(user_badges)").all();
+            const hasStoryId = badgeTableInfo.some(col => col.name === 'story_id');
+            const hasBadgeCategory = badgeTableInfo.some(col => col.name === 'badge_category');
+            
+            return !hasQuizNumber || !hasBadgeType || !hasStoryId || !hasBadgeCategory;
+        } catch (error) {
+            // If tables don't exist, no migration needed
+            return false;
+        }
+    }
+
+    migrateQuizResults() {
+        console.log('  Migrating quiz_results table...');
+        
+        // Get existing data
+        const existingData = this.db.prepare('SELECT * FROM quiz_results').all();
+        
+        // Create new table with updated schema
+        this.db.exec(`
+            DROP TABLE IF EXISTS quiz_results_new;
+            CREATE TABLE quiz_results_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                story_id INTEGER,
+                quiz_number INTEGER,
+                score INTEGER,
+                total_questions INTEGER,
+                badge_type TEXT,
+                completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+            )
+        `);
+        
+        // Migrate existing data
+        if (existingData.length > 0) {
+            const insertStmt = this.db.prepare(`
+                INSERT INTO quiz_results_new 
+                (id, user_id, story_id, quiz_number, score, total_questions, badge_type, completed_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `);
+            
+            for (const row of existingData) {
+                const badgeType = this.calculateQuizBadge(row.score, row.total_questions);
+                const quizNumber = row.quiz_number || 1;
+                
+                insertStmt.run(
+                    row.id,
+                    row.user_id,
+                    row.story_id,
+                    quizNumber,
+                    row.score,
+                    row.total_questions,
+                    badgeType,
+                    row.completed_at
+                );
+            }
+            
+            console.log(`    Migrated ${existingData.length} quiz results`);
+        }
+        
+        // Replace old table with new one
+        this.db.exec(`
+            DROP TABLE quiz_results;
+            ALTER TABLE quiz_results_new RENAME TO quiz_results;
+        `);
+        
+        console.log('    ✓ quiz_results migrated');
+    }
+
+    migrateUserBadges() {
+        console.log('  Migrating user_badges table...');
+        
+        // Get existing data
+        const existingData = this.db.prepare('SELECT * FROM user_badges').all();
+        
+        // Create new table with updated schema
+        this.db.exec(`
+            DROP TABLE IF EXISTS user_badges_new;
+            CREATE TABLE user_badges_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                story_id INTEGER,
+                badge_type TEXT,
+                badge_category TEXT,
+                earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                UNIQUE(user_id, story_id, badge_category)
+            )
+        `);
+        
+        // Migrate existing data
+        if (existingData.length > 0) {
+            const insertStmt = this.db.prepare(`
+                INSERT OR IGNORE INTO user_badges_new 
+                (id, user_id, story_id, badge_type, badge_category, earned_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `);
+            
+            for (const row of existingData) {
+                const { storyId, badgeType, badgeCategory } = this.parseLegacyBadgeId(row.badge_id);
+                
+                insertStmt.run(
+                    row.id,
+                    row.user_id,
+                    storyId,
+                    badgeType,
+                    badgeCategory,
+                    row.earned_at
+                );
+            }
+            
+            console.log(`    Migrated ${existingData.length} badges`);
+        }
+        
+        // Replace old table with new one
+        this.db.exec(`
+            DROP TABLE user_badges;
+            ALTER TABLE user_badges_new RENAME TO user_badges;
+        `);
+        
+        console.log('    ✓ user_badges migrated');
+    }
+
+    parseLegacyBadgeId(badgeId) {
+        let storyId = 1;
+        let badgeType = 'gold';
+        let badgeCategory = 'story-completion';
+        
+        if (!badgeId) {
+            return { storyId, badgeType, badgeCategory };
+        }
+        
+        // Extract story ID
+        const storyMatch = badgeId.match(/story-?(\d+)/i);
+        if (storyMatch) {
+            storyId = parseInt(storyMatch[1]);
+        }
+        
+        // Determine badge type
+        if (badgeId.includes('gold')) {
+            badgeType = 'gold';
+        } else if (badgeId.includes('silver')) {
+            badgeType = 'silver';
+        } else if (badgeId.includes('bronze')) {
+            badgeType = 'bronze';
+        }
+        
+        // Determine badge category
+        if (badgeId.includes('quiz1')) {
+            badgeCategory = 'quiz-1';
+        } else if (badgeId.includes('quiz2')) {
+            badgeCategory = 'quiz-2';
+        } else if (badgeId.includes('complete')) {
+            badgeCategory = 'story-completion';
+        }
+        
+        return { storyId, badgeType, badgeCategory };
     }
 
     initializeTables() {
@@ -46,28 +256,32 @@ class VocabVentureDB {
             )
         `);
 
-        // Create quiz_results table
+        // Create quiz_results table - REFINED with badge_type
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS quiz_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
                 story_id INTEGER,
+                quiz_number INTEGER,
                 score INTEGER,
                 total_questions INTEGER,
+                badge_type TEXT,
                 completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         `);
 
-        // Create user_badges table
+        // Create user_badges table - REFINED with badge_type and story_id
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS user_badges (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
-                badge_id TEXT,
+                story_id INTEGER,
+                badge_type TEXT,
+                badge_category TEXT,
                 earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id),
-                UNIQUE(user_id, badge_id)
+                UNIQUE(user_id, story_id, badge_category)
             )
         `);
 
@@ -195,16 +409,35 @@ class VocabVentureDB {
         return stmt.all(userId);
     }
 
+    // Check if story is fully completed
+    isStoryCompleted(userId, storyId, totalSegments) {
+        const progress = this.getProgress(userId, storyId);
+        return progress.filter(p => p.completed).length === totalSegments;
+    }
+
     // ============================================
-    // QUIZ METHODS
+    // QUIZ METHODS - REFINED
     // ============================================
     
-    saveQuizResult(userId, storyId, score, totalQuestions) {
+    saveQuizResult(userId, storyId, quizNumber, score, totalQuestions) {
+        // Calculate badge type based on score
+        const badgeType = this.calculateQuizBadge(score, totalQuestions);
+        
         const stmt = this.db.prepare(`
-            INSERT INTO quiz_results (user_id, story_id, score, total_questions)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO quiz_results (user_id, story_id, quiz_number, score, total_questions, badge_type)
+            VALUES (?, ?, ?, ?, ?, ?)
         `);
-        return stmt.run(userId, storyId, score, totalQuestions);
+        return stmt.run(userId, storyId, quizNumber, score, totalQuestions, badgeType);
+    }
+
+    calculateQuizBadge(score, totalQuestions) {
+        if (score === totalQuestions) {
+            return 'gold';
+        } else if (score >= 3 && score <= 4) {
+            return 'silver';
+        } else {
+            return 'bronze';
+        }
     }
 
     getQuizResults(userId, storyId = null) {
@@ -225,48 +458,74 @@ class VocabVentureDB {
         }
     }
 
-    getBestQuizScore(userId, storyId) {
+    getBestQuizScore(userId, storyId, quizNumber) {
         const stmt = this.db.prepare(`
-            SELECT MAX(score) as best_score, total_questions
+            SELECT MAX(score) as best_score, total_questions, badge_type
             FROM quiz_results 
-            WHERE user_id = ? AND story_id = ?
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ?
         `);
-        return stmt.get(userId, storyId);
+        return stmt.get(userId, storyId, quizNumber);
     }
 
     // ============================================
-    // BADGE METHODS
+    // BADGE METHODS - REFINED
     // ============================================
     
-    awardBadge(userId, badgeId) {
+    awardBadge(userId, storyId, badgeType, badgeCategory) {
         try {
             const stmt = this.db.prepare(`
-                INSERT INTO user_badges (user_id, badge_id)
-                VALUES (?, ?)
+                INSERT OR REPLACE INTO user_badges (user_id, story_id, badge_type, badge_category)
+                VALUES (?, ?, ?, ?)
             `);
-            return stmt.run(userId, badgeId);
+            return stmt.run(userId, storyId, badgeType, badgeCategory);
         } catch (error) {
-            // Badge already awarded, ignore
+            console.error('Error awarding badge:', error);
             return null;
         }
     }
 
-    getUserBadges(userId) {
+    getUserBadges(userId, storyId = null) {
+        if (storyId) {
+            const stmt = this.db.prepare(`
+                SELECT * FROM user_badges 
+                WHERE user_id = ? AND story_id = ?
+                ORDER BY earned_at DESC
+            `);
+            return stmt.all(userId, storyId);
+        } else {
+            const stmt = this.db.prepare(`
+                SELECT * FROM user_badges 
+                WHERE user_id = ?
+                ORDER BY earned_at DESC
+            `);
+            return stmt.all(userId);
+        }
+    }
+
+    getStoryBadge(userId, storyId, badgeCategory) {
+        const stmt = this.db.prepare(`
+            SELECT * FROM user_badges 
+            WHERE user_id = ? AND story_id = ? AND badge_category = ?
+        `);
+        return stmt.get(userId, storyId, badgeCategory);
+    }
+
+    hasBadge(userId, storyId, badgeCategory) {
+        const stmt = this.db.prepare(`
+            SELECT COUNT(*) as count FROM user_badges 
+            WHERE user_id = ? AND story_id = ? AND badge_category = ?
+        `);
+        const result = stmt.get(userId, storyId, badgeCategory);
+        return result.count > 0;
+    }
+
+    getAllUserBadges(userId) {
         const stmt = this.db.prepare(`
             SELECT * FROM user_badges 
             WHERE user_id = ?
             ORDER BY earned_at DESC
         `);
         return stmt.all(userId);
-    }
-
-    hasBadge(userId, badgeId) {
-        const stmt = this.db.prepare(`
-            SELECT COUNT(*) as count FROM user_badges 
-            WHERE user_id = ? AND badge_id = ?
-        `);
-        const result = stmt.get(userId, badgeId);
-        return result.count > 0;
     }
 
     // ============================================
@@ -292,7 +551,7 @@ class VocabVentureDB {
 
     getUserStats(userId) {
         const progress = this.getOverallProgress(userId);
-        const badges = this.getUserBadges(userId);
+        const badges = this.getAllUserBadges(userId);
         const quizResults = this.getQuizResults(userId);
         
         const avgScore = quizResults.length > 0

@@ -1,4 +1,4 @@
-// story-viewer.js - Dynamic Story Viewer
+// story-viewer.js - Dynamic Story Viewer with finish-book.html Flow
 
 let currentStory = null;
 let currentSegmentIndex = 0;
@@ -103,7 +103,7 @@ function loadSegment(index) {
     updateNavigationButtons();
 }
 
-// Update story text with interactive vocabulary words - IMPROVED VERSION
+// Update story text with interactive vocabulary words
 function updateStoryText(segment) {
     const storyTextElement = document.getElementById('storyText');
     let textHtml = segment.text;
@@ -122,10 +122,7 @@ function updateStoryText(segment) {
             // Escape special characters for regex
             const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
-            // Create regex that matches:
-            // - Whole word (with word boundaries)
-            // - Case insensitive
-            // - Including words with apostrophes (e.g., "don't")
+            // Create regex that matches whole word, case insensitive
             const regex = new RegExp(`\\b${escapedWord}\\b`, 'gi');
             
             // Check if this word exists in the text
@@ -159,7 +156,7 @@ function updateStoryText(segment) {
     storyTextElement.innerHTML = textHtml;
 }
 
-// Play segment audio - IMPROVED VERSION
+// Play segment audio
 function playSegmentAudio(audioPath) {
     // Stop any existing audio first
     stopCurrentAudio();
@@ -195,7 +192,7 @@ function setupNavigation() {
         if (currentSegmentIndex < currentStory.segments.length - 1) {
             loadSegment(currentSegmentIndex + 1);
         } else {
-            // Story completed - show quiz or completion screen
+            // Story completed - go to finish-book.html
             showCompletionScreen();
         }
     });
@@ -228,7 +225,7 @@ function updateNavigationButtons() {
     
     // Change next button text on last segment
     if (currentSegmentIndex === currentStory.segments.length - 1) {
-        nextBtn.textContent = 'Complete →';
+        nextBtn.textContent = 'Complete ✓';
         nextBtn.style.background = '#4ade80';
     } else {
         nextBtn.textContent = 'Next →';
@@ -236,21 +233,26 @@ function updateNavigationButtons() {
     }
 }
 
-// Show completion screen
+// Show completion screen - UPDATED: Go to finish-book.html
 function showCompletionScreen() {
-    // Stop audio before showing completion
+    // Stop audio before transitioning
     stopCurrentAudio();
     
-    alert(`Congratulations! You've completed "${currentStory.title}"!\n\nQuiz feature coming soon!`);
+    // Store story completion data
+    const storyId = currentStory.id;
+    const storyTitle = currentStory.title;
     
-    // TODO: Save progress to database
-    // TODO: Show quiz
-    // TODO: Award badges
+    // Store in sessionStorage for finish-book page
+    sessionStorage.setItem('quizStoryId', storyId);
+    sessionStorage.setItem('completedStory', JSON.stringify({
+        id: storyId,
+        title: storyTitle,
+        totalSegments: currentStory.totalSegments,
+        vocabularyCount: currentStory.vocabularySummary ? currentStory.vocabularySummary.length : 0
+    }));
     
-    // For now, redirect to library
-    setTimeout(() => {
-        window.location.href = 'library.html';
-    }, 1000);
+    // Redirect to finish-book.html to show gold badge
+    window.location.href = `finish-book.html?story=${storyId}`;
 }
 
 // Listen for voice changes
