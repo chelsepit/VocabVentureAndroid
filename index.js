@@ -2,6 +2,9 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const VocabVentureDB = require('./app/js/database');
 
+app.commandLine.appendSwitch('--disable-http-cache');
+app.commandLine.appendSwitch('--disable-gpu-shader-disk-cache');
+app.commandLine.appendSwitch('--disable-application-cache');
 // Initialize database
 const db = new VocabVentureDB();
 

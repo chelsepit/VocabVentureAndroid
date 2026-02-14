@@ -104,7 +104,7 @@ function checkAuth() {
     
     // If already logged in and on login/register page, redirect to dashboard
     if (currentUser && (currentPage.includes('login.html') || currentPage.includes('register.html'))) {
-        window.location.href = '../../index.html';
+        window.location.href = '../dashboard/welcome-auth.html';
     }
 }
 

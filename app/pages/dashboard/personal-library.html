@@ -59,13 +59,16 @@
 
             <div class="burger-menu" id="burgerMenu">
                 <div class="mb-1">
-                    <a href="../../badges.html" class="header-font font-semibold">Badge</a>
+                    <a href="badges.html" class="header-font font-semibold">Badge</a>
                 </div>
                 <div class="mb-1">
-                    <a href="../../library.html" class="header-font font-semibold">Library</a>
+                    <a href="library.html" class="header-font font-semibold">Library</a>
                 </div>
-                <div>
-                    <a href="../../personal-library.html" class="header-font font-semibold">Personal Library</a>
+                <div class="mb-1">
+                    <a href="personal-library.html" class="header-font font-semibold">Personal Library</a>
+                </div>
+                <div class="logout-item">
+                    <div onclick="handleLogout()" class="header-font font-semibold" style="cursor: pointer;">Logout</div>
                 </div>
             </div>
         </div>
@@ -75,8 +78,8 @@
     <div class="library-container">
         <!-- Header Section -->
         <div class="library-header">
-            <!-- Back Button -->
-            <a href="../../library.html" class="back-button">
+            <!-- Back Button - FIXED: Same folder, just use filename -->
+            <a href="library.html" class="back-button">
                 <span class="back-arrow">←</span>
                 <span class="header-font" style="color: white; font-size: 1.2rem; font-weight: 600;">Back</span>
             </a>
@@ -97,22 +100,23 @@
                 </div>
 
                 <div class="book-grid" id="recentReads">
+                    <!-- Books will be dynamically loaded by personal-library.js -->
                     <div class="book-item" data-story-id="1">
                         <img src="../../assets/images/books/folktales/folktale-book-1.png" alt="Book 1">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 45%;" data-progress="1"></div>
+                            <div class="progress-fill" style="width: 0%;" data-progress="1"></div>
                         </div>
                     </div>
                     <div class="book-item" data-story-id="2">
                         <img src="../../assets/images/books/folktales/folktale-book-2.png" alt="Book 2">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 65%;" data-progress="2"></div>
+                            <div class="progress-fill" style="width: 0%;" data-progress="2"></div>
                         </div>
                     </div>
                     <div class="book-item" data-story-id="3">
                         <img src="../../assets/images/books/folktales/folktale-book-3.png" alt="Book 3">
                         <div class="progress-container">
-                            <div class="progress-fill" style="width: 30%;" data-progress="3"></div>
+                            <div class="progress-fill" style="width: 0%;" data-progress="3"></div>
                         </div>
                     </div>
                 </div>
@@ -128,23 +132,10 @@
                 </div>
 
                 <div class="book-grid" id="completedBooks">
-                    <div class="book-item" data-story-id="4">
-                        <img src="../../assets/images/books/folktales/folktale-book-4.png" alt="Completed Book 1">
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="book-item" data-story-id="5">
-                        <img src="../../assets/images/books/folktales/folktale-book-5.png" alt="Completed Book 2">
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="book-item" data-story-id="6">
-                        <img src="../../assets/images/books/folktales/folktale-book-1.png" alt="Completed Book 3">
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: 100%;"></div>
-                        </div>
+                    <!-- Completed books will be dynamically loaded -->
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <p style="color: #6b7280; font-size: 1.1rem;">No completed books yet!</p>
+                        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 10px;">Finish stories to see them here</p>
                     </div>
                 </div>
             </section>
