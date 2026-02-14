@@ -8,49 +8,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/welcome-page.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
 <body>
     <!-- Settings Menu Component -->
     <div class="components">
-        <div class="settings-dropdown">
-        <button class="settings-button" 
-            style="position: absolute; top: 20px; left: 20px; z-index: 1000;" 
-            id="settingsBtn" 
-            aria-label="Open settings">                
-                <img src="../../assets/images/icons/setting-icon.svg" alt="Settings" class="w-8 h-8">
-            </button>
-
-            <div class="settings-menu" id="settingsMenu">
-                <div class="mb-6">
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="font-bold text-gray-800" style="color: #6e4324; font-size: 1.2rem;">Sound</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="soundToggle" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Volume</label>
-                    <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
-                    <div class="flex justify-between text-sm text-gray-600 mt-1">
-                        <span>0</span>
-                        <span id="volumeValue">70</span>
-                        <span>100</span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice Selection</label>
-                    <div class="flex gap-3">
-                        <button class="voice-btn active" id="boyVoice" data-voice="boy" style="color: #6e4324; font-size: 1.2rem;">Boy</button>
-                        <button class="voice-btn" id="girlVoice" data-voice="girl" style="color: #6e4324; font-size: 1.2rem;">Girl</button>
-                    </div>
-                </div>
-            </div>
+        <div class="left-group">
+            <div id="settings-container"></div>
         </div>
     </div>
 
@@ -81,7 +47,6 @@
         </div>
     </div>
 
-    <script src="../../js/components.js"></script>
     <script>
         const { ipcRenderer } = require('electron');
 
@@ -107,5 +72,25 @@
             }, 150);
         }
     </script>
+    <script>
+        function loadComponent(elementId, filePath) {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                    if (window.initializeComponents) {
+                        window.initializeComponents();
+                    }
+                })
+                .catch(err => console.error('Error loading component:', err));
+        }
+
+        // Load components
+        loadComponent('settings-container', '../components/settings-menu.html');
+    </script>
+    <script src="../../js/components.js"></script>
 </body>
 </html>

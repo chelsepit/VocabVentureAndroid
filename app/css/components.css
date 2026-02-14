@@ -1,171 +1,52 @@
-/* =========================
-   COMPONENTS CONTAINER (Holds both buttons)
-   ========================= */
+/* ========================================
+   RESPONSIVE COMPONENTS
+   Mobile-First Design
+   ======================================== */
+
+/* ========================================
+   COMPONENTS CONTAINER
+   ======================================== */
+
 .components {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    right: 30px; 
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    right: 16px;
     align-items: center;
     z-index: 1000;
     display: flex;
     justify-content: space-between;
-    pointer-events: none; /* Container doesn't block clicks */
+    pointer-events: none;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .left-group {
     display: flex;
     align-items: center;
-    gap: 15px;
-    pointer-events: none; /* Group doesn't block clicks */
+    gap: 8px;
+    pointer-events: none;
 }
 
-/* Make sure children can receive clicks */
 .components > *,
-.left-group > * {
-    pointer-events: auto; /* Re-enable clicks for children */
+.left-group,
+.left-group * {
+    pointer-events: auto;
 }
 
-/* =========================
-   SETTINGS COMPONENT
-   ========================= */
+/* ========================================
+   SETTINGS COMPONENT (Mobile-First)
+   ======================================== */
+
 .settings-dropdown {
     position: relative;
     display: inline-block;
-    pointer-events: auto; /* Explicitly enable */
+    pointer-events: auto;
 }
 
 .settings-button {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background: transparent; 
-    border: none;
-    border-radius: 50%;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: auto; /* Explicitly enable */
-    z-index: 1001;
-}
-
-.settings-button img {
-    width: 35px;
-    height: 35px;
-    object-fit: contain;
-    transition: transform 0.5s ease;
-    pointer-events: none; /* Image shouldn't block button clicks */
-}
-
-.settings-button:hover {
-    transform: scale(1.1);
-}
-
-.settings-button:hover img {
-    transform: rotate(90deg);
-}
-
-/* THE SETTINGS MENU */
-.settings-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid #6e4324;
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 20px;
-    min-width: 280px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    pointer-events: auto; /* Menu can receive clicks */
-    
-    /* Hidden State */
-    display: none;
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-    z-index: 1002;
-}
-
-/* Visible State */
-.settings-menu.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: fadeIn 0.2s ease-out;
-}
-
-/*Back Button*/
-.back-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    padding: 10px 20px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    z-index: 50;
-}
-
-.back-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateX(5px);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-.back-arrow {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    transition: transform 0.3s ease;
-}
-
-.back-button:hover .back-arrow {
-    transform: translateX(-3px);
-}
-
-/* Responsive adjustments for back button */
-@media (max-width: 768px) {
-    .back-button {
-        right: 15px;
-        padding: 8px 15px;
-        font-size: 1rem;
-    }
-    
-    .back-arrow {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .back-button {
-        right: 10px;
-        padding: 6px 12px;
-        font-size: 0.9rem;
-    }
-    
-    .back-arrow {
-        font-size: 1.2rem;
-    }
-}
-
-/* =========================
-   BURGER NAV COMPONENT
-   ========================= */
-.burger-dropdown {
-    position: relative;
-    pointer-events: auto; /* Explicitly enable */
-}
-
-.burger-button {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,43 +55,169 @@
     border: none;
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: auto; /* Explicitly enable */
+    pointer-events: auto;
     z-index: 1001;
+    padding: 8px;
+    min-touch-target: 44px;
+}
+
+.settings-button img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    pointer-events: none;
+}
+
+.settings-button:hover {
+    transform: scale(1.1);
+}
+
+.settings-button:active {
+    transform: scale(0.95);
+}
+
+.settings-button:hover img {
+    transform: rotate(90deg);
+}
+
+/* THE SETTINGS MENU (Mobile-First) */
+.settings-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
+    background: rgba(255, 255, 255, 0.98);
+    border: 2px solid #6e4324;
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px;
+    min-width: 260px;
+    max-width: 90vw;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+    z-index: 1002;
+    margin-top: 8px;
+}
+
+.settings-menu.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* ========================================
+   BACK BUTTON (Responsive)
+   ======================================== */
+
+.back-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 8px 16px;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 50;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(5px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.back-button:active {
+    transform: translateX(5px) scale(0.98);
+}
+
+.back-arrow {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-arrow {
+    transform: translateX(-3px);
+}
+
+/* ========================================
+   BURGER NAV COMPONENT (Mobile-First)
+   ======================================== */
+
+.burger-dropdown {
+    position: relative;
+    pointer-events: auto;
+}
+
+.burger-button {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    z-index: 1001;
+    padding: 8px;
 }
 
 .burger-button img {
     width: 35px;
     height: 35px;
     object-fit: contain;
-    pointer-events: none; /* Image shouldn't block button clicks */
+    pointer-events: none;
 }
 
 .burger-button:hover {
     transform: scale(1.1);
 }
 
-/* THE BURGER MENU */
+.burger-button:active {
+    transform: scale(0.95);
+}
+
+/* THE BURGER MENU (Mobile-First) */
 .burger-menu {
     position: absolute;
     top: 100%;
     left: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border: 2px solid #6e4324;
     backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 12px;
+    border-radius: 12px;
+    padding: 8px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    min-width: 180px;
-    pointer-events: auto; /* Menu can receive clicks */
+    min-width: 160px;
+    max-width: 90vw;
+    pointer-events: auto;
     
-    /* Hidden State */
     display: none;
     opacity: 0;
-    transform: translateY(-20px) scale(0.95);
+    transform: translateY(-10px) scale(0.95);
     z-index: 1002;
+    margin-top: 8px;
 }
 
-/* Visible State */
 .burger-menu.active {
     display: block;
     opacity: 1;
@@ -218,43 +225,49 @@
     animation: fadeIn 0.2s ease-out;
 }
 
-/* FIXED: Burger menu items - unified styling */
+/* Burger menu items */
 .burger-menu a,
 .burger-menu-item,
 .burger-menu > div {
     display: block;
-    padding: 12px 15px;
-    margin-bottom: 5px;
-    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    border-radius: 8px;
     transition: all 0.2s ease;
     text-decoration: none;
     font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 600;
+    font-size: 15px;
     color: #6e4324;
     cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
 }
 
-/* Remove margin from last item */
 .burger-menu a:last-child,
 .burger-menu-item:last-child,
 .burger-menu > div:last-child {
     margin-bottom: 0;
 }
 
-/* Hover states */
 .burger-menu a:hover,
 .burger-menu-item:hover,
 .burger-menu > div:hover {
     background: #FFD93D;
     color: #333;
-    transform: translateX(5px);
+    transform: translateX(4px);
 }
 
-/* Special styling for logout */
+.burger-menu a:active,
+.burger-menu-item:active,
+.burger-menu > div:active {
+    transform: scale(0.98);
+}
+
 .logout-item {
     border-top: 2px solid #f0f0f0;
-    margin-top: 5px;
+    margin-top: 4px;
     padding-top: 12px;
 }
 
@@ -263,14 +276,15 @@
     color: white;
 }
 
-/* =========================
-   SETTINGS CONTROLS
-   ========================= */
+/* ========================================
+   SETTINGS CONTROLS (Mobile-First)
+   ======================================== */
+
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 28px;
+    width: 48px;
+    height: 26px;
 }
 
 .toggle-switch input {
@@ -287,21 +301,21 @@
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
+    transition: background-color 0.3s ease;
+    border-radius: 26px;
 }
 
 .toggle-slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     left: 4px;
     bottom: 4px;
     background-color: white;
-    transition: .4s;
+    transition: transform 0.3s ease;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 input:checked + .toggle-slider {
@@ -314,36 +328,54 @@ input:checked + .toggle-slider:before {
 
 .volume-slider {
     width: 100%;
-    height: 8px;
-    border-radius: 5px;
+    height: 6px;
+    border-radius: 3px;
     background: #eee;
     outline: none;
-    margin-top: 5px;
+    margin-top: 8px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: #FF6B35;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FF6B35;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: none;
 }
 
 .voice-btn {
-    padding: 10px 0;
-    border-radius: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
     border: 2px solid #eee;
     background: #f9f9f9;
     color: #888;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-weight: bold;
+    font-weight: 600;
     font-family: 'Nunito', sans-serif;
+    font-size: 14px;
     flex: 1;
     text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .voice-btn.active {
@@ -353,58 +385,77 @@ input:checked + .toggle-slider:before {
     box-shadow: 0 4px 10px rgba(255, 217, 61, 0.4);
 }
 
-/* =========================
-   SPEAK ICON COMPONENT
-   ========================= */
+.voice-btn:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   SPEAK BUTTON COMPONENT
+   ======================================== */
+
 .speak-button {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    background: transparent; 
+    background: transparent;
     border: none;
     border-radius: 50%;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-left: auto;
     pointer-events: auto;
+    padding: 8px;
+}
+
+.speak-button:hover {
+    transform: scale(1.1);
+}
+
+.speak-button:active {
+    transform: scale(0.95);
 }
 
 .speak-button-icon {
-    width: 35px;
-    height: 35px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     cursor: pointer;
     pointer-events: none;
 }
 
-/* =========================
+/* ========================================
    INTERACTIVE WORD STYLING
-   ========================= */
+   ======================================== */
+
 .interactive-word {
     font-weight: 800;
     color: black;
     text-decoration: underline;
     text-decoration-thickness: 2px;
     cursor: pointer;
-    padding: 0 4px;
+    padding: 2px 4px;
     border-radius: 4px;
     transition: all 0.2s ease;
+    display: inline-block;
+    word-break: break-word;
 }
 
 .interactive-word:hover {
-    font-weight: bold; 
-    cursor: pointer;
-    text-decoration: underline;
+    background-color: rgba(255, 217, 61, 0.3);
     color: black;
-    transform: scale(1.05);
-    display: inline-block; 
+    text-decoration: underline;
 }
 
-/* =========================
-   DEFINITION CARD POPUP
-   ========================= */
+.interactive-word:active {
+    transform: scale(0.95);
+}
+
+/* ========================================
+   DEFINITION CARD POPUP (Mobile-First)
+   ======================================== */
+
 .definition-card {
     position: fixed;
     top: 50%;
@@ -412,21 +463,21 @@ input:checked + .toggle-slider:before {
     transform: translate(-50%, -50%) scale(0.9);
     
     width: 90%;
-    max-width: 400px;
+    max-width: 380px;
     background: white;
     border: 1px solid black;
-    border-radius: 25px;
-    padding: 25px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 2000;
     
-    /* HIDDEN STATE */
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
-/* ACTIVE STATE (Added by JS) */
 .definition-card.active {
     opacity: 1;
     pointer-events: auto;
@@ -438,74 +489,92 @@ input:checked + .toggle-slider:before {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
 .def-title {
     font-family: 'Baloo 2', sans-serif;
-    font-size: 1.8rem;
+    font-size: 22px;
     font-weight: 800;
     color: black;
     margin: 0;
     text-transform: uppercase;
+    word-break: break-word;
 }
 
 .speaker-icon {
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 5px;
+    padding: 6px;
     transition: transform 0.2s ease;
+    min-width: 36px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .speaker-icon:hover {
     transform: scale(1.1);
 }
 
+.speaker-icon:active {
+    transform: scale(0.95);
+}
+
 /* PHONETIC TEXT */
 .def-phonetic {
     font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
+    font-size: 13px;
     color: #666;
     font-style: italic;
-    margin: 0px 0 5px 0;
+    margin: 0 0 8px 0;
+    word-break: break-word;
 }
 
-/* SYNONYM*/
+/* SYNONYM */
 .def-synonym {
     font-family: 'Nunito', sans-serif;
-    font-size: 1rem;
+    font-size: 14px;
     font-style: italic;
-    margin: 0 0 15px 0;
+    margin: 0 0 12px 0;
+    color: #555;
+    word-break: break-word;
 }
 
 /* DEFINITION MEANING */
 .def-meaning {
     font-family: 'Nunito', sans-serif;
-    font-size: 1.1rem;
+    font-size: 15px;
     line-height: 1.6;
     color: #333;
     margin: 0;
+    word-break: break-word;
 }
 
 /* CLOSE BUTTON */
 .close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 12px;
+    right: 12px;
     background: transparent;
     border: none;
-    font-size: 2.5rem;
+    font-size: 28px;
     color: black;
     cursor: pointer;
     line-height: 1;
-    padding: 0;
-    width: 35px;
-    height: 35px;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    min-touch-target: 44px;
 }
 
 .close-btn:hover {
@@ -513,7 +582,11 @@ input:checked + .toggle-slider:before {
     color: #333;
 }
 
-/* OVERLAY (DARKENS BACKGROUND) */
+.close-btn:active {
+    transform: scale(0.95);
+}
+
+/* OVERLAY (Mobile-First) */
 .overlay {
     position: fixed;
     top: 0;
@@ -523,63 +596,218 @@ input:checked + .toggle-slider:before {
     background: rgba(0, 0, 0, 0.5);
     z-index: 1999;
     
-    /* HIDDEN STATE */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-/* OVERLAY ACTIVE STATE */
 .overlay.active {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* RESPONSIVE DESIGN */
-@media (max-width: 768px) {
-    .definition-card {
-        width: 85%;
-        padding: 20px;
+/* ========================================
+   UTILITIES & ANIMATIONS
+   ======================================== */
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.w-8 {
+    width: 2rem;
+}
+
+.h-8 {
+    height: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
     }
-    
-    .def-title {
-        font-size: 1.5rem;
-    }
-    
-    .def-meaning {
-        font-size: 1rem;
-    }
-    
-    .components {
-        top: 20px;
-        left: 20px;
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
-/* =========================
-   UTILITIES & ANIMATIONS
-   ========================= */
-.flex { display: flex; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-3 { gap: 0.75rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.font-bold { font-weight: 700; }
-.text-gray-800 { color: #1f2937; }
-.text-sm { font-size: 0.875rem; }
-.text-gray-600 { color: #4b5563; }
-.w-8 { width: 2rem; }
-.h-8 { height: 2rem; }
-
-/* Animation for menus */
-@keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(-10px) scale(0.95); 
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+/* Large Mobile: 480px - 0px */
+@media (min-width: 481px) {
+    .components {
+        top: 16px;
+        left: 16px;
+        gap: 10px;
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
+    
+    .definition-card {
+        max-width: 420px;
+        padding: 24px;
+    }
+    
+    .def-title {
+        font-size: 24px;
+    }
+
+    .settings-button,
+    .burger-button,
+    .speak-button {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+
+/* Large Mobile: 481px - 767px */
+@media (min-width: 481px) {
+    .components {
+        top: 16px;
+        left: 16px;
+        gap: 10px;
+    }
+    
+    .definition-card {
+        max-width: 420px;
+        padding: 24px;
+    }
+    
+    .def-title {
+        font-size: 24px;
+    }
+
+    .settings-button,
+    .burger-button,
+    .speak-button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Tablet Portrait: 768px - 1023px */
+@media (min-width: 768px) {
+    .components {
+        top: 20px;
+        left: 20px;
+        gap: 12px;
+    }
+    
+    .settings-button,
+    .burger-button,
+    .speak-button {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .back-button {
+        top: 20px;
+        right: 20px;
+        padding: 10px 18px;
+        font-size: 15px;
+    }
+    
+    .back-arrow {
+        font-size: 1.4rem;
+    }
+    
+    .settings-menu {
+        min-width: 300px;
+    }
+    
+    .definition-card {
+        max-width: 450px;
+        padding: 28px;
+    }
+    
+    .def-title {
+        font-size: 26px;
+    }
+    
+    .def-meaning {
+        font-size: 16px;
+    }
+}
+
+/* Tablet Landscape: 1024px - 1279px */
+@media (min-width: 1024px) {
+    .definition-card {
+        max-width: 500px;
+        padding: 32px;
+    }
+    
+    .def-title {
+        font-size: 28px;
+    }
+}
+
+/* Desktop: 1280px+ */
+@media (min-width: 1280px) {
+    .components {
+        top: 24px;
+        left: 24px;
+    }
+    
+    .definition-card {
+        max-width: 550px;
     }
 }
