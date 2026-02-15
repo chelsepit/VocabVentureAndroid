@@ -1,4 +1,4 @@
-// game-result.js - Quiz Results Page Logic with Dynamic Badge Display
+// game-result.js - Quiz Results with BADGE UPGRADE SYSTEM
 
 let quizResults = null;
 let currentQuizNumber = 1;
@@ -15,54 +15,60 @@ function getParams() {
 function loadResults() {
     getParams();
     
-    // Get results from sessionStorage
     const storageKey = `quiz${currentQuizNumber}Results`;
     const storedResults = sessionStorage.getItem(storageKey);
     
     if (!storedResults) {
         console.error('No quiz results found');
         document.getElementById('resultMessage').textContent = 'No results found. Redirecting...';
-        setTimeout(() => {
-            window.location.href = 'library.html';
-        }, 2000);
+        setTimeout(() => window.location.href = 'library.html', 2000);
         return;
     }
     
     quizResults = JSON.parse(storedResults);
     console.log('Quiz results:', quizResults);
     
-    // Display results
     displayResults();
 }
 
-// Display results with dynamic badges
-function displayResults() {
+// Display results with badge upgrade logic
+async function displayResults() {
     const score = quizResults.score;
     const total = quizResults.total;
-    const badgeType = quizResults.badgeType || calculateBadgeType(score, total);
-    const isPerfectScore = score === total;
+    const passedQuiz = score >= 4; // Need 4 or 5 out of 5 (80%+)
     
     // Update score display
     document.getElementById('scoreDisplay').textContent = `${score}/${total}`;
     
-    // Determine result title and message
-    let resultTitle, resultMessage;
+    let resultTitle, resultMessage, badgeType;
     
-    if (isPerfectScore) {
-        // Perfect score = Gold badge
-        resultTitle = 'PERFECT!';
-        resultMessage = 'You\'re a vocabulary master! 🌟';
-    } else {
-        // Other scores
-        if (score >= 3 && score <= 4) {
-            resultTitle = 'GREAT JOB!';
-            resultMessage = 'Almost perfect! Keep it up! 🏆';
-        } else if (score >= 1 && score <= 2) {
-            resultTitle = 'KEEP TRYING!';
-            resultMessage = 'Practice makes perfect! 💪';
+    if (currentQuizNumber === 1) {
+        // QUIZ 1 RESULTS
+        if (passedQuiz) {
+            // Passed Quiz 1 → Upgrade to SILVER
+            resultTitle = 'EXCELLENT!';
+            resultMessage = '🥈 Badge upgraded to SILVER!';
+            badgeType = 'silver';
+            await upgradeBadge('silver');
         } else {
-            resultTitle = 'GOOD EFFORT!';
-            resultMessage = 'You\'re learning! 👍';
+            // Failed Quiz 1 → Stay BRONZE
+            resultTitle = 'NOT QUITE!';
+            resultMessage = `You need 4-5 correct to upgrade to Silver. You got ${score}/5. Try again!`;
+            badgeType = 'bronze';
+        }
+    } else {
+        // QUIZ 2 RESULTS
+        if (passedQuiz) {
+            // Passed Quiz 2 → Upgrade to GOLD
+            resultTitle = 'PERFECT!';
+            resultMessage = '🥇 Badge upgraded to GOLD! You\'re a vocabulary master!';
+            badgeType = 'gold';
+            await upgradeBadge('gold');
+        } else {
+            // Failed Quiz 2 → Stay SILVER
+            resultTitle = 'ALMOST THERE!';
+            resultMessage = `You need 4-5 correct to upgrade to Gold. You got ${score}/5. Keep trying!`;
+            badgeType = 'silver';
         }
     }
     
@@ -70,27 +76,46 @@ function displayResults() {
     document.getElementById('resultTitle').textContent = resultTitle;
     document.getElementById('resultMessage').textContent = resultMessage;
     
-    // Show appropriate badge dynamically
+    // Show badge
     showBadge(badgeType);
     
-    // Create buttons based on score and quiz number
-    createButtons(isPerfectScore);
+    // Create buttons
+    createButtons(passedQuiz);
 }
 
-// Calculate badge type based on score
-function calculateBadgeType(score, total) {
-    if (score === total) {
-        return 'gold';
-    } else if (score >= 3 && score <= 4) {
-        return 'silver';
-    } else {
-        return 'bronze';
+// Upgrade badge in database
+async function upgradeBadge(newBadgeType) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (currentUser) {
+            // Save quiz result
+            await ipcRenderer.invoke('quiz:save', {
+                userId: currentUser.id,
+                storyId: storyId,
+                quizNumber: currentQuizNumber,
+                score: quizResults.score,
+                totalQuestions: quizResults.total,
+                badgeType: newBadgeType
+            });
+            
+            // Upgrade badge (this will update the existing badge)
+            await ipcRenderer.invoke('badge:upgrade', {
+                userId: currentUser.id,
+                storyId: storyId,
+                newBadgeType: newBadgeType
+            });
+            
+            console.log(`✅ Badge upgraded to ${newBadgeType.toUpperCase()}`);
+        }
+    } catch (error) {
+        console.error('Error upgrading badge:', error);
     }
 }
 
-// Show badge dynamically based on type
+// Show badge based on type
 function showBadge(badgeType) {
-    // Create badge display if not exists
     let badgeContainer = document.getElementById('badgeContainer');
     if (!badgeContainer) {
         badgeContainer = document.createElement('div');
@@ -98,66 +123,57 @@ function showBadge(badgeType) {
         badgeContainer.style.textAlign = 'center';
         badgeContainer.style.marginBottom = '20px';
         
-        // Insert before title
         const titleElement = document.getElementById('resultTitle');
         titleElement.parentNode.insertBefore(badgeContainer, titleElement);
     }
     
-    // Badge image paths based on type
-    let badgePath;
-    switch(badgeType) {
-        case 'gold':
-            badgePath = '../../assets/images/badges/gold-badge.png';
-            break;
-        case 'silver':
-            badgePath = '../../assets/images/badges/silver-badge.png';
-            break;
-        case 'bronze':
-            badgePath = '../../assets/images/badges/bronze-badge.png';
-            break;
-        default:
-            badgePath = '../../assets/images/badges/bronze-badge.png';
-    }
+    const badgePaths = {
+        'gold': '../../assets/images/badges/gold-badge.png',
+        'silver': '../../assets/images/badges/silver-badge.png',
+        'bronze': '../../assets/images/badges/bronze-badge.png'
+    };
+    
+    const badgePath = badgePaths[badgeType] || badgePaths['bronze'];
     
     badgeContainer.innerHTML = `
-        <img src="${badgePath}" alt="${badgeType} badge" style="width: 150px; height: 150px; object-fit: contain;">
+        <img src="${badgePath}" alt="${badgeType} badge" style="width: 150px; height: 150px; object-fit: contain; animation: bounceIn 0.6s;">
     `;
 }
 
-// Create buttons based on score and quiz number
-function createButtons(isPerfectScore) {
+// Create buttons based on pass/fail
+function createButtons(passed) {
     const buttonsContainer = document.querySelector('.finish-button');
-    buttonsContainer.innerHTML = ''; // Clear existing buttons
+    buttonsContainer.innerHTML = '';
     
     if (currentQuizNumber === 1) {
-        // Quiz 1 Results
-        if (isPerfectScore) {
-            // Perfect Score: EXIT + PROCEED TO DECODE
+        // QUIZ 1
+        if (passed) {
+            // Passed → Can proceed to Quiz 2
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
-                <button class="proceed-button" onclick="proceedToQuiz2()">PROCEED TO DECODE-A-WORD</button>
+                <button class="proceed-button" onclick="proceedToQuiz2()">PROCEED TO QUIZ 2</button>
             `;
         } else {
-            // Not Perfect: EXIT + REVIEW + RETAKE
+            // Failed → Must retake or review
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
-                <button class="review-button" onclick="reviewVocabulary()">REVIEW</button>
-                <button class="retake-button" onclick="retakeQuiz()">RETAKE</button>
+                <button class="review-button" onclick="reviewVocabulary()">REVIEW VOCABULARY</button>
+                <button class="retake-button" onclick="retakeQuiz()">RETAKE QUIZ</button>
             `;
         }
     } else {
-        // Quiz 2 Results
-        if (isPerfectScore) {
-            // Perfect Score: EXIT only
+        // QUIZ 2
+        if (passed) {
+            // Passed → Gold achieved, just exit
             buttonsContainer.innerHTML = `
-                <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
+                <button class="exit-button" onclick="exitToLibrary()">EXIT TO LIBRARY</button>
             `;
         } else {
-            // Not Perfect: EXIT + REVIEW + RETAKE
+            // Failed → Must retake or review
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
-                <button class="review-button" onclick="reviewVocabulary()">REVIEW</button>
-                <button class="retake-button" onclick="retakeQuiz()">RETAKE</button>
+                <button class="review-button" onclick="reviewVocabulary()">REVIEW VOCABULARY</button>
+                <button class="retake-button" onclick="retakeQuiz()">RETAKE QUIZ</button>
             `;
         }
     }
@@ -165,28 +181,22 @@ function createButtons(isPerfectScore) {
 
 // Exit to library
 function exitToLibrary() {
-    // Clear quiz data
     sessionStorage.removeItem('quiz1Results');
     sessionStorage.removeItem('quiz2Results');
     sessionStorage.removeItem('quizStoryId');
     sessionStorage.removeItem('completedStory');
-    
-    // Go to library
     window.location.href = 'library.html';
 }
 
 // Review vocabulary
 function reviewVocabulary() {
-    // Go to vocabulary review page
     window.location.href = `lets-review.html?story=${storyId}`;
 }
 
 // Retake quiz
 function retakeQuiz() {
-    // Clear current quiz results
     sessionStorage.removeItem(`quiz${currentQuizNumber}Results`);
     
-    // Reload the quiz
     if (currentQuizNumber === 1) {
         window.location.href = `pick-a-word.html?story=${storyId}`;
     } else {
@@ -194,10 +204,10 @@ function retakeQuiz() {
     }
 }
 
-// Proceed to Quiz 2 (only from Quiz 1 with perfect score)
+// Proceed to Quiz 2 (only after passing Quiz 1)
 function proceedToQuiz2() {
     window.location.href = `decode-the-word.html?story=${storyId}`;
 }
 
-// Initialize when page loads
+// Initialize
 window.addEventListener('DOMContentLoaded', loadResults);

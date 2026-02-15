@@ -1,4 +1,4 @@
-// finish-book.js - Story Completion Page Logic with Dynamic Gold Badge
+// finish-book.js - Story Completion with BRONZE BADGE
 
 let completedStory = null;
 
@@ -9,7 +9,6 @@ async function initFinishPage() {
     
     if (!storedData) {
         console.error('No completion data found');
-        // Redirect back to library
         window.location.href = 'library.html';
         return;
     }
@@ -17,28 +16,33 @@ async function initFinishPage() {
     completedStory = JSON.parse(storedData);
     console.log('Story completed:', completedStory);
     
-    // Display the gold badge
-    displayGoldBadge();
+    // Display the BRONZE badge
+    displayBronzeBadge();
     
-    // Save to database and award badge
+    // Save to database and award BRONZE badge
     await saveStoryCompletion();
 }
 
-// Display gold badge for completing the story
-function displayGoldBadge() {
+// Display BRONZE badge for completing the story
+function displayBronzeBadge() {
     const badgeImage = document.getElementById('badgeImage');
     const completionMessage = document.getElementById('completionMessage');
     
-    // Set gold badge image
-    badgeImage.src = '../../assets/images/badges/gold-badge.png';
-    badgeImage.alt = 'Gold Badge - Story Completed';
+    // Set BRONZE badge image
+    badgeImage.src = '../../assets/images/badges/bronze-badge.png';
+    badgeImage.alt = 'Bronze Badge - Story Completed';
     
     // Update completion message
     if (completedStory) {
         completionMessage.innerHTML = `
             <strong>Congratulations!</strong><br>
-            You've earned a <strong style="color: #FFD700;">GOLD BADGE</strong> for completing <strong>"${completedStory.title}"</strong>!<br>
-            Ready to test your vocabulary knowledge?
+            You've earned a <strong style="color: #CD7F32;">BRONZE BADGE</strong> for completing <strong>"${completedStory.title}"</strong>!<br>
+            <br>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                💡 Complete the quizzes to upgrade your badge!<br>
+                🥈 Silver: Score 4-5 in Quiz 1<br>
+                🥇 Gold: Score 4-5 in both quizzes
+            </p>
         `;
     }
 }
@@ -46,10 +50,7 @@ function displayGoldBadge() {
 // Continue to vocabulary games (Quiz 1)
 function continueToGames() {
     if (completedStory) {
-        // Store story ID for quiz pages
         sessionStorage.setItem('quizStoryId', completedStory.id);
-        
-        // Go directly to Quiz 1 (Pic-a-Word)
         window.location.href = `pick-a-word.html?story=${completedStory.id}`;
     }
 }
@@ -70,15 +71,15 @@ async function saveStoryCompletion() {
                 });
             }
             
-            // Award GOLD badge for completing the story
+            // Award BRONZE badge for completing the story
             await ipcRenderer.invoke('badge:award', {
                 userId: currentUser.id,
                 storyId: completedStory.id,
-                badgeType: 'gold',
+                badgeType: 'bronze',
                 badgeCategory: 'story-completion'
             });
             
-            console.log('Story completion saved - GOLD badge awarded');
+            console.log('✅ Story completion saved - BRONZE badge awarded');
         }
     } catch (error) {
         console.error('Error saving completion:', error);

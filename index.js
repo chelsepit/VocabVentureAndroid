@@ -344,6 +344,34 @@ ipcMain.handle('badge:getStory', async (event, { userId, storyId }) => {
     }
 });
 
+// Add this IPC handler to your index.js (main process)
+
+// ⭐ NEW: Upgrade badge (replaces existing badge with higher tier)
+ipcMain.handle('badge:upgrade', async (event, { userId, storyId, newBadgeType }) => {
+    try {
+        // Delete old badge for this story
+        const deleteStmt = db.db.prepare(`
+            DELETE FROM user_badges 
+            WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
+        `);
+        deleteStmt.run(userId, storyId);
+        
+        // Award new badge
+        const insertStmt = db.db.prepare(`
+            INSERT INTO user_badges (user_id, story_id, badge_type, badge_category)
+            VALUES (?, ?, ?, 'story-completion')
+        `);
+        insertStmt.run(userId, storyId, newBadgeType);
+        
+        console.log(`🎖️ Badge upgraded: User ${userId}, Story ${storyId} → ${newBadgeType.toUpperCase()}`);
+        
+        return { success: true };
+    } catch (error) {
+        console.error('Error upgrading badge:', error);
+        return { success: false, error: error.message };
+    }
+});
+
 ipcMain.handle('badge:has', async (event, { userId, storyId, badgeCategory }) => {
     try {
         return db.hasBadge(userId, storyId, badgeCategory);
