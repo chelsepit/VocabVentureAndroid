@@ -2,13 +2,15 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const VocabVentureDB = require('./app/js/database');
 
+app.commandLine.appendSwitch('--disable-http-cache');
+app.commandLine.appendSwitch('--disable-gpu-shader-disk-cache');
+app.commandLine.appendSwitch('--disable-application-cache');
+// Initialize database
+const db = new VocabVentureDB();
+
 let mainWindow;
-let db;
 
 function createWindow() {
-    // Initialize database
-    db = new VocabVentureDB();
-    
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 800,
@@ -21,7 +23,7 @@ function createWindow() {
     // Open DevTools (remove this in production)
     mainWindow.webContents.openDevTools();
     
-    // Load welcome page initially (or login.html if you prefer)
+    // Load welcome page initially
     mainWindow.loadFile('app/pages/dashboard/welcome.html');
 
     mainWindow.on('closed', () => {
@@ -38,165 +40,6 @@ function createWindow() {
             });
         }
     });
-}
-
-// ============================================
-// AUTHENTICATION IPC HANDLERS
-// ============================================
-
-// Handle login
-ipcMain.handle('auth:login', async (event, { name, birthdate }) => {
-    console.log('Login attempt:', name, birthdate);
-    const result = db.login(name, birthdate);
-    return result;
-});
-
-// Handle registration
-ipcMain.handle('auth:register', async (event, { name, birthdate }) => {
-    console.log('Registration attempt:', name, birthdate);
-    const result = db.register(name, birthdate);
-    return result;
-});
-
-// Get user by ID
-ipcMain.handle('user:get', async (event, userId) => {
-    return db.getUser(userId);
-});
-
-// ============================================
-// PROGRESS IPC HANDLERS
-// ============================================
-
-// Save progress
-ipcMain.handle('progress:save', async (event, { userId, storyId, segmentId }) => {
-    try {
-        db.saveProgress(userId, storyId, segmentId);
-        return { success: true };
-    } catch (error) {
-        console.error('Error saving progress:', error);
-        return { success: false, message: error.message };
-    }
-});
-
-// Get progress for a story
-ipcMain.handle('progress:get', async (event, { userId, storyId }) => {
-    return db.getProgress(userId, storyId);
-});
-
-// Get all progress
-ipcMain.handle('progress:getAll', async (event, userId) => {
-    return db.getAllProgress(userId);
-});
-
-// Get overall progress
-ipcMain.handle('progress:getOverall', async (event, userId) => {
-    return db.getOverallProgress(userId);
-});
-
-// ============================================
-// QUIZ IPC HANDLERS
-// ============================================
-
-// Save quiz result
-ipcMain.handle('quiz:save', async (event, { userId, storyId, score, totalQuestions }) => {
-    try {
-        db.saveQuizResult(userId, storyId, score, totalQuestions);
-        
-        // Check and award badges based on quiz performance
-        checkAndAwardQuizBadges(userId, storyId, score, totalQuestions);
-        
-        return { success: true };
-    } catch (error) {
-        console.error('Error saving quiz result:', error);
-        return { success: false, message: error.message };
-    }
-});
-
-// Get quiz results
-ipcMain.handle('quiz:getResults', async (event, { userId, storyId }) => {
-    return db.getQuizResults(userId, storyId);
-});
-
-// ============================================
-// BADGE IPC HANDLERS
-// ============================================
-
-// Award badge
-ipcMain.handle('badge:award', async (event, { userId, badgeId }) => {
-    try {
-        db.awardBadge(userId, badgeId);
-        return { success: true };
-    } catch (error) {
-        return { success: false, message: error.message };
-    }
-});
-
-// Get user badges
-ipcMain.handle('badge:getAll', async (event, userId) => {
-    return db.getUserBadges(userId);
-});
-
-// Check if user has badge
-ipcMain.handle('badge:has', async (event, { userId, badgeId }) => {
-    return db.hasBadge(userId, badgeId);
-});
-
-// ============================================
-// STATS IPC HANDLERS
-// ============================================
-
-// Get user stats
-ipcMain.handle('stats:get', async (event, userId) => {
-    return db.getUserStats(userId);
-});
-
-// ============================================
-// BADGE AWARD LOGIC
-// ============================================
-
-function checkAndAwardQuizBadges(userId, storyId, score, totalQuestions) {
-    const percentage = (score / totalQuestions) * 100;
-    
-    // Perfect score badge
-    if (percentage === 100) {
-        db.awardBadge(userId, 'perfect-score');
-    }
-    
-    // First quiz completed
-    const quizResults = db.getQuizResults(userId);
-    if (quizResults.length === 1) {
-        db.awardBadge(userId, 'first-quiz');
-    }
-    
-    // Quiz master (completed all 3 story quizzes)
-    const uniqueStories = [...new Set(quizResults.map(q => q.story_id))];
-    if (uniqueStories.length === 3) {
-        db.awardBadge(userId, 'quiz-master');
-    }
-    
-    // High achiever (80% or higher on any quiz)
-    if (percentage >= 80) {
-        db.awardBadge(userId, 'high-achiever');
-    }
-}
-
-function checkAndAwardProgressBadges(userId) {
-    const progress = db.getOverallProgress(userId);
-    
-    // First story completed (14 segments)
-    if (progress.completed >= 14 && !db.hasBadge(userId, 'first-story')) {
-        db.awardBadge(userId, 'first-story');
-    }
-    
-    // Halfway there (21 segments)
-    if (progress.completed >= 21 && !db.hasBadge(userId, 'halfway')) {
-        db.awardBadge(userId, 'halfway');
-    }
-    
-    // All stories completed (42 segments)
-    if (progress.completed >= 42 && !db.hasBadge(userId, 'all-stories')) {
-        db.awardBadge(userId, 'all-stories');
-    }
 }
 
 // ============================================
@@ -220,6 +63,361 @@ app.on('window-all-closed', () => {
     }
     if (process.platform !== 'darwin') {
         app.quit();
+    }
+});
+
+// ============================================
+// AUTHENTICATION HANDLERS
+// ============================================
+
+ipcMain.handle('auth:login', async (event, { name, birthdate }) => {
+    try {
+        console.log('Login attempt:', name);
+        return db.login(name, birthdate);
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, message: 'An error occurred during login' };
+    }
+});
+
+ipcMain.handle('auth:register', async (event, { name, birthdate }) => {
+    try {
+        console.log('Registration attempt:', name);
+        return db.register(name, birthdate);
+    } catch (error) {
+        console.error('Registration error:', error);
+        return { success: false, message: 'An error occurred during registration' };
+    }
+});
+
+ipcMain.handle('user:get', async (event, userId) => {
+    try {
+        return db.getUser(userId);
+    } catch (error) {
+        console.error('Get user error:', error);
+        return null;
+    }
+});
+
+// ============================================
+// PROGRESS HANDLERS
+// ============================================
+
+ipcMain.handle('progress:save', async (event, { userId, storyId, segmentId }) => {
+    try {
+        return db.saveProgress(userId, storyId, segmentId);
+    } catch (error) {
+        console.error('Save progress error:', error);
+        throw error;
+    }
+});
+
+// ⭐ NEW: Mark individual segment as completed
+ipcMain.handle('progress:markSegmentComplete', async (event, data) => {
+    try {
+        const { userId, storyId, segmentId } = data;
+        
+        // Save to progress table
+        const result = db.saveProgress(userId, storyId, segmentId);
+        
+        console.log(`✅ Segment marked complete: User ${userId}, Story ${storyId}, Segment ${segmentId}`);
+        
+        return { success: true, result };
+    } catch (error) {
+        console.error('Error marking segment complete:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+ipcMain.handle('progress:get', async (event, { userId, storyId }) => {
+    try {
+        return db.getProgress(userId, storyId);
+    } catch (error) {
+        console.error('Get progress error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('progress:getAll', async (event, userId) => {
+    try {
+        return db.getAllProgress(userId);
+    } catch (error) {
+        console.error('Get all progress error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('progress:getOverall', async (event, userId) => {
+    try {
+        return db.getOverallProgress(userId);
+    } catch (error) {
+        console.error('Get overall progress error:', error);
+        return { completed: 0, total: 42, percentage: 0 };
+    }
+});
+
+ipcMain.handle('progress:saveLastViewed', async (event, data) => {
+    try {
+        const { userId, storyId, segmentId } = data;
+        
+        // Update last_viewed_segment in progress table
+        const stmt = db.db.prepare(`
+            INSERT INTO progress (user_id, story_id, segment_id, last_viewed_segment, completed)
+            VALUES (?, ?, 1, ?, 0)
+            ON CONFLICT(user_id, story_id, segment_id) 
+            DO UPDATE SET last_viewed_segment = ?
+        `);
+        
+        const result = stmt.run(userId, storyId, segmentId, segmentId);
+        
+        return { success: true };
+    } catch (error) {
+        console.error('Error saving last viewed:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+ipcMain.handle('progress:getLastViewed', async (event, data) => {
+    try {
+        const { userId, storyId } = data;
+        
+        const stmt = db.db.prepare(`
+            SELECT last_viewed_segment
+            FROM progress
+            WHERE user_id = ? AND story_id = ?
+            ORDER BY id DESC
+            LIMIT 1
+        `);
+        
+        const result = stmt.get(userId, storyId);
+        
+        return result ? result.last_viewed_segment : 0;
+    } catch (error) {
+        console.error('Error getting last viewed:', error);
+        return 0;
+    }
+});
+
+
+// ============================================
+// STORY COMPLETION STATUS HANDLER
+// ============================================
+
+ipcMain.handle('story:getCompletionStatus', async (event, data) => {
+    try {
+        const { userId, storyId, totalSegments } = data;
+        
+        // Get completed segments count
+        const segmentStmt = db.db.prepare(`
+            SELECT COUNT(*) as count
+            FROM progress
+            WHERE user_id = ? AND story_id = ? AND completed = 1
+        `);
+        
+        const segmentResult = segmentStmt.get(userId, storyId);
+        const completedSegments = segmentResult ? segmentResult.count : 0;
+        
+        // Check if story is fully complete
+        const storyCompleted = completedSegments >= totalSegments;
+        
+        // Check quiz completion
+        const quizStmt = db.db.prepare(`
+            SELECT quiz_number, badge_type
+            FROM quiz_results
+            WHERE user_id = ? AND story_id = ?
+            ORDER BY completed_at DESC
+        `);
+        
+        const quizResults = quizStmt.all(userId, storyId);
+        
+        const quiz1Completed = quizResults.some(q => q.quiz_number === 1);
+        const quiz2Completed = quizResults.some(q => q.quiz_number === 2);
+        
+        // Get last accessed time
+        const lastAccessStmt = db.db.prepare(`
+            SELECT MAX(completed_at) as lastAccessed
+            FROM progress
+            WHERE user_id = ? AND story_id = ?
+        `);
+        
+        const lastAccessResult = lastAccessStmt.get(userId, storyId);
+        const lastAccessed = lastAccessResult ? lastAccessResult.lastAccessed : null;
+        
+        return {
+            completedSegments: completedSegments,
+            totalSegments: totalSegments,
+            storyCompleted: storyCompleted,
+            quiz1Completed: quiz1Completed,
+            quiz2Completed: quiz2Completed,
+            lastAccessed: lastAccessed
+        };
+    } catch (error) {
+        console.error('Error getting completion status:', error);
+        return {
+            completedSegments: 0,
+            totalSegments: totalSegments,
+            storyCompleted: false,
+            quiz1Completed: false,
+            quiz2Completed: false,
+            lastAccessed: null
+        };
+    }
+});
+
+// ============================================
+// QUIZ HANDLERS
+// ============================================
+
+ipcMain.handle('quiz:save', async (event, { userId, storyId, quizNumber, score, totalQuestions }) => {
+    try {
+        return db.saveQuizResult(userId, storyId, quizNumber, score, totalQuestions);
+    } catch (error) {
+        console.error('Save quiz result error:', error);
+        throw error;
+    }
+});
+
+ipcMain.handle('quiz:getResults', async (event, { userId, storyId }) => {
+    try {
+        return db.getQuizResults(userId, storyId);
+    } catch (error) {
+        console.error('Get quiz results error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('quiz:getBestScore', async (event, { userId, storyId, quizNumber }) => {
+    try {
+        return db.getBestQuizScore(userId, storyId, quizNumber);
+    } catch (error) {
+        console.error('Get best score error:', error);
+        return null;
+    }
+});
+
+// ============================================
+// BADGE HANDLERS
+// ============================================
+
+ipcMain.handle('badge:award', async (event, { userId, storyId, badgeType, badgeCategory }) => {
+    try {
+        return db.awardBadge(userId, storyId, badgeType, badgeCategory);
+    } catch (error) {
+        console.error('Error awarding badge:', error);
+        throw error;
+    }
+});
+
+ipcMain.handle('badge:getAll', async (event, userId) => {
+    try {
+        return db.getAllUserBadges(userId);
+    } catch (error) {
+        console.error('Get all badges error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('badge:getAllOrdered', async (event, userId) => {
+    try {
+        return db.getAllUserBadgesOrdered(userId);
+    } catch (error) {
+        console.error('Get ordered badges error:', error);
+        return [];
+    }
+});
+
+ipcMain.handle('badge:getStats', async (event, userId) => {
+    try {
+        return db.getBadgeStats(userId);
+    } catch (error) {
+        console.error('Get badge stats error:', error);
+        return { gold: 0, silver: 0, bronze: 0, total: 0 };
+    }
+});
+
+ipcMain.handle('badge:getStory', async (event, { userId, storyId }) => {
+    try {
+        return db.getUserBadges(userId, storyId);
+    } catch (error) {
+        console.error('Get story badges error:', error);
+        return [];
+    }
+});
+
+// Add this IPC handler to your index.js (main process)
+
+// ⭐ NEW: Upgrade badge (replaces existing badge with higher tier)
+ipcMain.handle('badge:upgrade', async (event, { userId, storyId, newBadgeType }) => {
+    try {
+        // Delete old badge for this story
+        const deleteStmt = db.db.prepare(`
+            DELETE FROM user_badges 
+            WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
+        `);
+        deleteStmt.run(userId, storyId);
+        
+        // Award new badge
+        const insertStmt = db.db.prepare(`
+            INSERT INTO user_badges (user_id, story_id, badge_type, badge_category)
+            VALUES (?, ?, ?, 'story-completion')
+        `);
+        insertStmt.run(userId, storyId, newBadgeType);
+        
+        console.log(`🎖️ Badge upgraded: User ${userId}, Story ${storyId} → ${newBadgeType.toUpperCase()}`);
+        
+        return { success: true };
+    } catch (error) {
+        console.error('Error upgrading badge:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+ipcMain.handle('badge:has', async (event, { userId, storyId, badgeCategory }) => {
+    try {
+        return db.hasBadge(userId, storyId, badgeCategory);
+    } catch (error) {
+        console.error('Check badge error:', error);
+        return false;
+    }
+});
+
+// ============================================
+// USER STATS HANDLERS
+// ============================================
+
+ipcMain.handle('user:getStats', async (event, userId) => {
+    try {
+        return db.getUserStats(userId);
+    } catch (error) {
+        console.error('Get user stats error:', error);
+        return null;
+    }
+});
+
+ipcMain.handle('stats:get', async (event, userId) => {
+    try {
+        return db.getUserStats(userId);
+    } catch (error) {
+        console.error('Get stats error:', error);
+        return null;
+    }
+});
+
+// ============================================
+// CLEANUP HANDLERS
+// ============================================
+
+process.on('exit', () => {
+    if (db) {
+        db.close();
+        console.log('Database connection closed on exit');
+    }
+});
+
+app.on('will-quit', () => {
+    if (db) {
+        db.close();
+        console.log('Database connection closed on app quit');
     }
 });
 

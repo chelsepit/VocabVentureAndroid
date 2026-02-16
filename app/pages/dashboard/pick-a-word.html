@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Let's Review</title>
+    <title>Pic-a-Word Quiz - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -12,7 +12,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/lets-review.css">
+    <link rel="stylesheet" href="../../css/pick-a-world.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
@@ -26,25 +26,52 @@
             <div id="burger-container"></div>
         </div>
         <div id="speak-container"></div>
-    </div> 
+    </div>
 
-    <div class="review-container">
+    <!-- Intro Screen -->
+    <div id="quizIntro" class="finish-content">
         <div class="title-header">
-            LET'S REVIEW!
+            Pic-a-Word!
         </div>
 
-        <div class="finish-content">
-            <div class="word-title">
-                HARVEST        
-            </div>
+        <div class="progress-comment">
+            Get ready to boost your word power while having fun!<br>
+            Complete the sentence by choosing the correct word.<br>
+            Let's get started and begin your word adventure—have fun and enjoy!
+        </div>
+        
+        <div class="finish-button">
+            <button class="start-button" onclick="startPicAWord()">START</button>
+        </div>
+    </div>
 
-            <div class="review-desc">
-                The time when crops are picked from the fields.
-            </div>
+    <!-- Quiz Question Screen (hidden initially) -->
+    <div id="quizQuestion" class="finish-content" style="display: none;">
+        <div class="title-header">
+            Pic-a-Word!
+        </div>
 
-            <div class="audio-button">
-                <img src="../../assets/images/icons/replay-icon.svg" alt="Play audio">
+        <!-- Progress indicator -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <span style="font-family: 'Nunito', sans-serif; font-weight: 700; color: #6e4324; font-size: 1.2rem;">
+                Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
+            </span>
+        </div>
+
+        <!-- Question with blank -->
+        <div class="progress-comment">
+            <div class="sentence-with-image" id="questionText">
+                <!-- Question will be inserted here dynamically -->
             </div>
+        </div>
+        
+        <!-- Answer buttons -->
+        <div class="finish-button" id="answerButtons">
+            <!-- Buttons will be dynamically added here -->
+        </div>
+
+        <!-- Feedback message -->
+        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;">
         </div>
     </div>
 
@@ -69,6 +96,7 @@
     </script>
 
     <script src="../../js/components.js"></script>
+    <script src="../../js/pick-a-word-quiz.js"></script>
 </body>
 
 </html>

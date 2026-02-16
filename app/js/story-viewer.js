@@ -1,9 +1,10 @@
-// story-viewer.js - Dynamic Story Viewer
+// story-viewer.js - Manual Speak Button (Works with image icons)
 
 let currentStory = null;
 let currentSegmentIndex = 0;
 let storyData = null;
-let currentAudio = null; // Track current audio for cleanup
+let currentAudio = null;
+let isSpeaking = false;
 
 // Get story ID from URL parameters
 function getStoryIdFromUrl() {
@@ -35,7 +36,16 @@ function stopCurrentAudio() {
         currentAudio.pause();
         currentAudio.currentTime = 0;
         currentAudio = null;
+        isSpeaking = false;
+        updateSpeakButton();
     }
+}
+
+// Get segment from URL
+function getSegmentFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const segment = parseInt(urlParams.get('segment'));
+    return segment && segment > 0 ? segment - 1 : 0;
 }
 
 // Initialize story viewer
@@ -47,19 +57,151 @@ async function initStoryViewer() {
     if (!story) return;
     
     currentStory = story;
-    currentSegmentIndex = 0;
     
-    // Update page title
+    const resumeSegment = getSegmentFromUrl();
+    currentSegmentIndex = resumeSegment;
+    
+    console.log('Starting at segment:', currentSegmentIndex + 1);
+    
     document.title = story.title + ' - VocabVenture';
-    
-    // Update total segments display
     document.getElementById('totalSegments').textContent = story.totalSegments;
     
-    // Load first segment
-    loadSegment(0);
-    
-    // Setup navigation buttons
+    loadSegment(currentSegmentIndex);
     setupNavigation();
+    setupVolumeControl();
+    setupSpeakButton();
+}
+
+// ⭐ Setup speak button (works with both emoji and image icons)
+function setupSpeakButton() {
+    console.log('🎤 Setting up speak button...');
+    
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    const trySetup = () => {
+        const speakBtn = document.getElementById('speakBtn');
+        
+        if (speakBtn) {
+            console.log('✅ Speak button found!');
+            
+            // Remove any existing listeners
+            const newBtn = speakBtn.cloneNode(true);
+            speakBtn.parentNode.replaceChild(newBtn, speakBtn);
+            
+            // Set initial state to MUTED
+            updateSpeakButtonContent(newBtn, false);
+            newBtn.title = 'Click to play audio';
+            newBtn.style.cursor = 'pointer';
+            
+            // Add click handler
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🎤 Speak button clicked!');
+                toggleSpeak();
+            });
+            
+            console.log('✅ Speak button initialized (MUTED)');
+            return true;
+        } else {
+            attempts++;
+            if (attempts < maxAttempts) {
+                console.log(`⏳ Speak button not found, attempt ${attempts}/${maxAttempts}`);
+                setTimeout(trySetup, 300);
+            } else {
+                console.error('❌ Speak button not found after', maxAttempts, 'attempts');
+            }
+            return false;
+        }
+    };
+    
+    trySetup();
+}
+
+// ⭐ Update speak button content (handles both emoji and image icons)
+function updateSpeakButtonContent(btn, isSpeaking) {
+    // Check if button has an img child (icon version)
+    const icon = btn.querySelector('img.speak-button-icon');
+    
+    if (icon) {
+        // Image icon version
+        if (isSpeaking) {
+            icon.src = '../../assets/images/icons/speak-icon.svg';
+            icon.alt = 'speaking';
+        } else {
+            icon.src = '../../assets/images/icons/speak-icon.svg';
+            icon.alt = 'muted';
+        }
+    } else {
+        // Emoji version
+        if (isSpeaking) {
+            btn.innerHTML = '🔊';
+        } else {
+            btn.innerHTML = '🔇';
+        }
+    }
+}
+
+// ⭐ Toggle speak on/off
+function toggleSpeak() {
+    console.log('🎤 toggleSpeak called, isSpeaking:', isSpeaking);
+    
+    if (isSpeaking) {
+        stopCurrentAudio();
+        console.log('🔇 Audio stopped');
+    } else {
+        if (!currentStory || !currentStory.segments[currentSegmentIndex]) {
+            console.error('❌ No story or segment available');
+            return;
+        }
+        
+        const segment = currentStory.segments[currentSegmentIndex];
+        const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
+        const audioPath = segment[`audio-${selectedVoice}`];
+        
+        console.log('🎤 Audio path:', audioPath);
+        
+        if (audioPath) {
+            playSegmentAudio(audioPath);
+            console.log('🔊 Audio playing');
+        } else {
+            console.error('❌ No audio path found');
+        }
+    }
+}
+
+// ⭐ Update speak button (finds button each time)
+function updateSpeakButton() {
+    const speakBtn = document.getElementById('speakBtn');
+    if (speakBtn) {
+        updateSpeakButtonContent(speakBtn, isSpeaking);
+        speakBtn.title = isSpeaking ? 'Click to stop audio' : 'Click to play audio';
+        console.log(isSpeaking ? '🔊 Button: SPEAKING' : '🔇 Button: MUTED');
+    }
+}
+
+// Setup volume control
+function setupVolumeControl() {
+    setTimeout(() => {
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        
+        if (volumeSlider && volumeValue) {
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value;
+                volumeValue.textContent = volume;
+                localStorage.setItem('volume', volume);
+                
+                if (currentAudio) {
+                    currentAudio.volume = parseInt(volume) / 100;
+                    console.log(`🔊 Volume adjusted to ${volume}%`);
+                }
+            });
+            
+            console.log('✅ Volume control initialized');
+        }
+    }, 500);
 }
 
 // Load a specific segment
@@ -68,7 +210,6 @@ function loadSegment(index) {
         return;
     }
     
-    // Stop any currently playing audio before loading new segment
     stopCurrentAudio();
     
     currentSegmentIndex = index;
@@ -76,69 +217,94 @@ function loadSegment(index) {
     
     console.log('Loading segment:', index + 1, segment);
     
-    // Update segment counter
+    saveLastViewedSegment(index + 1);
+    markSegmentAsCompleted(index + 1);
+    
     document.getElementById('currentSegment').textContent = index + 1;
     
     // Update video
     const videoSource = document.getElementById('videoSource');
     const video = document.getElementById('storyVideo');
     
-    // Get the correct audio path based on voice selection
-    const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
-    const audioPath = segment[`audio-${selectedVoice}`];
-    
     videoSource.src = '../../' + segment.illustration;
     video.load();
+    video.loop = false;
+    
+    video.onended = () => {
+        video.currentTime = video.duration;
+    };
+    
     video.play();
     
-    // Update text content with interactive words
     updateStoryText(segment);
     
-    // Play audio if sound is enabled
-    if (audioPath && localStorage.getItem('sound_enabled') !== 'false') {
-        playSegmentAudio(audioPath);
-    }
+    isSpeaking = false;
+    updateSpeakButton();
     
-    // Update navigation buttons
     updateNavigationButtons();
 }
 
-// Update story text with interactive vocabulary words - IMPROVED VERSION
+// Save last viewed segment
+async function saveLastViewedSegment(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const storyId = getStoryIdFromUrl();
+        
+        if (currentUser) {
+            await ipcRenderer.invoke('progress:saveLastViewed', {
+                userId: currentUser.id,
+                storyId: storyId,
+                segmentId: segmentNumber
+            });
+            
+            console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
+        }
+    } catch (error) {
+        console.error('Error saving last viewed segment:', error);
+    }
+}
+
+// Mark segment as completed
+async function markSegmentAsCompleted(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const storyId = getStoryIdFromUrl();
+        
+        if (currentUser) {
+            await ipcRenderer.invoke('progress:markSegmentComplete', {
+                userId: currentUser.id,
+                storyId: storyId,
+                segmentId: segmentNumber
+            });
+            
+            console.log(`✅ Segment ${segmentNumber} marked as completed`);
+        }
+    } catch (error) {
+        console.error('Error marking segment as completed:', error);
+    }
+}
+
+// Update story text
 function updateStoryText(segment) {
     const storyTextElement = document.getElementById('storyText');
     let textHtml = segment.text;
-    
-    // Get selected voice for vocab audio
     const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
     
-    // Replace vocabulary words with interactive spans
     if (segment.vocabulary && segment.vocabulary.length > 0) {
-        // Sort vocabulary by word length (longest first) to handle overlapping words
         const sortedVocab = [...segment.vocabulary].sort((a, b) => b.word.length - a.word.length);
         
         sortedVocab.forEach(vocab => {
             const word = vocab.word;
-            
-            // Escape special characters for regex
             const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            
-            // Create regex that matches:
-            // - Whole word (with word boundaries)
-            // - Case insensitive
-            // - Including words with apostrophes (e.g., "don't")
             const regex = new RegExp(`\\b${escapedWord}\\b`, 'gi');
             
-            // Check if this word exists in the text
             if (regex.test(textHtml)) {
-                // Reset regex lastIndex
                 regex.lastIndex = 0;
-                
-                // Get the audio path based on selected voice
                 const vocabAudioPath = vocab[`audio-${selectedVoice}`] || '';
                 
-                // Replace the word with interactive span
                 textHtml = textHtml.replace(regex, (match) => {
-                    // Escape quotes in the data attributes to prevent breaking HTML
                     const safeWord = vocab.word.replace(/'/g, "\\'");
                     const safePronunciation = vocab.pronunciation.replace(/'/g, "\\'");
                     const safeSynonym = vocab.synonym.replace(/'/g, "\\'");
@@ -150,8 +316,6 @@ function updateStoryText(segment) {
                         ${match}
                     </span>`;
                 });
-            } else {
-                console.warn(`Vocabulary word "${word}" not found in segment text`);
             }
         });
     }
@@ -159,28 +323,34 @@ function updateStoryText(segment) {
     storyTextElement.innerHTML = textHtml;
 }
 
-// Play segment audio - IMPROVED VERSION
+// Play segment audio
 function playSegmentAudio(audioPath) {
-    // Stop any existing audio first
     stopCurrentAudio();
     
-    // Create new audio instance
     currentAudio = new Audio('../../' + audioPath);
     const volume = parseInt(localStorage.getItem('volume') || '70') / 100;
     currentAudio.volume = volume;
     
-    // Play the audio
+    console.log(`🔊 Playing audio: ${audioPath} at ${Math.round(volume * 100)}% volume`);
+    
+    isSpeaking = true;
+    updateSpeakButton();
+    
     currentAudio.play().catch(error => {
         console.log('Audio play prevented:', error);
+        isSpeaking = false;
+        updateSpeakButton();
     });
     
-    // Clean up when audio ends
     currentAudio.addEventListener('ended', () => {
+        console.log('🔊 Audio ended');
         currentAudio = null;
+        isSpeaking = false;
+        updateSpeakButton();
     });
 }
 
-// Setup navigation buttons
+// Setup navigation
 function setupNavigation() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -195,12 +365,10 @@ function setupNavigation() {
         if (currentSegmentIndex < currentStory.segments.length - 1) {
             loadSegment(currentSegmentIndex + 1);
         } else {
-            // Story completed - show quiz or completion screen
             showCompletionScreen();
         }
     });
     
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft' && currentSegmentIndex > 0) {
             prevBtn.click();
@@ -210,12 +378,11 @@ function setupNavigation() {
     });
 }
 
-// Update navigation button states
+// Update navigation buttons
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     
-    // Disable previous button on first segment
     if (currentSegmentIndex === 0) {
         prevBtn.style.opacity = '0.5';
         prevBtn.style.cursor = 'not-allowed';
@@ -226,9 +393,8 @@ function updateNavigationButtons() {
         prevBtn.disabled = false;
     }
     
-    // Change next button text on last segment
     if (currentSegmentIndex === currentStory.segments.length - 1) {
-        nextBtn.textContent = 'Complete →';
+        nextBtn.textContent = 'Complete ✓';
         nextBtn.style.background = '#4ade80';
     } else {
         nextBtn.textContent = 'Next →';
@@ -238,46 +404,44 @@ function updateNavigationButtons() {
 
 // Show completion screen
 function showCompletionScreen() {
-    // Stop audio before showing completion
     stopCurrentAudio();
     
-    alert(`Congratulations! You've completed "${currentStory.title}"!\n\nQuiz feature coming soon!`);
+    const storyId = currentStory.id;
+    const storyTitle = currentStory.title;
     
-    // TODO: Save progress to database
-    // TODO: Show quiz
-    // TODO: Award badges
+    sessionStorage.setItem('quizStoryId', storyId);
+    sessionStorage.setItem('completedStory', JSON.stringify({
+        id: storyId,
+        title: storyTitle,
+        totalSegments: currentStory.totalSegments,
+        vocabularyCount: currentStory.vocabularySummary ? currentStory.vocabularySummary.length : 0
+    }));
     
-    // For now, redirect to library
-    setTimeout(() => {
-        window.location.href = 'library.html';
-    }, 1000);
+    window.location.href = `finish-book.html?story=${storyId}`;
 }
 
 // Listen for voice changes
 document.addEventListener('DOMContentLoaded', () => {
-    // Wait a bit for components to load
     setTimeout(() => {
         const boyVoice = document.getElementById('boyVoice');
         const girlVoice = document.getElementById('girlVoice');
         
         if (boyVoice && girlVoice) {
             boyVoice.addEventListener('click', () => {
-                // Reload current segment with new voice
-                loadSegment(currentSegmentIndex);
+                stopCurrentAudio();
             });
             
             girlVoice.addEventListener('click', () => {
-                // Reload current segment with new voice
-                loadSegment(currentSegmentIndex);
+                stopCurrentAudio();
             });
         }
     }, 500);
 });
 
-// Cleanup on page unload
+// Cleanup
 window.addEventListener('beforeunload', () => {
     stopCurrentAudio();
 });
 
-// Initialize when page loads
+// Initialize
 window.addEventListener('DOMContentLoaded', initStoryViewer);

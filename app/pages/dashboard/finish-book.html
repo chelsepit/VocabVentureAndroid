@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finish Book</title>
+    <title>Story Complete - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -12,7 +12,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/game-result.css">
+    <link rel="stylesheet" href="../../css/finish-book.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
@@ -29,23 +29,22 @@
     </div> 
 
     <div class="finish-content">
-        <div class="title-header">
-            HOORAY!
+        <!-- Gold Badge Display -->
+        <div class="badge-container">
+            <img id="badgeImage" src="../../assets/images/badges/gold-badge.png" alt="Gold Badge">
         </div>
 
-        <div class="progress-comment">
-            You’re a vocabulary champ! 🏆        
+        <!-- Completion Message -->
+        <div class="progress-comment" id="completionMessage">
+            <strong>Congratulations!</strong><br>
+            You've earned a <strong style="color: #FFD700;">GOLD BADGE</strong>!<br>
+            Ready to test your vocabulary knowledge?
         </div>
 
-        <div class="score">
-            5/5
-        </div>
-
+        <!-- Continue Button -->
         <div class="finish-button">
-            <button class="exit-button">EXIT</button>
-            <button class="proceed-button">PROCEED</button>
+            <button class="vocabulary-button" onclick="continueToGames()">CONTINUE</button>
         </div>
-
     </div>
 
     <script>
@@ -57,22 +56,20 @@
                 })
                 .then(data => {
                     document.getElementById(elementId).innerHTML = data;
-                    // After HTML is inserted, initialize the Javascript for buttons
-                    // (This calls the function we defined in components.js)
                     if (window.initializeComponents) {
                         window.initializeComponents();
                     }
                 })
                 .catch(err => console.error('Error loading component:', err));
         }
-        // Load the files (Paths are relative to THIS file)
-        // We go up one level (..) to 'pages', then into 'components'
+        
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('speak-container', '../components/speak-button.html');
     </script>
 
     <script src="../../js/components.js"></script>
+    <script src="../../js/finish-book.js"></script>
 </body>
 
 </html>

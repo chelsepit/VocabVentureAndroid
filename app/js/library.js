@@ -1,4 +1,4 @@
-// library.js - Library Page Functionality
+// library.js - Library Page with WORKING SEARCH
 
 const { ipcRenderer } = require('electron');
 
@@ -8,63 +8,111 @@ if (!currentUser) {
     window.location.href = '../auth/login.html';
 }
 
+// Store progress data to persist across genre switches
+let userProgressData = {};
+let allStories = []; // Store all stories globally for search
+let currentGenre = 'folktales'; // Track current genre
+
+// ============================================
+// CALCULATE PROGRESS PERCENTAGE
+// ============================================
+function calculateProgressPercentage(status) {
+    let progress = 0;
+    
+    if (status.storyCompleted) {
+        progress += 50;
+    } else {
+        const segmentProgress = (status.completedSegments / status.totalSegments) * 50;
+        progress += segmentProgress;
+    }
+    
+    if (status.quiz1Completed) {
+        progress += 25;
+    }
+    
+    if (status.quiz2Completed) {
+        progress += 25;
+    }
+    
+    return Math.round(progress);
+}
+
 // ============================================
 // LOAD USER PROGRESS
 // ============================================
 async function loadProgress() {
     try {
-        // Get progress for each story
+        console.log('Loading progress for user:', currentUser.id);
+        
         for (let storyId = 1; storyId <= 30; storyId++) {
             try {
-                const storyProgress = await ipcRenderer.invoke('progress:get', {
+                const totalSegments = getTotalSegments(storyId);
+                
+                const status = await ipcRenderer.invoke('story:getCompletionStatus', {
                     userId: currentUser.id,
-                    storyId: storyId
+                    storyId: storyId,
+                    totalSegments: totalSegments
                 });
                 
-                // Calculate story progress (varies by story)
-                const totalSegments = getTotalSegments(storyId);
-                const completedSegments = storyProgress.filter(p => p.completed).length;
-                const percentage = Math.round((completedSegments / totalSegments) * 100);
+                const percentage = calculateProgressPercentage(status);
+                userProgressData[storyId] = percentage;
                 
-                // Update progress bars - only if they exist
-                const progressBars = document.querySelectorAll(`[data-progress="${storyId}"]`);
-                if (progressBars.length > 0) {
-                    progressBars.forEach(bar => {
-                        bar.style.width = percentage + '%';
-                    });
-                }
+                console.log(`Story ${storyId}: ${percentage}% (Story: ${status.storyCompleted ? '✓' : status.completedSegments + '/' + totalSegments}, Quiz1: ${status.quiz1Completed ? '✓' : '✗'}, Quiz2: ${status.quiz2Completed ? '✓' : '✗'})`);
+                
             } catch (err) {
-                // Skip this story if progress load fails, keep default width
-                console.log(`Could not load progress for story ${storyId}:`, err);
+                userProgressData[storyId] = 0;
+                console.log(`Could not load progress for story ${storyId}:`, err.message);
             }
         }
+        
+        applyProgressBars();
+        
     } catch (error) {
         console.error('Error loading progress:', error);
-        // Don't completely fail if progress database is unavailable
     }
+}
+
+// ============================================
+// APPLY PROGRESS BARS
+// ============================================
+function applyProgressBars() {
+    Object.keys(userProgressData).forEach(storyId => {
+        const percentage = userProgressData[storyId];
+        const progressBars = document.querySelectorAll(`[data-progress="${storyId}"]`);
+        
+        if (progressBars.length > 0) {
+            progressBars.forEach(bar => {
+                bar.style.width = percentage + '%';
+                
+                if (percentage === 100) {
+                    bar.style.background = 'linear-gradient(to right, #4ade80, #22c55e)';
+                } else if (percentage >= 50) {
+                    bar.style.background = 'linear-gradient(to right, #fbbf24, #f59e0b)';
+                } else if (percentage > 0) {
+                    bar.style.background = 'linear-gradient(to right, #60a5fa, #3b82f6)';
+                } else {
+                    bar.style.width = '0%';
+                }
+            });
+        }
+    });
 }
 
 // Get total segments for each story
 function getTotalSegments(storyId) {
     const segments = {
-        1: 13,  // How the Tinguian Learned to Plant
-        7: 14,  // The Origin of the Rainbow
-        13: 10  // The Butterfly & The Caterpillar
+        1: 13,
+        2: 14,
+        3: 10,
     };
-    return segments[storyId] || 14; // Default to 14 segments
+    return segments[storyId] || 14;
 }
 
-// Load progress after a short delay to ensure books are rendered
-setTimeout(() => {
-    loadProgress();
-}, 500);
-
 // ============================================
-// GENRE FILTERING
+// GENRE FILTERING & SEARCH
 // ============================================
 (() => {
     const DATA_PATH = "../../data/stories-index.json";
-
     const libraryContainer = document.getElementById("libraryContent");
     const genreTags = document.querySelectorAll(".genre-tag");
 
@@ -73,9 +121,7 @@ setTimeout(() => {
         return;
     }
 
-    let allStories = [];
-
-    // 1. Load JSON
+    // Load JSON
     fetch(DATA_PATH)
         .then(res => {
             if (!res.ok) throw new Error('Failed to fetch stories index');
@@ -83,15 +129,29 @@ setTimeout(() => {
         })
         .then(data => {
             allStories = data.stories;
-            // Initially show folktales (first active genre)
+            
+            // Initially show folktales
             const folktales = allStories.filter(s => s.genre === 'folktales');
             renderLibrary(folktales);
+            
+            // Load user progress
+            loadProgress();
         })
         .catch(err => console.error("Failed to load stories:", err));
 
-    // 2. Render shelves
+    // Render shelves
     function renderLibrary(stories) {
         libraryContainer.innerHTML = "";
+
+        if (stories.length === 0) {
+            libraryContainer.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px;">
+                    <h2 style="color: #6e4324; font-size: 1.5rem; margin-bottom: 10px;">No stories found</h2>
+                    <p style="color: #999; font-size: 1rem;">Try a different search term or genre</p>
+                </div>
+            `;
+            return;
+        }
 
         const grouped = groupByGenre(stories);
 
@@ -112,13 +172,15 @@ setTimeout(() => {
             libraryContainer.appendChild(section);
         });
         
-        // Attach click handlers after rendering
         attachBookClicks();
+        applyProgressBars();
     }
 
-    // 3. Render single book
+    // Render single book
     function renderBook(story) {
         const locked = !story.isActive;
+        const initialWidth = locked ? '0%' : '0%';
+        
         return `
             <div class="book-item ${locked ? "locked" : ""}"
                  data-id="${story.id}"
@@ -131,13 +193,13 @@ setTimeout(() => {
                     ${locked ? `<div class="coming-soon">Coming Soon</div>` : ""}
                 </div>
                 <div class="progress-container">
-                    <div class="progress-fill" style="width: 35%;" data-progress="${story.id}"></div>
+                    <div class="progress-fill" style="width: ${initialWidth};" data-progress="${story.id}"></div>
                 </div>
             </div>
         `;
     }
 
-    // 4. Group by genre
+    // Group by genre
     function groupByGenre(stories) {
         return stories.reduce((acc, story) => {
             if (!acc[story.genre]) acc[story.genre] = [];
@@ -146,36 +208,95 @@ setTimeout(() => {
         }, {});
     }
 
-    // 5. Genre button filtering
+    // Genre button filtering
     genreTags.forEach(tag => {
         tag.addEventListener("click", () => {
-            // Remove active class from all tags
             genreTags.forEach(t => t.classList.remove("active"));
-            // Add active class to clicked tag
             tag.classList.add("active");
 
-            const genre = tag.dataset.genre;
-            const filtered = allStories.filter(s => s.genre === genre);
+            currentGenre = tag.dataset.genre;
+            
+            // Clear search when switching genres
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            
+            const filtered = allStories.filter(s => s.genre === currentGenre);
             renderLibrary(filtered);
         });
     });
 
-    // 6. Helpers
+    // Helper
     function formatGenre(genre) {
         return genre
             .replace(/-/g, " ")
             .replace(/\b\w/g, l => l.toUpperCase());
     }
+
+    // Make renderLibrary accessible globally for search
+    window.renderLibrarySearch = renderLibrary;
 })();
+
+// ============================================
+// SEARCH FUNCTIONALITY
+// ============================================
+const searchInput = document.getElementById('searchInput');
+const clearSearch = document.getElementById('clearSearch');
+
+if (searchInput && clearSearch) {
+    // Search as user types
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        console.log('Search query:', query);
+        
+        // Show/hide clear button
+        clearSearch.style.opacity = query ? '1' : '0.7';
+        
+        // Perform search
+        performSearch(query);
+    });
+
+    // Clear search
+    clearSearch.addEventListener('click', function() {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+        searchInput.focus();
+    });
+}
+
+// ⭐ NEW: Perform search
+function performSearch(query) {
+    if (!query) {
+        // No search query - show current genre
+        const filtered = allStories.filter(s => s.genre === currentGenre);
+        window.renderLibrarySearch(filtered);
+        return;
+    }
+    
+    // Search across ALL stories (all genres)
+    const results = allStories.filter(story => {
+        const titleMatch = story.title.toLowerCase().includes(query);
+        const genreMatch = story.genre.toLowerCase().includes(query);
+        const cultureMatch = story.culture && story.culture.toLowerCase().includes(query);
+        
+        return titleMatch || genreMatch || cultureMatch;
+    });
+    
+    console.log(`Found ${results.length} results for "${query}"`);
+    
+    // Render search results
+    window.renderLibrarySearch(results);
+}
 
 // ============================================
 // ATTACH BOOK CLICK HANDLERS
 // ============================================
 function attachBookClicks() {
     document.querySelectorAll(".book-item").forEach(book => {
-        book.addEventListener("click", () => {
+        book.addEventListener("click", async () => {
             const isActive = book.dataset.active === "true";
-            const id = book.dataset.id;
+            const id = parseInt(book.dataset.id);
             const title = book.dataset.title;
 
             if (!isActive) {
@@ -185,10 +306,21 @@ function attachBookClicks() {
 
             console.log(`Opening story ${id}: ${title}`);
             
-            // Navigate to story viewer
-            // story-viewer.html should be in the same folder as library.html
-            // Both should be in /app/pages/dashboard/
-            window.location.href = `story-viewer.html?id=${id}`;
+            try {
+                const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
+                    userId: currentUser.id,
+                    storyId: id
+                });
+                
+                if (lastSegment > 0) {
+                    window.location.href = `story-viewer.html?id=${id}&segment=${lastSegment}`;
+                } else {
+                    window.location.href = `story-viewer.html?id=${id}`;
+                }
+            } catch (error) {
+                console.error('Error getting last viewed segment:', error);
+                window.location.href = `story-viewer.html?id=${id}`;
+            }
         });
         
         // Add hover effect for active books
@@ -208,30 +340,6 @@ function attachBookClicks() {
 }
 
 // ============================================
-// SEARCH FUNCTIONALITY
-// ============================================
-const searchInput = document.getElementById('searchInput');
-const clearSearch = document.getElementById('clearSearch');
-
-if (searchInput && clearSearch) {
-    searchInput.addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        console.log('Search query:', query);
-        
-        // Show/hide clear button
-        clearSearch.style.opacity = query ? '1' : '0.7';
-        
-        // TODO: Implement search filtering
-    });
-
-    clearSearch.addEventListener('click', function() {
-        searchInput.value = '';
-        searchInput.dispatchEvent(new Event('input'));
-        searchInput.focus();
-    });
-}
-
-// ============================================
 // VIEW ALL LINKS
 // ============================================
 setTimeout(() => {
@@ -241,8 +349,9 @@ setTimeout(() => {
             e.preventDefault();
             console.log('View all clicked');
             
-            // TODO: Show all books in category
-            alert('View all books - Coming soon!');
+            // Show all books in current genre
+            const filtered = allStories.filter(s => s.genre === currentGenre);
+            window.renderLibrarySearch(filtered);
         });
     });
-}, 500); // Small delay to ensure elements are rendered
+}, 500);
