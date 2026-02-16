@@ -222,6 +222,15 @@ function loadSegment(index) {
     
     document.getElementById('currentSegment').textContent = index + 1;
     
+    // Get story text element
+    const storyTextElement = document.getElementById('storyText');
+    
+    // Hide text initially
+    storyTextElement.style.opacity = '0';
+    storyTextElement.style.transform = 'translateY(30px)';
+    storyTextElement.style.transition = 'none';
+    storyTextElement.style.animation = 'none'; // Stop any previous animation
+    
     // Update video
     const videoSource = document.getElementById('videoSource');
     const video = document.getElementById('storyVideo');
@@ -230,12 +239,27 @@ function loadSegment(index) {
     video.load();
     video.loop = false;
     
+    // Show text with floating animation when video ends
     video.onended = () => {
-        video.currentTime = video.duration;
+        video.currentTime = video.duration; // Keep last frame
+        
+        // Animate text in with floating effect
+        setTimeout(() => {
+            storyTextElement.style.transition = 'opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            storyTextElement.style.opacity = '1';
+            storyTextElement.style.transform = 'translateY(0)';
+            
+            // After entrance animation, add continuous gentle floating
+            setTimeout(() => {
+                storyTextElement.style.transition = 'none';
+                storyTextElement.style.animation = 'gentleFloat 3s ease-in-out infinite';
+            }, 1000); // Wait for entrance animation to finish
+        }, 300); // Small delay before animation starts
     };
     
     video.play();
     
+    // Update the text content (but it's hidden until video ends)
     updateStoryText(segment);
     
     isSpeaking = false;

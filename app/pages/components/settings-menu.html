@@ -4,6 +4,7 @@
     </button>
 
     <div class="settings-menu" id="settingsMenu">
+        <!-- Sound Toggle -->
         <div class="mb-6">
             <div class="flex items-center justify-between mb-2">
                 <label class="font-bold text-gray-800" style="color: #6e4324; font-size: 1.2rem;">Sound</label>
@@ -14,8 +15,9 @@
             </div>
         </div>
 
+        <!-- Voice Volume -->
         <div class="mb-6">
-            <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Volume</label>
+            <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice Volume</label>
             <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
             <div class="flex justify-between text-sm text-gray-600 mt-1">
                 <span>0</span>
@@ -24,9 +26,20 @@
             </div>
         </div>
 
+        <!-- Music Volume (NEW) -->
+        <div class="mb-6">
+            <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Music Volume</label>
+            <input type="range" min="0" max="100" value="80" class="volume-slider" id="musicVolumeSlider">
+            <div class="flex justify-between text-sm text-gray-600 mt-1">
+                <span>0</span>
+                <span id="musicVolumeValue">80</span>
+                <span>100</span>
+            </div>
+        </div>
+
+        <!-- Voice Selection -->
         <div>
-            <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice
-                Selection</label>
+            <label class="font-bold text-gray-800 block mb-3" style="color: #6e4324; font-size: 1.2rem;">Voice Selection</label>
             <div class="flex gap-3">
                 <button class="voice-btn active" id="boyVoice" data-voice="boy"
                     style="color: #6e4324; font-size: 1.2rem;">Boy</button>
