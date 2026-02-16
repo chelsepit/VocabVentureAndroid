@@ -1,4 +1,4 @@
-// components.js - UNIVERSAL FIX (No loops)
+// components.js - UNIVERSAL FIX (No loops) + Dashboard Music Integration
 
 console.log('🔧 Components.js loaded');
 
@@ -117,7 +117,7 @@ function initializeSettings(btn, menu, burgerMenu) {
 // =============================================================================
 
 function initializeSettingsControls() {
-    // Sound Toggle
+    // Sound Toggle with Dashboard Music Integration
     const soundToggle = document.getElementById('soundToggle');
     if (soundToggle && !soundToggle._initialized) {
         const saved = localStorage.getItem('sound_enabled');
@@ -127,11 +127,21 @@ function initializeSettingsControls() {
         soundToggle.addEventListener('change', function() {
             localStorage.setItem('sound_enabled', this.checked);
             console.log('🔊 Sound:', this.checked ? 'ON' : 'OFF');
+            
+            // ⭐ Control dashboard music
+            if (window.dashboardMusic) {
+                window.dashboardMusic.toggle(this.checked);
+            }
+            
+            // ⭐ Control story music
+            if (window.storyMusic) {
+                window.storyMusic.toggle(this.checked);
+            }
         });
         soundToggle._initialized = true;
     }
     
-    // Volume Slider
+    // Volume Slider with Dashboard Music Integration
     const volumeSlider = document.getElementById('volumeSlider');
     const volumeValue = document.getElementById('volumeValue');
     if (volumeSlider && volumeValue && !volumeSlider._initialized) {
@@ -144,6 +154,31 @@ function initializeSettingsControls() {
             localStorage.setItem('volume', this.value);
         });
         volumeSlider._initialized = true;
+    }
+    
+    // Music Volume Slider (NEW)
+    const musicVolumeSlider = document.getElementById('musicVolumeSlider');
+    const musicVolumeValue = document.getElementById('musicVolumeValue');
+    if (musicVolumeSlider && musicVolumeValue && !musicVolumeSlider._initialized) {
+        const saved = localStorage.getItem('music_volume') || '80';
+        musicVolumeSlider.value = saved;
+        musicVolumeValue.textContent = saved;
+        
+        musicVolumeSlider.addEventListener('input', function() {
+            musicVolumeValue.textContent = this.value;
+            localStorage.setItem('music_volume', this.value);
+            
+            // Update dashboard music volume
+            if (window.dashboardMusic) {
+                window.dashboardMusic.updateMusicVolume(parseInt(this.value));
+            }
+            
+            // Update story music volume
+            if (window.storyMusic) {
+                window.storyMusic.updateMusicVolume(parseInt(this.value));
+            }
+        });
+        musicVolumeSlider._initialized = true;
     }
     
     // Voice Selection
@@ -243,18 +278,24 @@ function setupGlobalHandlers() {
 
 window.handleLogout = function() {
     console.log('🚪 Logging out...');
+    
+    // ⭐ NEW: Stop dashboard music on logout
+    if (window.dashboardMusic) {
+        window.dashboardMusic.stop();
+    }
+    
     localStorage.removeItem('currentUser');
     
     const path = window.location.pathname;
     if (path.includes('/pages/')) {
-        window.location.href = '../dashboard/welcome.html';
+        window.location.href = '../auth/login.html';
     } else {
-        window.location.href = 'pages/dashboard/welcome.html';
+        window.location.href = 'pages/auth/login.html';
     }
 };
 
 // =============================================================================
-// HELPER FUNCTIONSbu
+// HELPER FUNCTIONS
 // =============================================================================
 
 function getCurrentUser() {

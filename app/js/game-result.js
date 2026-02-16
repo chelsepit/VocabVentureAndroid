@@ -1,4 +1,4 @@
-// game-result.js - Quiz Results with BADGE UPGRADE SYSTEM
+// game-result.js - Quiz Results with BADGE UPGRADE + AUDIO FEEDBACK
 
 let quizResults = null;
 let currentQuizNumber = 1;
@@ -31,7 +31,7 @@ function loadResults() {
     displayResults();
 }
 
-// Display results with badge upgrade logic
+// Display results with badge upgrade logic and audio
 async function displayResults() {
     const score = quizResults.score;
     const total = quizResults.total;
@@ -45,30 +45,48 @@ async function displayResults() {
     if (currentQuizNumber === 1) {
         // QUIZ 1 RESULTS
         if (passedQuiz) {
-            // Passed Quiz 1 → Upgrade to SILVER
+            // Perfect/Passed Quiz 1 → Upgrade to SILVER
             resultTitle = 'EXCELLENT!';
             resultMessage = '🥈 Badge upgraded to SILVER!';
             badgeType = 'silver';
             await upgradeBadge('silver');
+            
+            // ⭐ Play audio based on score
+            if (score === 5) {
+                // Perfect score - play hooray + continue
+                playAudioSequence(['hooray', 'continue']);
+            } else {
+                // Good score (4/5) - play nicejob
+                playAudio('nicejob');
+            }
         } else {
             // Failed Quiz 1 → Stay BRONZE
             resultTitle = 'NOT QUITE!';
             resultMessage = `You need 4-5 correct to upgrade to Silver. You got ${score}/5. Try again!`;
             badgeType = 'bronze';
+            
+            // ⭐ Play nicejob audio for failed attempt
+            playAudio('nicejob');
         }
     } else {
         // QUIZ 2 RESULTS
         if (passedQuiz) {
-            // Passed Quiz 2 → Upgrade to GOLD
+            // Perfect/Passed Quiz 2 → Upgrade to GOLD
             resultTitle = 'PERFECT!';
             resultMessage = '🥇 Badge upgraded to GOLD! You\'re a vocabulary master!';
             badgeType = 'gold';
             await upgradeBadge('gold');
+            
+            // ⭐ Play excellent audio
+            playAudio('excellent');
         } else {
             // Failed Quiz 2 → Stay SILVER
             resultTitle = 'ALMOST THERE!';
             resultMessage = `You need 4-5 correct to upgrade to Gold. You got ${score}/5. Keep trying!`;
             badgeType = 'silver';
+            
+            // ⭐ Play nicejob2 audio
+            playAudio('nicejob2');
         }
     }
     
@@ -81,6 +99,57 @@ async function displayResults() {
     
     // Create buttons
     createButtons(passedQuiz);
+}
+
+// ⭐ NEW: Play audio based on selected voice
+function playAudio(audioType) {
+    const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
+    const volume = parseInt(localStorage.getItem('volume') || '70') / 100;
+    
+    const audioPath = `../../assets/audio/button-sounds/${audioType}_${selectedVoice}.mp3`;
+    
+    console.log(`🔊 Playing audio: ${audioPath}`);
+    
+    const audio = new Audio(audioPath);
+    audio.volume = volume;
+    
+    audio.play().catch(error => {
+        console.error('Audio play error:', error);
+    });
+}
+
+// ⭐ NEW: Play audio sequence (hooray then continue)
+function playAudioSequence(audioTypes) {
+    const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
+    const volume = parseInt(localStorage.getItem('volume') || '70') / 100;
+    
+    let currentIndex = 0;
+    
+    function playNext() {
+        if (currentIndex >= audioTypes.length) return;
+        
+        const audioType = audioTypes[currentIndex];
+        const audioPath = `../../assets/audio/button-sounds/${audioType}_${selectedVoice}.mp3`;
+        
+        console.log(`🔊 Playing audio ${currentIndex + 1}/${audioTypes.length}: ${audioPath}`);
+        
+        const audio = new Audio(audioPath);
+        audio.volume = volume;
+        
+        audio.addEventListener('ended', () => {
+            currentIndex++;
+            playNext();
+        });
+        
+        audio.play().catch(error => {
+            console.error('Audio play error:', error);
+            // Try next audio even if current fails
+            currentIndex++;
+            playNext();
+        });
+    }
+    
+    playNext();
 }
 
 // Upgrade badge in database
@@ -100,7 +169,7 @@ async function upgradeBadge(newBadgeType) {
                 badgeType: newBadgeType
             });
             
-            // Upgrade badge (this will update the existing badge)
+            // Upgrade badge
             await ipcRenderer.invoke('badge:upgrade', {
                 userId: currentUser.id,
                 storyId: storyId,
@@ -148,13 +217,11 @@ function createButtons(passed) {
     if (currentQuizNumber === 1) {
         // QUIZ 1
         if (passed) {
-            // Passed → Can proceed to Quiz 2
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
                 <button class="proceed-button" onclick="proceedToQuiz2()">PROCEED TO QUIZ 2</button>
             `;
         } else {
-            // Failed → Must retake or review
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
                 <button class="review-button" onclick="reviewVocabulary()">REVIEW VOCABULARY</button>
@@ -164,12 +231,10 @@ function createButtons(passed) {
     } else {
         // QUIZ 2
         if (passed) {
-            // Passed → Gold achieved, just exit
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT TO LIBRARY</button>
             `;
         } else {
-            // Failed → Must retake or review
             buttonsContainer.innerHTML = `
                 <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
                 <button class="review-button" onclick="reviewVocabulary()">REVIEW VOCABULARY</button>
@@ -204,7 +269,7 @@ function retakeQuiz() {
     }
 }
 
-// Proceed to Quiz 2 (only after passing Quiz 1)
+// Proceed to Quiz 2
 function proceedToQuiz2() {
     window.location.href = `decode-the-word.html?story=${storyId}`;
 }

@@ -61,27 +61,40 @@ function loadQuestion(index) {
     // Update question counter
     document.getElementById('currentQuestion').textContent = index + 1;
     
-    // Format the question with blank placeholder
-    // The question text has "____________" which we'll replace with an image placeholder
+    // Get the correct answer word
+    const correctWord = question.options[question.correctAnswer];
+    
+    // Get story ID to build the image path
+    const storyId = getStoryId();
+    
+    // Build image path: assets/images/pick-a-word/story1-pick-a-word/harvest.png
+    const imagePath = `../../assets/images/pick-a-word/story${storyId}-pick-a-word/${correctWord.toLowerCase().replace(/\s+/g, '')}.png`;
+    
+    // Format the question with the vocabulary image
     const questionText = question.question;
-    const parts = questionText.split('____________');
+    
+    // Split by any sequence of underscores (3 or more)
+    const parts = questionText.split(/_{3,}/);
     
     let questionHTML = '';
     
-    if (parts.length === 2) {
-        // Question has a blank in the middle
-        questionHTML = `
-            <span class="sentence-part">${parts[0]}</span>
-            <div class="image-placeholder">
-                <img src="../../assets/images/icons/question-mark-icon.svg" alt="blank" style="width: 40px; height: 40px; opacity: 0.6;">
-                <span class="blank-line"></span>
-            </div>
-            <span class="sentence-part">${parts[1]}</span>
-        `;
-    } else {
-        // No blank placeholder, just show the question
-        questionHTML = `<p style="font-size: 1.4rem; line-height: 1.8; color: #333; text-align: center;">${questionText}</p>`;
-    }
+    // if (parts.length === 2) {
+    //     // Question has a blank in the middle - show vocabulary image
+    //     questionHTML = `
+    //         <span class="sentence-part">${parts[0]}</span>
+    //         <div class="vocab-image-container" style="display: inline-block; margin: 0 15px; vertical-align: middle;">
+    //             <img src="${imagePath}" 
+    //                  alt="${correctWord}" 
+    //                  class="vocab-image"
+    //                  style="width: 120px; height: 120px; object-fit: contain; border: 3px solid #FF6B35; border-radius: 15px; padding: 10px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: block;"
+    //                  onerror="this.src='../../assets/images/icons/question-mark-icon.svg'; this.style.width='80px'; this.style.height='80px'; console.error('Image not found:', '${imagePath}');">
+    //         </div>
+    //         <span class="sentence-part">${parts[1]}</span>
+    //     `;
+    // } else {
+    //     // No blank placeholder, just show the question
+    //     questionHTML = `<p style="font-size: 1.4rem; line-height: 1.8; color: #333; text-align: center;">${questionText}</p>`;
+    // }
     
     // Display question
     document.getElementById('questionText').innerHTML = questionHTML;
