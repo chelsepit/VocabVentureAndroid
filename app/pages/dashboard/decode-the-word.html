@@ -25,7 +25,6 @@
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
-        <div id="speak-container"></div>
     </div>
 
     <!-- Intro Screen -->
@@ -52,18 +51,16 @@
         </div>
 
         <!-- Progress indicator -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <span style="font-family: 'Nunito', sans-serif; font-weight: 700; color: #6e4324; font-size: 1.2rem;">
-                Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
-            </span>
+        <div class="progress-indicator">
+            <span class="progress-text">Questions <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
         </div>
 
         <!-- Question text with underlined word -->
         <div class="progress-comment">
-            <div style="font-size: 1.4rem; line-height: 2; color: #333; text-align: center; margin-bottom: 15px;">
+            <div class="sentence-text">
                 <span id="sentenceText">The king commanded his soldiers to guard the castle.</span>
             </div>
-            <div style="font-size: 1.3rem; font-weight: 700; color: #6e4324; text-align: center; margin-top: 20px;">
+            <div class="question-prompt">
                 <span id="questionPrompt">What does commanded mean?</span>
             </div>
         </div>

@@ -162,7 +162,6 @@ function getTotalSegments(storyId) {
             section.innerHTML = `
                 <div class="section-header">
                     <h2 class="section-title">${formatGenre(genre)}</h2>
-                    <a href="#" class="view-all-link">view all...</a>
                 </div>
                 <div class="book-grid">
                     ${grouped[genre].map(renderBook).join("")}
@@ -340,18 +339,5 @@ function attachBookClicks() {
 }
 
 // ============================================
-// VIEW ALL LINKS
+// SEARCH AND FILTER
 // ============================================
-setTimeout(() => {
-    const viewAllLinks = document.querySelectorAll('.view-all-link');
-    viewAllLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('View all clicked');
-            
-            // Show all books in current genre
-            const filtered = allStories.filter(s => s.genre === currentGenre);
-            window.renderLibrarySearch(filtered);
-        });
-    });
-}, 500);

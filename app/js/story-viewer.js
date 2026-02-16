@@ -205,6 +205,7 @@ function setupVolumeControl() {
 }
 
 // Load a specific segment
+// Load a specific segment
 function loadSegment(index) {
     if (!currentStory || index < 0 || index >= currentStory.segments.length) {
         return;
@@ -225,7 +226,11 @@ function loadSegment(index) {
     // Get story text element
     const storyTextElement = document.getElementById('storyText');
     
-    // Hide text initially
+    // Get content container
+    const contentContainer = document.getElementById('storyContent');
+    
+    // ⭐ HIDE BOTH container and text initially
+    contentContainer.style.opacity = '0';
     storyTextElement.style.opacity = '0';
     storyTextElement.style.transform = 'translateY(30px)';
     storyTextElement.style.transition = 'none';
@@ -239,12 +244,17 @@ function loadSegment(index) {
     video.load();
     video.loop = false;
     
-    // Show text with floating animation when video ends
+    // Show BOTH container and text when video ends
     video.onended = () => {
         video.currentTime = video.duration; // Keep last frame
         
-        // Animate text in with floating effect
+        // Animate BOTH container and text in
         setTimeout(() => {
+            // ⭐ Show the container
+            contentContainer.style.transition = 'opacity 0.8s ease-out';
+            contentContainer.style.opacity = '1';
+            
+            // Show the text
             storyTextElement.style.transition = 'opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
             storyTextElement.style.opacity = '1';
             storyTextElement.style.transform = 'translateY(0)';

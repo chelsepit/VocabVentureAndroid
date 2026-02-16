@@ -7,13 +7,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../assets/images/backgrounds/fable-bg.jpg') no-repeat center center;
+    background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
-    /* Darker overlay so text pops */
-    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.3);
-    filter: blur(4px);
-    transform: scale(1.1); /* Removes blur edges */
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
 /* =========================
@@ -39,8 +36,8 @@
     border: 4px solid rgba(255, 255, 255, 0.527);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    width: 90%;
-    max-width: 700px;
+    width: 98%;
+    max-width: 1100px;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -54,7 +51,7 @@
    ========================= */
 .title-header {
     font-family: 'header-font', arial;
-    font-size: 2.5rem;
+    font-size: clamp(1.6rem, 5vw, 2.5rem);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -72,11 +69,15 @@
    TEXT
    ========================= */
 .progress-comment {
-    font-family: 'body-font', sans-serif; /* Use your nice font */
+    font-family: 'body-font', sans-serif; 
     color: white;
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
     line-height: 1.4;
-    max-width: 80%;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* =========================
@@ -84,14 +85,36 @@
    ========================= */
 .sentence-with-image {
     display: flex;
-    align-items: flex-end; /* Align to bottom baseline */
+    align-items: center;
     justify-content: center;
     gap: 15px;
     flex-wrap: wrap;
+    width: 100%; 
+    text-align: center;
+    padding: 0 10px; 
+    box-sizing: border-box;
+}
+
+#questionText {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+#questionText.sentence-with-image {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+#questionText .vocab-image-container {
+    flex: 0 0 auto;
+    display: inline-flex;
+    vertical-align: middle;
 }
 
 .sentence-part {
-    display: inline-block;
+    display: inline;
     line-height: 1.4;
 }
 
@@ -100,7 +123,7 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    margin-bottom: -5px; /* Fine-tune vertical alignment */
+    margin-bottom: -5px; 
 }
 
 .image-placeholder img {
@@ -124,24 +147,28 @@
 .finish-button {
     margin-top: 30px;
     display: flex;
-    gap: 20px;
+    gap: clamp(12px, 3vw, 20px);
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap; /* Wraps on mobile */
+    flex-wrap: wrap;
+    padding: 0 clamp(10px, 2vw, 20px);
 }
 
 .finish-button button {
-    padding: 15px 30px;
+    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: clamp(0.95rem, 3.5vw, 1.5rem);
     border-radius: 50px;
     font-family: 'title-font', sans-serif; 
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.1); 
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    white-space: nowrap;
+    display: inline-block;
+    min-width: fit-content;
 }
 
 /* =========================
@@ -166,7 +193,6 @@
     }
 
     .progress-comment {
-        font-size: 1.4rem;
         max-width: 100%;
     }
 
@@ -183,7 +209,7 @@
     }
 
     .finish-button {
-        flex-direction: row; /* Stack buttons vertically */
+        flex-direction: row;
         gap: 15px;
         align-items: center;
     }
@@ -191,7 +217,6 @@
     .finish-button button {
         width: 100%;
         max-width: 200px;
-        font-size: 1rem;
         padding: 15px 30px;
     }
 }
@@ -215,7 +240,6 @@
     }
 
     .progress-comment {
-        font-size: 1.2rem; /* Smaller font for small screens */
         margin-bottom: 20px;
     }
 
@@ -243,7 +267,6 @@
 
     .finish-button button {
         max-width: 180px;
-        font-size: 1rem;
         padding: 10px 20px;
     }
 }

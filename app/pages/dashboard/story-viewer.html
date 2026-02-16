@@ -45,17 +45,13 @@
 
     <!-- Navigation Controls -->
     <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px;">
-        <button id="prevBtn" class="nav-btn" style="background: rgba(255, 255, 255, 0.9); border: 2px solid #FF6B35; padding: 15px 30px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
-            ← Previous
-        </button>
-        <button id="nextBtn" class="nav-btn" style="background: #FFD93D; border: 2px solid #FF6B35; padding: 15px 30px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
-            Next →
-        </button>
+        <button id="prevBtn" class="nav-btn">← Previous</button>
+        <button id="nextBtn" class="nav-btn">Next →</button>
     </div>
 
     <!-- Progress Indicator -->
-    <div style="position: fixed; top: 100px; right: 30px; background: rgba(255, 255, 255, 0.9); padding: 15px 20px; border-radius: 15px; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-        <div style="font-family: 'Nunito', sans-serif; font-weight: 700; color: #6e4324; font-size: 1rem;">
+    <div class="progress-indicator">
+        <div>
             Segment <span id="currentSegment">1</span> / <span id="totalSegments">1</span>
         </div>
     </div>
@@ -84,7 +80,7 @@
     </script>
 
     <script src="../../js/components.js"></script>
-    <script src="../../js/story-music.js"></script><!-- ⭐ ADDED: Story background music -->
+    <script src="../../js/story-music.js"></script>
     <script src="../../js/book-stories.js"></script>
     <script src="../../js/story-viewer.js"></script>
 </body>

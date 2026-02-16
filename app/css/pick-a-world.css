@@ -7,20 +7,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../assets/images/backgrounds/fable-bg.jpg') no-repeat center center;
+    background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
-    /* Darker overlay so text pops */
-    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.3);
-    filter: blur(4px);
-    transform: scale(1.1); /* Removes blur edges */
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
 /* =========================
    MAIN CONTENT CARD
    ========================= */
 .finish-content {
-    color: white;
+    color: rgb(0, 0, 0);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -32,15 +29,15 @@
     justify-content: center;
     text-align: center;
     
-    background: rgba(255, 255, 255, 0.215);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
     padding: 50px;
     border-radius: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.527);
+    border: 4px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    width: 90%;
-    max-width: 700px;
+    width: 95%;
+    max-width: 1000px;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -54,7 +51,7 @@
    ========================= */
 .title-header {
     font-family: 'header-font', arial;
-    font-size: 2.5rem;
+    font-size: clamp(1.6rem, 5vw, 3rem);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -69,14 +66,58 @@
 }
 
 /* =========================
-   TEXT
+   TEXT & QUESTION
    ========================= */
 .progress-comment {
-    font-family: 'body-font', sans-serif; /* Use your nice font */
-    color: white;
-    font-size: 1.8rem;
-    line-height: 1.4;
-    max-width: 80%;
+    font-family: 'body-font', sans-serif;
+    color: rgb(0, 0, 0);
+    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    line-height: 1.3;
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Sentence with image container */
+.sentence-with-image {
+    display: flex;
+    align-items: baseline; /* Changed from center to baseline */
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.sentence-part {
+    display: inline;
+    line-height: 1.6;
+}
+
+/* Vocabulary image styling */
+.vocab-image-container {
+    display: inline-block;
+    vertical-align: baseline; 
+    margin: 0 5px;
+    line-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.vocab-image {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    display: block;
+    margin: 0;
+    margin-bottom: -20px; 
+    padding: 0;
+    line-height: 0;
+    
+}
+
+/* Fallback icon for missing images */
+.vocab-image.fallback-icon {
+    width: 80px !important;
+    height: 80px !important;
 }
 
 /* =========================
@@ -85,24 +126,38 @@
 .finish-button {
     margin-top: 30px;
     display: flex;
-    gap: 20px;
+    gap: clamp(12px, 3vw, 15px);
     width: 100%;
     justify-content: center;
-    flex-wrap: wrap; /* Wraps on mobile */
+    flex-wrap: wrap;
+    padding: 0 clamp(10px, 2vw, 15px);
 }
 
 .finish-button button {
-    padding: 15px 30px;
-    font-weight: 800;
-    font-size: 1.5rem;
+    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3.5vw, 1.8rem);
     border-radius: 50px;
     font-family: 'title-font', sans-serif; 
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.1); 
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    white-space: nowrap;
+    display: inline-block;
+    min-width: fit-content;
+}
+
+.finish-button button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.15);
+}
+
+.finish-button button:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.1);
 }
 
 /* =========================
@@ -114,73 +169,77 @@
     .finish-content {
         padding: 40px 20px;
         width: 85%;
+        max-width: 900px;
     }
 
-    .badge-container {
-        width: 120px;
-        height: 120px;
-    }
-    
-    .badge-container img {
-        width: 70px;
-        height: 70px;
-    }
-
-    .progress-comment {
-        font-size: 1.4rem;
-        max-width: 100%;
-    }
-
-    .finish-button {
-        flex-direction: column; /* Stack buttons vertically */
-        gap: 15px;
-        align-items: center;
-    }
-
-    .finish-button button {
-        width: 100%;
-        max-width: 200px;
-        font-size: 1.5rem;
-        padding: 15px 30px;
-
+    .vocab-image {
+        width: 90px;
+        height: 90px;
     }
 }
 
 /* Small Phones */
 @media (max-width: 480px) {
     .finish-content {
-        padding: 30px 15px;
+        padding: 30px 20px;
         border-radius: 25px;
+        width: 85%;
     }
 
-    .badge-container {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 20px;
-    }
-    
-    .badge-container img {
-        width: 60px;
-        height: 60px;
+    .title-header {
+        margin-bottom: 15px;
     }
 
     .progress-comment {
-        font-size: 1.2rem; /* Smaller font for small screens */
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+    }
+
+    .sentence-with-image {
+        gap: 8px;
+    }
+
+    .vocab-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    .vocab-image.fallback-icon {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    .finish-button {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
     }
 
     .finish-button button {
-        max-width: 180px;
-        font-size: 1.5rem;
-        padding: 15px 30px;
+        width: 100%;
+        min-width: unset;
+        max-width: 100%;
     }
 }
 
 /* Landscape Mode Fix (Short Screens) */
 @media (max-height: 600px) {
     .finish-content {
-        top: 80px; /* Stick to top instead of center */
+        top: 80px;
         transform: translate(-50%, 0);
         margin-bottom: 20px;
+        padding: 30px;
+    }
+    
+    .vocab-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .title-header {
+        margin-bottom: 15px;
+    }
+
+    .progress-comment {
+        margin-bottom: 10px;
     }
 }

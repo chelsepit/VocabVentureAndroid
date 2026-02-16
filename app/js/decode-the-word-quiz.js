@@ -97,7 +97,7 @@ function formatSentenceWithUnderline(sentence, wordToUnderline) {
     const regex = new RegExp(`\\b${wordToUnderline}\\b`, 'gi');
     
     return sentence.replace(regex, (match) => {
-        return `<span style="text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: #FF6B35; font-weight: 700;">${match}</span>`;
+        return `<span style="text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: #000000; font-weight: 700;">${match}</span>`;
     });
 }
 
@@ -160,10 +160,10 @@ function showFeedback(isCorrect, explanation) {
     
     if (isCorrect) {
         feedbackElement.innerHTML = `
-            <div style="color: #16a34a;">
+            <div style="color: #000000;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✓</div>
-                <div style="font-size: 1.3rem;">Correct!</div>
-                <div style="font-size: 1rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                <div style="font-size: 2.3rem;">Correct!</div>
+                <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
                     ${explanation}
                 </div>
             </div>
@@ -172,10 +172,10 @@ function showFeedback(isCorrect, explanation) {
         feedbackElement.style.border = '2px solid #4ade80';
     } else {
         feedbackElement.innerHTML = `
-            <div style="color: #dc2626;">
+            <div style="color: #000000;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✗</div>
-                <div style="font-size: 1.3rem;">Not quite!</div>
-                <div style="font-size: 1rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                <div style="font-size: 2.3rem;">Not quite!</div>
+                <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
                     ${explanation}
                 </div>
             </div>

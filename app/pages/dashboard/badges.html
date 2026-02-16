@@ -19,35 +19,6 @@
     
     <style>
         /* Additional styles for dynamic badges */
-        .back-button {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #FF6B35;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-right: 10px;
-        }
-        
-        .back-button:hover {
-            background: #FF6B35;
-            transform: translateX(-3px);
-        }
-        
-        .back-button:hover svg {
-            stroke: white;
-        }
-        
-        .back-button svg {
-            stroke: #FF6B35;
-            transition: stroke 0.3s ease;
-        }
-        
         .badge-item {
             position: relative;
             cursor: pointer;
@@ -56,25 +27,6 @@
         
         .badge-item.earned:hover {
             transform: translateY(-10px) scale(1.05);
-        }
-        
-        .badge-info {
-            margin-top: 10px;
-            text-align: center;
-        }
-        
-        .badge-label {
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #6e4324;
-            margin-bottom: 4px;
-        }
-        
-        .badge-date {
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.75rem;
-            color: #999;
         }
         
         .badge-stats {
@@ -158,6 +110,10 @@
             position: relative;
             max-width: 400px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         .close-modal {
@@ -179,7 +135,8 @@
         .modal-badge-image {
             width: 150px;
             height: 150px;
-            margin: 20px 0;
+            margin: 20px auto;
+            object-fit: contain;
         }
         
         .badge-modal-content h2 {
@@ -217,11 +174,9 @@
 <body>
     <div class="components">
         <div class="left-group">
-            <button class="back-button" onclick="goToLibrary()" title="Back to Library">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-            </button>
+            <a href="library.html" class="back-button" title="Back to Library">
+                <span class="header-font" style="color: white; font-size: 1.5rem; font-weight: 600; padding: 1px 5px;">Back</span>
+            </a>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>

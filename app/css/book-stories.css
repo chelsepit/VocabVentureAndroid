@@ -60,18 +60,20 @@ html, body {
     z-index: 100;
     background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
-    color: #333;
+    color: #000000;
     font-family: 'Nunito', sans-serif;
-    width: 90%;
-    max-width: 500px;
-    padding: 20px;
-    font-size: 16px;
+    width: 92%;
+    max-width: 600px;
+    padding: clamp(20px, 5vw, 40px);
+    font-size: clamp(1.4rem, 5vw, 2rem);
     border-radius: 24px;
     text-align: center;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    line-height: 1.6;
+    line-height: 1.8;
     max-height: 80vh;
     overflow-y: auto;
+    opacity: 0;  
+    transition: opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);  
 }
 
 .content h1,
@@ -80,11 +82,12 @@ html, body {
     font-family: 'Baloo 2', cursive;
     font-weight: 800;
     margin-bottom: 12px;
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
 }
 
 .content p {
     margin-bottom: 12px;
-    font-size: 14px;
+    font-size: clamp(1.4rem, 5vw, 2rem);
 }
 
 .content p:last-child {
@@ -126,18 +129,15 @@ html, body {
     .content {
         max-width: 540px;
         padding: 24px;
-        font-size: 16px;
         border-radius: 28px;
     }
     
     .content h1,
     .content h2 {
-        font-size: 28px;
         margin-bottom: 14px;
     }
     
     .content p {
-        font-size: 15px;
         margin-bottom: 14px;
     }
 }
@@ -147,7 +147,6 @@ html, body {
     .content {
         max-width: 600px;
         padding: 28px;
-        font-size: 17px;
         border-radius: 32px;
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
         max-height: 75vh;
@@ -155,12 +154,10 @@ html, body {
     
     .content h1,
     .content h2 {
-        font-size: 32px;
         margin-bottom: 16px;
     }
     
     .content p {
-        font-size: 16px;
         margin-bottom: 14px;
         line-height: 1.7;
     }
@@ -171,18 +168,15 @@ html, body {
     .content {
         max-width: 700px;
         padding: 32px;
-        font-size: 18px;
         border-radius: 36px;
     }
     
     .content h1,
     .content h2 {
-        font-size: 36px;
         margin-bottom: 18px;
     }
     
     .content p {
-        font-size: 17px;
         margin-bottom: 16px;
     }
 }
@@ -192,18 +186,15 @@ html, body {
     .content {
         max-width: 800px;
         padding: 40px;
-        font-size: 19px;
         border-radius: 40px;
     }
     
     .content h1,
     .content h2 {
-        font-size: 40px;
         margin-bottom: 20px;
     }
     
     .content p {
-        font-size: 18px;
         margin-bottom: 16px;
         line-height: 1.8;
     }
@@ -214,15 +205,6 @@ html, body {
     .content {
         max-width: 900px;
         padding: 48px;
-    }
-    
-    .content h1,
-    .content h2 {
-        font-size: 44px;
-    }
-    
-    .content p {
-        font-size: 20px;
     }
 }
 
@@ -238,12 +220,10 @@ html, body {
     
     .content h1,
     .content h2 {
-        font-size: 24px;
         margin-bottom: 10px;
     }
     
     .content p {
-        font-size: 14px;
         margin-bottom: 10px;
         line-height: 1.5;
     }
@@ -403,4 +383,52 @@ html, body {
 
 .text-glow {
     animation: textGlow 2s ease-in-out infinite;
+}
+
+/* ========================================
+   NAVIGATION BUTTONS
+   ======================================== */
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #FF6B35;
+    padding: clamp(12px, 2.5vw, 18px) clamp(24px, 5vw, 36px);
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+#nextBtn {
+    background: #FFD93D;
+}
+
+/* ========================================
+   PROGRESS INDICATOR
+   ======================================== */
+
+.progress-indicator {
+    opacity: 0;
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 20px;
+    border-radius: 15px;
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    color: #6e4324;
+    font-size: clamp(0.8rem, 2vw, 1rem);
 }
