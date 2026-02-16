@@ -56,13 +56,6 @@
       "dataFile": "stories/story-2.json"
     },
     {
-      "id": 7,
-      "title": "The Origin of Rice",
-      "genre": "myths",
-      "coverImage": "assets/images/books/myths/the-legend-of-the-first-rainbow.svg",
-      "isActive": false
-    },
-    {
       "id": 9,
       "title": "The Sun And The Moon",
       "genre": "myths",
@@ -124,7 +117,7 @@
       "id": 17,
       "title": "The Ant and the Grasshopper",
       "genre": "fables",
-      "coverImage": "assets/images/books/fables/the-and-and-the-grashoppper.svg",
+      "coverImage": "assets/images/books/fables/the-ant-and-the-grasshopper.svg",
       "isActive": false
     },
     {

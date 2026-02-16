@@ -7,7 +7,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../assets/images/backgrounds/fable-bg.jpg') no-repeat center center;
+    background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
 }
@@ -19,7 +19,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -40%) scale(0.9);
+    opacity: 0;
     
     display: flex;
     flex-direction: column;
@@ -29,20 +30,21 @@
 
     background: rgba(255, 255, 255, 0.215);
     backdrop-filter: blur(10px);
-    padding: 50px;
+    padding: clamp(25px, 5vw, 50px) clamp(25px, 5vw, 60px);
     border-radius: 40px;
     border: 4px solid rgba(255, 255, 255, 0.527);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    padding: 50px 60px;
-    width: 90%;
-    max-width: 750px;
-    animation: fadeIn 0.6s ease;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -45%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
+@keyframes popIn {
+    from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 /* =========================
@@ -50,10 +52,10 @@
    ========================= */
 .title-header {
     font-family: 'title-font', 'Baloo 2', arial;
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 6vw, 3.5rem);
     font-weight: 800;
-    color: white;
-    margin-bottom: 30px;
+    color: rgb(0, 0, 0);
+    margin-bottom: clamp(12px, 4vw, 10px);
     text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
 }
 
@@ -61,48 +63,63 @@
    TEXT
    ========================= */
 .progress-comment {
-    font-family: 'body-font', sans-serif; /* Use your nice font */
-    color: #ffffff;
-    font-size: 1.8rem;
+    font-family: 'body-font', sans-serif;
+    color: #000000;
+    font-size: clamp(2rem, 3.5vw, 2rem);
     line-height: 1.4;
-    margin-bottom: 40px;
+    margin-top: 10px;
+    margin-bottom: clamp(15px, 4vw, 20px);
     max-width: 90%;
+}
+
+.progress-text {
+    font-family: 'body-font', sans-serif;
+    color: #000000;
+    font-size: clamp(1.8rem, 3.5vw, 2rem);
+    font-weight:bold;
 }
 
 /* =========================
    BUTTON
    ========================= */
 .finish-button {
+    margin-top: clamp(20px, 3vw, 30px);
     display: flex;
+    gap: clamp(12px, 3vw, 20px);
+    width: 100%;
     justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+    padding: 0 clamp(10px, 2vw, 20px);
 }
 
 .start-button {
-    padding: 18px 60px;
+    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
     background: #FFD93D;
-    border: solid 1px white;
-    color: black;
+    border: none;
+    color: rgb(0, 0, 0);
     border-radius: 50px;
     font-family: 'Baloo 2', sans-serif;
     font-weight: 800;
-    font-size: 1.8rem;
+    font-size: clamp(0.95rem, 3.5vw, 1.5rem);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    box-shadow: 0 8px 20px rgba(255, 217, 61, 0.4);
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    white-space: nowrap;
+    display: inline-block;
+    min-width: fit-content;
 }
 
 .start-button:hover {
     background: #ffe670;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 25px rgba(255, 217, 61, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 0 rgba(0,0,0,0.1);
 }
 
 .start-button:active {
-    transform: translateY(0px);
-    box-shadow: 0 4px 15px rgba(255, 217, 61, 0.4);
+    transform: translateY(0);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1);
 }
 
 /* =========================
@@ -112,50 +129,47 @@
 /* Tablets */
 @media (max-width: 768px) {
     .finish-content {
-        padding: 40px 30px;
+        padding: clamp(25px, 4vw, 40px);
         width: 85%;
     }
 
     .title-header {
-        font-size: 2.8rem;
-        margin-bottom: 25px;
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        margin-bottom: clamp(18px, 3vw, 25px);
     }
 
     .progress-comment {
-        font-size: 1.1rem;
+        font-size: clamp(2rem, 3.5vw, 2rem);
         line-height: 1.6;
-        margin-bottom: 35px;
+        margin-bottom: clamp(25px, 4vw, 35px);
         max-width: 100%;
     }
 
-    .start-button {
-        padding: 16px 50px;
-        font-size: 1.5rem;
+    .finish-button {
+        gap: clamp(8px, 2vw, 15px);
     }
 }
 
 /* Small Phones */
 @media (max-width: 480px) {
     .finish-content {
-        padding: 30px 20px;
+        padding: clamp(18px, 3vw, 30px);
         width: 90%;
     }
 
     .title-header {
-        font-size: 2.2rem;
-        margin-bottom: 20px;
+        font-size: clamp(1.4rem, 4vw, 2.2rem);
+        margin-bottom: clamp(14px, 2.5vw, 20px);
     }
 
     .progress-comment {
-        font-size: 0.95rem;
+        font-size: clamp(2rem, 3.5vw, 2rem);
         line-height: 1.5;
-        margin-bottom: 30px;
+        margin-bottom: clamp(20px, 3vw, 30px);
     }
 
-    .start-button {
-        padding: 14px 40px;
-        font-size: 1.3rem;
-        letter-spacing: 1px;
+    .finish-button {
+        gap: clamp(8px, 2vw, 12px);
     }
 }
 
@@ -163,23 +177,23 @@
 @media (max-height: 600px) {
     .finish-content {
         top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 25px 30px;
+        transform: translate(-50%, -40%) scale(0.9);
+        opacity: 0;
+        padding: clamp(15px, 2vw, 25px);
     }
 
     .title-header {
-        font-size: 2rem;
-        margin-bottom: 15px;
+        font-size: clamp(1.2rem, 3vw, 2rem);
+        margin-bottom: clamp(10px, 1.5vw, 15px);
     }
 
     .progress-comment {
-        font-size: 0.9rem;
+        font-size: clamp(2rem, 3.5vw, 2rem);
         line-height: 1.4;
-        margin-bottom: 20px;
+        margin-bottom: clamp(12px, 2vw, 20px);
     }
 
-    .start-button {
-        padding: 12px 35px;
-        font-size: 1.2rem;
+    .finish-button {
+        gap: clamp(6px, 1.5vw, 10px);
     }
 }

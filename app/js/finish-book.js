@@ -38,11 +38,6 @@ function displayBronzeBadge() {
             <strong>Congratulations!</strong><br>
             You've earned a <strong style="color: #CD7F32;">BRONZE BADGE</strong> for completing <strong>"${completedStory.title}"</strong>!<br>
             <br>
-            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
-                💡 Complete the quizzes to upgrade your badge!<br>
-                🥈 Silver: Score 4-5 in Quiz 1<br>
-                🥇 Gold: Score 4-5 in both quizzes
-            </p>
         `;
     }
 }

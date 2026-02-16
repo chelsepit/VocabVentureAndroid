@@ -12,6 +12,30 @@ if (!currentUser) {
 let userProgressData = {};
 let recentReadsData = [];
 let completedBooksData = [];
+let storiesIndexData = {}; // Store stories index for cover images
+
+// ============================================
+// LOAD STORIES INDEX
+// ============================================
+async function loadStoriesIndex() {
+    try {
+        const response = await fetch('../../data/stories-index.json');
+        const data = await response.json();
+        
+        // Create a mapping of story ID to cover image path
+        data.stories.forEach(story => {
+            storiesIndexData[story.id] = {
+                title: story.title,
+                genre: story.genre,
+                coverImage: story.coverImage
+            };
+        });
+        
+        console.log('Stories index loaded:', storiesIndexData);
+    } catch (error) {
+        console.error('Error loading stories index:', error);
+    }
+}
 
 // ============================================
 // CALCULATE PROGRESS PERCENTAGE
@@ -105,31 +129,65 @@ async function loadProgress() {
 }
 
 // ============================================
+// GET BOOK IMAGE PATH FOR STORY
+// ============================================
+function getBookImagePath(storyId) {
+    // Get image from stories index if available
+    if (storiesIndexData[storyId] && storiesIndexData[storyId].coverImage) {
+        return '../../' + storiesIndexData[storyId].coverImage;
+    }
+    
+    // Fallback if story not found
+    console.warn(`No cover image found for story ${storyId}`);
+    return '../../assets/images/books/default-book.png';
+}
+
+// ============================================
+// CREATE BOOK ELEMENT
+// ============================================
+function createBookElement(storyId) {
+    const bookDiv = document.createElement('div');
+    bookDiv.className = 'book-item';
+    bookDiv.dataset.storyId = storyId;
+    
+    const img = document.createElement('img');
+    img.src = getBookImagePath(storyId);
+    img.alt = `Book ${storyId}`;
+    
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'progress-container';
+    
+    const progressFill = document.createElement('div');
+    progressFill.className = 'progress-fill';
+    progressFill.style.width = '0%';
+    progressFill.dataset.progress = storyId;
+    
+    progressContainer.appendChild(progressFill);
+    bookDiv.appendChild(img);
+    bookDiv.appendChild(progressContainer);
+    
+    return bookDiv;
+}
+
+// ============================================
 // ORGANIZE BOOKS INTO CATEGORIES
 // ============================================
 async function organizeBooks() {
     recentReadsData = [];
     completedBooksData = [];
     
-    // Get all book items from DOM
-    const allBookElements = document.querySelectorAll('.book-item[data-story-id]');
-    
     // Categorize based on progress data
     Object.keys(userProgressData).forEach(storyId => {
         const data = userProgressData[storyId];
         const percentage = data.percentage;
         
-        // Find corresponding book element
-        const bookElement = Array.from(allBookElements).find(
-            el => parseInt(el.dataset.storyId) === parseInt(storyId)
-        );
-        
-        if (!bookElement) return;
+        // Create book element dynamically
+        const bookElement = createBookElement(storyId);
         
         // Create book data object
         const bookData = {
             storyId: parseInt(storyId),
-            element: bookElement.cloneNode(true),
+            element: bookElement,
             percentage: percentage,
             lastAccessed: data.lastAccessed,
             isCompleted: percentage === 100
@@ -301,6 +359,7 @@ function attachBookClickHandlers() {
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Personal Library loaded');
     
-    // Load progress bars from database
+    // Load stories index first, then load progress bars from database
+    await loadStoriesIndex();
     await loadProgress();
 });

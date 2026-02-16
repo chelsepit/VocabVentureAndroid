@@ -18,14 +18,18 @@
     justify-content: space-between;
     pointer-events: none;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 12px;
+    height: auto;
+    min-height: 52px;
 }
 
 .left-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: flex-start;
+    gap: 12px;
     pointer-events: none;
+    height: 52px;
 }
 
 .components > *,
@@ -45,8 +49,8 @@
 }
 
 .settings-button {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -58,7 +62,8 @@
     pointer-events: auto;
     z-index: 1001;
     padding: 8px;
-    min-touch-target: 44px;
+    min-touch-target: 48px;
+    flex-shrink: 0;
 }
 
 .settings-button img {
@@ -166,8 +171,8 @@
 }
 
 .burger-button {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -179,11 +184,12 @@
     pointer-events: auto;
     z-index: 1001;
     padding: 8px;
+    flex-shrink: 0;
 }
 
 .burger-button img {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     pointer-events: none;
 }
@@ -394,8 +400,8 @@ input:checked + .toggle-slider:before {
    ======================================== */
 
 .speak-button {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -407,6 +413,7 @@ input:checked + .toggle-slider:before {
     margin-left: auto;
     pointer-events: auto;
     padding: 8px;
+    flex-shrink: 0;
 }
 
 .speak-button:hover {
@@ -431,9 +438,10 @@ input:checked + .toggle-slider:before {
 
 .interactive-word {
     font-weight: 800;
-    color: black;
+    color: rgb(0, 0, 0);
     text-decoration: underline;
     text-decoration-thickness: 2px;
+
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 4px;
@@ -444,7 +452,7 @@ input:checked + .toggle-slider:before {
 
 .interactive-word:hover {
     background-color: rgba(255, 217, 61, 0.3);
-    color: black;
+    color: white;
     text-decoration: underline;
 }
 
@@ -465,7 +473,7 @@ input:checked + .toggle-slider:before {
     width: 90%;
     max-width: 380px;
     background: white;
-    border: 1px solid black;
+    border: 1px solid white;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -564,7 +572,7 @@ input:checked + .toggle-slider:before {
     background: transparent;
     border: none;
     font-size: 28px;
-    color: black;
+    color: white;
     cursor: pointer;
     line-height: 1;
     padding: 8px;
@@ -695,12 +703,16 @@ input:checked + .toggle-slider:before {
         width: 45px;
         height: 45px;
     }
-    
-    .settings-button img,
-    .burger-button img,
-    .speak-button-icon {
+
+    .settings-button img {
         width: 45px;
         height: 45px;
+    }
+    
+    .burger-button img,
+    .speak-button-icon {
+        width: 50px;
+        height: 50px;
     }
 }
 
@@ -728,12 +740,16 @@ input:checked + .toggle-slider:before {
         width: 50px;
         height: 50px;
     }
-    
-    .settings-button img,
-    .burger-button img,
-    .speak-button-icon {
+
+    .settings-button img {
         width: 50px;
         height: 50px;
+    }
+    
+    .burger-button img,
+    .speak-button-icon {
+        width: 55px;
+        height: 55px;
     }
 }
 
@@ -751,12 +767,16 @@ input:checked + .toggle-slider:before {
         width: 60px;
         height: 60px;
     }
+
+    .settings-button img {
+        width: 65px;
+        height: 65px;
+    }
     
-    .settings-button img,
     .burger-button img,
     .speak-button-icon {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
     
     .back-button {
@@ -790,6 +810,24 @@ input:checked + .toggle-slider:before {
 
 /* Tablet Landscape: 1024px - 1279px */
 @media (min-width: 1024px) {
+    .settings-button,
+    .burger-button,
+    .speak-button {
+        width: 65px;
+        height: 65px;
+    }
+
+    .settings-button img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .burger-button img,
+    .speak-button-icon {
+        width: 75px;
+        height: 75px;
+    }
+
     .definition-card {
         max-width: 500px;
         padding: 32px;
@@ -805,6 +843,24 @@ input:checked + .toggle-slider:before {
     .components {
         top: 24px;
         left: 24px;
+    }
+    
+    .settings-button,
+    .burger-button,
+    .speak-button {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .settings-button img{
+        width: 75px;
+        height: 75px;
+    }
+
+    .burger-button img,
+    .speak-button-icon {
+        width: 80px;
+        height: 80px;
     }
     
     .definition-card {

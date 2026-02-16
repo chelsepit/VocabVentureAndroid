@@ -83,13 +83,9 @@ function createBadgeElement(badge, index) {
     // Get badge image path based on type
     const badgeImagePath = getBadgeImagePath(badge.badge_type);
     
-    // Create badge content
+    // Create badge content - just the image, no text labels
     badgeItem.innerHTML = `
         <img src="${badgeImagePath}" alt="${badge.badge_type} badge">
-        <div class="badge-info">
-            <div class="badge-label">${formatBadgeLabel(badge)}</div>
-            <div class="badge-date">${formatDate(badge.earned_at)}</div>
-        </div>
     `;
     
     // Add tooltip on hover
@@ -110,9 +106,6 @@ function createLockedBadgeElement() {
     
     badgeItem.innerHTML = `
         <img src="../../assets/images/badges/locked-badge.png" alt="Locked Badge">
-        <div class="badge-info">
-            <div class="badge-label">???</div>
-        </div>
     `;
     
     badgeItem.title = 'Complete more stories and quizzes to unlock!';
