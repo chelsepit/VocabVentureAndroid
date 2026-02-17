@@ -336,6 +336,7 @@ function updateStoryText(segment) {
             
             if (regex.test(textHtml)) {
                 regex.lastIndex = 0;
+
                 const vocabAudioPath = vocab[`audio-${selectedVoice}`] || '';
                 
                 textHtml = textHtml.replace(regex, (match) => {
@@ -455,6 +456,7 @@ function showCompletionScreen() {
 }
 
 // Listen for voice changes
+// Listen for voice changes
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const boyVoice = document.getElementById('boyVoice');
@@ -463,10 +465,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (boyVoice && girlVoice) {
             boyVoice.addEventListener('click', () => {
                 stopCurrentAudio();
+                setTimeout(() => {
+                    updateStoryText(currentStory.segments[currentSegmentIndex]);
+                    console.log('🎤 Voice changed to Boy - vocabulary audio updated');
+                }, 100);
             });
             
             girlVoice.addEventListener('click', () => {
                 stopCurrentAudio();
+                setTimeout(() => {
+                    updateStoryText(currentStory.segments[currentSegmentIndex]);
+                    console.log('🎤 Voice changed to Girl - vocabulary audio updated');
+                }, 100);
             });
         }
     }, 500);
