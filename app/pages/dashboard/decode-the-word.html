@@ -22,6 +22,7 @@
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -29,33 +30,25 @@
 
     <!-- Intro Screen -->
     <div id="quizIntro" class="finish-content">
-        <div class="title-header">
-            Decode the Word!
-        </div>
-
-        <div class="progress-comment">
-            Get ready to boost your word power while having fun!<br>
+        <div class="title-header">Decode the Word!</div>
+        <div class="progress-comment" style="margin-top: 20px;"> 
             Figure out the word's meaning in the sentence.<br>
-            Let's get started and begin your word adventure—have fun and enjoy!
+            <em>Let's start your word adventure!</em>
         </div>
-        
         <div class="finish-button">
-            <button class="start-button" onclick="startDecodeWord()">START</button>
+            <button class="intro-btn" onclick="startDecodeWord()">START</button>
         </div>
     </div>
 
     <!-- Quiz Question Screen (hidden initially) -->
     <div id="quizQuestion" class="finish-content" style="display: none;">
-        <div class="title-header">
-            Decode the Word!
-        </div>
+        
+        <div class="title-header">Decode the Word!</div>
 
-        <!-- Progress indicator -->
         <div class="progress-indicator">
-            <span class="progress-text">Questions <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
+            <span class="progress-text">Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
         </div>
 
-        <!-- Question text with underlined word -->
         <div class="progress-comment">
             <div class="sentence-text">
                 <span id="sentenceText">The king commanded his soldiers to guard the castle.</span>
@@ -65,14 +58,10 @@
             </div>
         </div>
         
-        <!-- Answer buttons -->
         <div class="finish-button" id="answerButtons">
-            <!-- Buttons will be dynamically added here -->
-        </div>
+            </div>
 
-        <!-- Feedback message -->
-        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;">
-        </div>
+        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;"></div>
     </div>
 
     <script>
@@ -90,6 +79,7 @@
                 })
                 .catch(err => console.error('Error loading component:', err));
         }
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('speak-container', '../components/speak-button.html');

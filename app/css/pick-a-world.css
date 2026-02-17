@@ -17,7 +17,7 @@
    MAIN CONTENT CARD
    ========================= */
 .finish-content {
-    color: rgb(0, 0, 0);
+    color: white;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -29,15 +29,20 @@
     justify-content: center;
     text-align: center;
     
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    padding: 50px;
+    background: #5DADE2;
+    backdrop-filter: none;
+    
+    /* Reduced padding to match 'Decode' compactness */
+    padding: 30px 40px;
     border-radius: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.2);
+    border: none;
+    border: 3px solid rgba(255, 255, 255, 0.781);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
     width: 95%;
-    max-width: 1000px;
+    max-width: 900px; /* Tighter width like Decode */
+    max-height: 90vh;
+    overflow-y: auto;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -50,114 +55,142 @@
    TITLE HEADER
    ========================= */
 .title-header {
-    font-family: 'header-font', arial;
-    font-size: clamp(1.6rem, 5vw, 3rem);
-    font-weight: 700;
+    font-family: 'header-font', cursive; 
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 800; 
+
+    color: #FFEB3B; 
+    -webkit-text-stroke: 3px white;
+    text-shadow: 4px 4px 0px #F57F17; 
+    
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 25px;
+    
+    /* Reduced margin to keep it close to the question number */
+    margin-bottom: 0px; 
+    line-height: 1.1;
     animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Question Counter (1/5) */
+.progress-indicator {
+    margin-top: 5px;
+    margin-bottom: 5px; /* Keep close to image */
 }
 
 /* =========================
-   TEXT & QUESTION
+   IMAGE AREA
    ========================= */
-.progress-comment {
-    font-family: 'body-font', sans-serif;
-    color: rgb(0, 0, 0);
-    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
-    line-height: 1.3;
-    max-width: 100%;
-    margin-bottom: 10px;
-}
-
-/* Sentence with image container */
-.sentence-with-image {
+.image-display-area {
     display: flex;
-    align-items: baseline; /* Changed from center to baseline */
     justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    text-align: center;
+    width: 100%;
+    
+    /* Spacing: Close to progress above, close to text below */
+    margin-top: 30px;
+    margin-bottom: 15px; 
 }
 
-.sentence-part {
-    display: inline;
-    line-height: 1.6;
+.image-bubble {
+    background: rgba(255, 255, 255, 0.25);
+    width: 180px; 
+    height: 140px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
-/* Vocabulary image styling */
-.vocab-image-container {
-    display: inline-block;
-    vertical-align: baseline; 
-    margin: 0 5px;
-    line-height: 0;
-    margin: 0;
-    padding: 0;
-}
-
-.vocab-image {
-    width: 110px;
-    height: 110px;
+.main-quiz-image {
+    max-width: 90%;
+    max-height: 90%;
     object-fit: contain;
     display: block;
-    margin: 0;
-    margin-bottom: -20px; 
-    padding: 0;
-    line-height: 0;
-    
+    animation: popImage 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Fallback icon for missing images */
-.vocab-image.fallback-icon {
-    width: 80px !important;
-    height: 80px !important;
+@keyframes popImage {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* =========================
+   TEXT & QUESTION (UPDATED SIZE)
+   ========================= */
+.progress-comment {
+    font-family: 'Nunito', sans-serif;
+    color: white;
+    
+    /* UPDATED: Bigger Font Size (approx 2rem) */
+    font-size: clamp(1.8rem, 5vw, 2.2rem); 
+    font-weight: 800; /* Bolder text */
+    
+    line-height: 1.3;
+    max-width: 100%;
+    
+    /* Spacing */
+    margin-top: 20px;
+    margin-bottom: 20px; 
 }
 
 /* =========================
    BUTTONS
    ========================= */
 .finish-button {
-    margin-top: 30px;
+    margin-top: 10px;
     display: flex;
-    gap: clamp(12px, 3vw, 15px);
+    gap: 15px;
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 0 clamp(10px, 2vw, 15px);
+    padding: 0;
 }
 
 .finish-button button {
-    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
-    font-weight: 600;
-    font-size: clamp(1.5rem, 3.5vw, 1.8rem);
-    border-radius: 50px;
-    font-family: 'title-font', sans-serif; 
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
+    /* Larger padding for better touch targets */
+    padding: clamp(15px, 3vw, 20px) clamp(30px, 4vw, 50px);
+    
+    font-family: 'Baloo 2', cursive; 
+    font-weight: 800;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    letter-spacing: 1px;
+    color: white;
+    text-shadow: 0px 2px 2px rgba(0,0,0,0.1); 
+    
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
     white-space: nowrap;
-    display: inline-block;
-    min-width: fit-content;
+    
+    /* Ensure uniform height */
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    box-shadow: 0 6px 0 #E65100, 0 10px 15px rgba(0,0,0,0.2);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .finish-button button:hover {
+    background: linear-gradient(180deg, #FFCC80 0%, #FFA726 100%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 8px 0 #E65100, 0 15px 20px rgba(0,0,0,0.2);
 }
 
 .finish-button button:active {
-    transform: translateY(0);
-    box-shadow: 0 6px 0 rgba(0,0,0,0.1);
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #E65100, 0 5px 10px rgba(0,0,0,0.2);
 }
 
 /* =========================
@@ -167,76 +200,57 @@
 /* Tablets */
 @media (max-width: 768px) {
     .finish-content {
-        padding: 40px 20px;
-        width: 85%;
-        max-width: 900px;
-    }
-
-    .vocab-image {
-        width: 90px;
-        height: 90px;
+        padding: 30px 20px;
+        width: 90%;
     }
 }
 
 /* Small Phones */
 @media (max-width: 480px) {
     .finish-content {
-        padding: 30px 20px;
-        border-radius: 25px;
-        width: 85%;
+        padding: 20px 15px;
     }
 
     .title-header {
-        margin-bottom: 15px;
+        font-size: 2.5rem;
+        margin-bottom: 5px;
     }
 
     .progress-comment {
+        font-size: 1.5rem; /* Slightly smaller on very small screens so it fits */
         margin-bottom: 15px;
     }
 
-    .sentence-with-image {
-        gap: 8px;
-    }
-
-    .vocab-image {
-        width: 70px;
-        height: 70px;
-    }
-
-    .vocab-image.fallback-icon {
-        width: 60px !important;
-        height: 60px !important;
+    .image-bubble {
+        width: 140px;
+        height: 110px;
     }
 
     .finish-button {
         flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        width: 100%;
     }
 
     .finish-button button {
         width: 100%;
-        min-width: unset;
-        max-width: 100%;
     }
 }
 
-/* Landscape Mode Fix (Short Screens) */
+/* Landscape Mode Fix */
 @media (max-height: 600px) {
     .finish-content {
-        top: 80px;
-        transform: translate(-50%, 0);
-        margin-bottom: 20px;
-        padding: 30px;
-    }
-    
-    .vocab-image {
-        width: 80px;
-        height: 80px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px;
     }
 
-    .title-header {
-        margin-bottom: 15px;
+    .image-display-area {
+        margin-bottom: 5px;
+    }
+    
+    .image-bubble {
+        width: 120px;
+        height: 100px;
     }
 
     .progress-comment {

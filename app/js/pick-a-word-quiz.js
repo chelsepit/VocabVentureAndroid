@@ -50,72 +50,56 @@ function startPicAWord() {
 }
 
 // Load a specific question
+// Load a specific question
 function loadQuestion(index) {
-  if (!quizData || index >= quizData.questions.length) {
-    return;
-  }
+    if (!quizData || index >= quizData.questions.length) {
+        return;
+    }
 
-  currentQuestionIndex = index;
-  const question = quizData.questions[index];
+    currentQuestionIndex = index;
+    const question = quizData.questions[index];
 
-  // Update question counter
-  document.getElementById("currentQuestion").textContent = index + 1;
+    // Update question counter
+    document.getElementById("currentQuestion").textContent = index + 1;
 
-  // Get the correct answer word
-  const correctWord = question.options[question.correctAnswer];
+    // 1. GET IMAGE PATH
+    const correctWord = question.options[question.correctAnswer];
+    const storyId = getStoryId();
+    // Build image path based on correct answer
+    const imagePath = `../../assets/images/pick-a-word/story${storyId}-pick-a-word/${correctWord.toLowerCase().replace(/\s+/g, "")}.png`;
 
-  // Get story ID to build the image path
-  const storyId = getStoryId();
+    // 2. SET THE IMAGE (Top Container)
+    const imgElement = document.getElementById("mainQuizImage");
+    imgElement.src = imagePath;
+    
+    // Add error handling for the image
+    imgElement.onerror = function() {
+        this.src = '../../assets/images/icons/question-mark-icon.svg'; 
+        console.error('Image not found:', imagePath);
+    };
 
-  // Build image path: assets/images/pick-a-word/story1-pick-a-word/harvest.png
-  const imagePath = `../../assets/images/pick-a-word/story${storyId}-pick-a-word/${correctWord.toLowerCase().replace(/\s+/g, "")}.png`;
+    // 3. SET THE TEXT (Below Container)
+    // We do NOT split the string anymore. We just show the question with the blanks.
+    document.getElementById("questionText").innerHTML = question.question;
 
-  // Format the question with the vocabulary image
-  const questionText = question.question;
+    // 4. CREATE BUTTONS
+    const buttonsContainer = document.getElementById("answerButtons");
+    buttonsContainer.innerHTML = "";
 
-  // Split by any sequence of underscores (3 or more)
-  const parts = questionText.split(/_{3,}/);
+    question.options.forEach((option, idx) => {
+        const button = document.createElement("button");
+        button.className = "start-button";
 
-  let questionHTML = "";
+        // Format as A., B., C.
+        const letter = String.fromCharCode(65 + idx); // 65 is 'A' in ASCII
+        button.textContent = `${letter}. ${option}`;
 
-  if (parts.length === 2) {
-    // Question has a blank in the middle - show vocabulary image
-    questionHTML = `
-            <span class="sentence-part">${parts[0]}</span>
-            <div class="vocab-image-container">
-                <img src="${imagePath}" 
-                    alt="${correctWord}" 
-                    class="vocab-image"
-                    onerror="this.src='../../assets/images/icons/question-mark-icon.svg'; this.style.width='80px'; this.style.height='80px'; console.error('Image not found:', '${imagePath}');">
-            </div>
-            <span class="sentence-part">${parts[1]}</span>
-        `;
-  } else {
-    // No blank placeholder, just show the question
-    questionHTML = `${questionText}`;
-  }
+        button.onclick = () => checkAnswer(idx);
+        buttonsContainer.appendChild(button);
+    });
 
-  // Display question
-  document.getElementById("questionText").innerHTML = questionHTML;
-
-  // Create answer buttons
-  const buttonsContainer = document.getElementById("answerButtons");
-  buttonsContainer.innerHTML = "";
-
-  question.options.forEach((option, idx) => {
-    const button = document.createElement("button");
-    button.className = "start-button";
-
-    // Format as A., B., C.
-    const letter = String.fromCharCode(65 + idx); // 65 is 'A' in ASCII
-    button.textContent = `${letter}. ${option}`;
-
-    button.onclick = () => checkAnswer(idx);
-    buttonsContainer.appendChild(button);
-  });
-
-  // Hide feedback message
-  document.getElementById("feedbackMessage").style.display = "none";
+    // Hide feedback message
+    document.getElementById("feedbackMessage").style.display = "none";
 }
 
 // Check if answer is correct
@@ -177,7 +161,7 @@ function showFeedback(isCorrect, explanation) {
 
   if (isCorrect) {
     feedbackElement.innerHTML = `
-            <div style="color: #000000;">
+            <div style="color: #ffffff;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✓</div>
                 <div style="font-size: 2.3rem;">Correct!</div>
                 <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
@@ -189,7 +173,7 @@ function showFeedback(isCorrect, explanation) {
     feedbackElement.style.border = "2px solid #4ade80";
   } else {
     feedbackElement.innerHTML = `
-            <div style="color: #000000;">
+            <div style="color: #ffffff;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✗</div>
                 <div style="font-size: 2.3rem;">Not quite!</div>
                 <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">

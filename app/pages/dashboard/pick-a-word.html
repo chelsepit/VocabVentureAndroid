@@ -22,6 +22,7 @@
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -34,9 +35,8 @@
         </div>
 
         <div class="progress-comment">
-            Get ready to boost your word power while having fun!<br>
             Complete the sentence by choosing the correct word.<br>
-            Let's get started and begin your word adventure—have fun and enjoy!
+            <em>Let's start your world adventure</em>
         </div>
         
         <div class="finish-button">
@@ -50,26 +50,26 @@
             Pic-a-Word!
         </div>
 
-        <!-- Progress indicator -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <span style="font-family: 'Nunito', sans-serif; font-weight: 700; color: rgb(0, 0, 0); font-size: 1.5rem;">
+        <div style="text-align: center; margin-bottom: 10px;">
+            <span style="font-family: 'Nunito', sans-serif; font-weight: 700; color: white; font-size: 1.5rem;">
                 Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
             </span>
         </div>
 
-        <!-- Question with blank -->
-        <div class="progress-comment">
-            <div class="sentence-with-image" id="questionText">
-                <!-- Question will be inserted here dynamically -->
+        <div class="image-display-area">
+            <div class="image-bubble">
+                <img id="mainQuizImage" src="" alt="Quiz Image" class="main-quiz-image">
             </div>
         </div>
-        
-        <!-- Answer buttons -->
-        <div class="finish-button" id="answerButtons">
-            <!-- Buttons will be dynamically added here -->
-        </div>
 
-        <!-- Feedback message -->
+        <div class="progress-comment">
+            <div id="questionText">
+                </div>
+        </div>
+        
+        <div class="finish-button" id="answerButtons">
+            </div>
+
         <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;">
         </div>
     </div>
@@ -89,6 +89,7 @@
                 })
                 .catch(err => console.error('Error loading component:', err));
         }
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('speak-container', '../components/speak-button.html');
