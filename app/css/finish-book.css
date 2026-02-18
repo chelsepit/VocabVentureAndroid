@@ -31,13 +31,13 @@
     justify-content: center;
     text-align: center;
     
-    /* GLASSMORPHISM CARD STYLE */
-    background: rgba(255, 255, 255, 0.215);
-    backdrop-filter: blur(10px);
+    background: #5DADE2;
+    backdrop-filter: none;
     padding: 30px;
     border-radius: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.527);
+    border: none;
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    border: 4px solid rgba(255, 255, 255, 0.7);
     
     
     width: 95%;
@@ -61,7 +61,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 5px solid #FFD93D;
+    border: 5px solid white;
     margin-bottom: 25px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     animation: float 3s ease-in-out infinite;
@@ -82,13 +82,25 @@
    TEXT
    ========================= */
 .progress-comment {
-    font-family: 'body-font', sans-serif; /* Use your nice font */
+    font-family: 'body-font', sans-serif;
     font-weight: 2rem;
-    color: #ffffff;
+    color: white;
     font-size: 2rem;
     line-height: 1.4;
     margin-bottom: 20px;
     max-width: 80%;
+}
+
+.congrats {
+    font-family: 'header-font', cursive; 
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-weight: 800; 
+    color: #FFEB3B; 
+    -webkit-text-stroke: 3px white;
+    text-shadow: 4px 4px 0px #F57F17; 
+    
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 /* =========================
@@ -114,38 +126,43 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 8px 0 rgba(0,0,0,0.1);
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    
+    box-shadow: 0 8px 0 #E65100, 0 15px 20px rgba(0,0,0,0.15);
+    
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Read Again (Secondary) */
 .read-again-button {
-    background: #fff;
+    background: white;
     color: #000000;
-    border: 3px solid #ddd !important;
+    border: none !important;
 }
 
 .read-again-button:hover {
-    background: #f9f9f9;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 0 #ddd;
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.2);
 }
 
 .read-again-button:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 #ddd;
+    transform: translateY(0);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
 }
 
 /* Vocabulary Games (Primary) */
 .vocabulary-button {
-    background: #FF6B35; /* Orange Theme */
-    color: rgb(255, 255, 255);
-    border: 3px solid #FF6B35 !important;
+    background: #FFA500;
+    color: white;
+    border: none !important;
 }
 
 .vocabulary-button:hover {
-    background: #ff8558;
-    border-color: #ff8558 !important;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 0 rgba(199, 72, 26, 0.4);
+    background: #FFB84D;
+    border-color: #FFB84D !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 0 rgba(0,0,0,0.2);
 }
 
 .vocabulary-button:active {

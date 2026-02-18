@@ -77,7 +77,9 @@ function loadQuestion(index) {
     
     question.options.forEach((option, idx) => {
         const button = document.createElement('button');
-        button.className = 'start-button';
+        
+        // CHANGED CLASS TO answer-btn (The long style)
+        button.className = 'answer-btn'; 
         
         // Format as A., B., C.
         const letter = String.fromCharCode(65 + idx); // 65 is 'A' in ASCII
@@ -97,7 +99,7 @@ function formatSentenceWithUnderline(sentence, wordToUnderline) {
     const regex = new RegExp(`\\b${wordToUnderline}\\b`, 'gi');
     
     return sentence.replace(regex, (match) => {
-        return `<span style="text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: #000000; font-weight: 700;">${match}</span>`;
+        return `<span style="text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: #ffffff; font-weight: 700;">${match}</span>`;
     });
 }
 
@@ -122,8 +124,7 @@ function checkAnswer(selectedIndex) {
     showFeedback(isCorrect, question.explanation);
     
     // Disable all buttons and show visual feedback
-    const buttons = document.querySelectorAll('#answerButtons .start-button');
-    buttons.forEach((btn, idx) => {
+        const buttons = document.querySelectorAll('#answerButtons .answer-btn');    buttons.forEach((btn, idx) => {
         btn.disabled = true;
         btn.style.cursor = 'not-allowed';
         
@@ -160,7 +161,7 @@ function showFeedback(isCorrect, explanation) {
     
     if (isCorrect) {
         feedbackElement.innerHTML = `
-            <div style="color: #000000;">
+            <div style="color: #ffffff;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✓</div>
                 <div style="font-size: 2.3rem;">Correct!</div>
                 <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
@@ -172,7 +173,7 @@ function showFeedback(isCorrect, explanation) {
         feedbackElement.style.border = '2px solid #4ade80';
     } else {
         feedbackElement.innerHTML = `
-            <div style="color: #000000;">
+            <div style="color: #ffffff;">
                 <div style="font-size: 2rem; margin-bottom: 10px;">✗</div>
                 <div style="font-size: 2.3rem;">Not quite!</div>
                 <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">

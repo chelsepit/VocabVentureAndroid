@@ -39,6 +39,49 @@
 }
 
 /* ========================================
+   HOME BUTTON COMPONENT (Mobile-First)
+   ======================================== */
+
+.home-dropdown {
+    position: relative;
+    display: inline-block;
+    pointer-events: auto;
+}
+
+.home-button {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+    z-index: 1001;
+    padding: 8px;
+    min-touch-target: 48px;
+    flex-shrink: 0;
+}
+
+.home-button img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+}
+
+.home-button:active {
+    transform: scale(0.95);
+}
+
+/* ========================================
    SETTINGS COMPONENT (Mobile-First)
    ======================================== */
 
@@ -67,8 +110,8 @@
 }
 
 .settings-button img {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     transition: transform 0.5s ease;
     pointer-events: none;
@@ -425,8 +468,8 @@ input:checked + .toggle-slider:before {
 }
 
 .speak-button-icon {
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
     object-fit: contain;
     cursor: pointer;
     pointer-events: none;
@@ -471,11 +514,11 @@ input:checked + .toggle-slider:before {
     transform: translate(-50%, -50%) scale(0.9);
     
     width: 90%;
-    max-width: 380px;
+    max-width: 500px;
     background: white;
     border: 1px solid white;
     border-radius: 20px;
-    padding: 20px;
+    padding: 28px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 2000;
     
@@ -504,7 +547,7 @@ input:checked + .toggle-slider:before {
 
 .def-title {
     font-family: 'Baloo 2', sans-serif;
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 800;
     color: black;
     margin: 0;
@@ -518,8 +561,8 @@ input:checked + .toggle-slider:before {
     cursor: pointer;
     padding: 6px;
     transition: transform 0.2s ease;
-    min-width: 36px;
-    min-height: 36px;
+    min-width: 44px;
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -537,7 +580,7 @@ input:checked + .toggle-slider:before {
 /* PHONETIC TEXT */
 .def-phonetic {
     font-family: 'Nunito', sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     color: #666;
     font-style: italic;
     margin: 0 0 8px 0;
@@ -547,7 +590,7 @@ input:checked + .toggle-slider:before {
 /* SYNONYM */
 .def-synonym {
     font-family: 'Nunito', sans-serif;
-    font-size: 14px;
+    font-size: 17px;
     font-style: italic;
     margin: 0 0 12px 0;
     color: #555;
@@ -557,7 +600,7 @@ input:checked + .toggle-slider:before {
 /* DEFINITION MEANING */
 .def-meaning {
     font-family: 'Nunito', sans-serif;
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.6;
     color: #333;
     margin: 0;
@@ -697,22 +740,24 @@ input:checked + .toggle-slider:before {
         font-size: 24px;
     }
 
+    .home-button,
     .settings-button,
     .burger-button,
     .speak-button {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
     }
 
+    .home-button img,
     .settings-button img {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
     }
     
     .burger-button img,
     .speak-button-icon {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -726,14 +771,32 @@ input:checked + .toggle-slider:before {
     }
     
     .definition-card {
-        max-width: 420px;
-        padding: 24px;
+        max-width: 520px;
+        padding: 28px;
     }
     
     .def-title {
-        font-size: 24px;
+        font-size: 28px;
+    }
+    
+    .def-phonetic {
+        font-size: 16px;
+    }
+    
+    .def-synonym {
+        font-size: 17px;
+    }
+    
+    .def-meaning {
+        font-size: 18px;
+    }
+    
+    .speaker-icon {
+        min-width: 44px;
+        min-height: 44px;
     }
 
+    .home-button,
     .settings-button,
     .burger-button,
     .speak-button {
@@ -741,19 +804,18 @@ input:checked + .toggle-slider:before {
         height: 50px;
     }
 
+    .home-button img,
     .settings-button img {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
     }
     
     .burger-button img,
     .speak-button-icon {
-        width: 55px;
-        height: 55px;
+        width: 40px;
+        height: 40px;
     }
 }
-
-/* Tablet Portrait: 768px - 1023px */
 @media (min-width: 768px) {
     .components {
         top: 20px;
@@ -761,22 +823,20 @@ input:checked + .toggle-slider:before {
         gap: 12px;
     }
     
+    .home-button,
     .settings-button,
     .burger-button,
     .speak-button {
-        width: 60px;
-        height: 60px;
-    }
-
-    .settings-button img {
-        width: 65px;
-        height: 65px;
-    }
-    
-    .burger-button img,
-    .speak-button-icon {
         width: 70px;
         height: 70px;
+    }
+
+    .home-button img,
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
+        width: 55px;
+        height: 55px;
     }
     
     .back-button {
@@ -795,46 +855,73 @@ input:checked + .toggle-slider:before {
     }
     
     .definition-card {
-        max-width: 450px;
-        padding: 28px;
+        max-width: 680px;
+        padding: 32px;
     }
     
     .def-title {
-        font-size: 26px;
+        font-size: 2.4rem;
+    }
+    
+    .def-phonetic {
+        font-size: 1.2rem;
+    }
+    
+    .def-synonym {
+        font-size: 1.3rem;
     }
     
     .def-meaning {
-        font-size: 16px;
+        font-size: 1.8rem;
+    }
+    
+    .speaker-icon {
+        min-width: 52px;
+        min-height: 52px;
     }
 }
 
 /* Tablet Landscape: 1024px - 1279px */
 @media (min-width: 1024px) {
+    .home-button,
     .settings-button,
     .burger-button,
     .speak-button {
-        width: 65px;
-        height: 65px;
-    }
-
-    .settings-button img {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .burger-button img,
-    .speak-button-icon {
         width: 75px;
         height: 75px;
     }
+    .home-button img,
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
+        width: 60px;
+        height: 60px;
+    }
 
     .definition-card {
-        max-width: 500px;
-        padding: 32px;
+        max-width: 700px;
+        padding: 40px;
     }
     
     .def-title {
-        font-size: 28px;
+        font-size: 2.8rem;
+    }
+    
+    .def-phonetic {
+        font-size: 1.4rem;
+    }
+    
+    .def-synonym {
+        font-size: 1.5rem;
+    }
+    
+    .def-meaning {
+        font-size: 2rem;
+    }
+    
+    .speaker-icon {
+        min-width: 56px;
+        min-height: 56px;
     }
 }
 
@@ -845,25 +932,45 @@ input:checked + .toggle-slider:before {
         left: 24px;
     }
     
+    .home-button,
     .settings-button,
     .burger-button,
     .speak-button {
+        width: 90px;
+        height: 90px;
+    }
+
+    .home-button img,
+    .settings-button img,
+    .burger-button img,
+    .speak-button-icon {
         width: 70px;
         height: 70px;
     }
     
-    .settings-button img{
-        width: 75px;
-        height: 75px;
-    }
-
-    .burger-button img,
-    .speak-button-icon {
-        width: 80px;
-        height: 80px;
+    .definition-card {
+        max-width: 750px;
+        padding: 48px;
     }
     
-    .definition-card {
-        max-width: 550px;
+    .def-title {
+        font-size: 3rem;
+    }
+    
+    .def-phonetic {
+        font-size: 1.5rem;
+    }
+    
+    .def-synonym {
+        font-size: 1.6rem;
+    }
+    
+    .def-meaning {
+        font-size: 2.2rem;
+    }
+    
+    .speaker-icon {
+        min-width: 60px;
+        min-height: 60px;
     }
 }

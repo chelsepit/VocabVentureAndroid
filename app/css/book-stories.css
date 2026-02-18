@@ -62,10 +62,10 @@ html, body {
     backdrop-filter: blur(8px);
     color: #000000;
     font-family: 'Nunito', sans-serif;
-    width: 92%;
-    max-width: 600px;
+    width: 98%;
+    max-width: 1000px;
     padding: clamp(20px, 5vw, 40px);
-    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-size: clamp(2.2rem, 7vw, 3rem);
     border-radius: 24px;
     text-align: center;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -82,12 +82,12 @@ html, body {
     font-family: 'Baloo 2', cursive;
     font-weight: 800;
     margin-bottom: 12px;
-    font-size: clamp(1.6rem, 6vw, 2.5rem);
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
 }
 
 .content p {
     margin-bottom: 12px;
-    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-size: clamp(2.2rem, 7vw, 3rem);
 }
 
 .content p:last-child {
@@ -127,39 +127,46 @@ html, body {
 /* Large Mobile: 481px - 767px */
 @media (min-width: 481px) {
     .content {
-        max-width: 540px;
+        max-width: 700px;
         padding: 24px;
         border-radius: 28px;
+        font-size: 2.4rem;
     }
     
     .content h1,
     .content h2 {
         margin-bottom: 14px;
+        font-size: 2.8rem;
     }
     
     .content p {
         margin-bottom: 14px;
+        font-size: 2.4rem;
     }
 }
 
 /* Tablet Portrait: 768px - 1023px */
 @media (min-width: 768px) {
     .content {
-        max-width: 600px;
+        margin: 0 20px;
+        max-width: 800px;
         padding: 28px;
         border-radius: 32px;
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
         max-height: 75vh;
+        font-size: 2.6rem;
     }
     
     .content h1,
     .content h2 {
         margin-bottom: 16px;
+        font-size: 3.2rem;
     }
     
     .content p {
         margin-bottom: 14px;
         line-height: 1.7;
+        font-size: 2.6rem;
     }
 }
 
@@ -169,15 +176,18 @@ html, body {
         max-width: 700px;
         padding: 32px;
         border-radius: 36px;
+        font-size: 2.8rem;
     }
     
     .content h1,
     .content h2 {
         margin-bottom: 18px;
+        font-size: 3.4rem;
     }
     
     .content p {
         margin-bottom: 16px;
+        font-size: 2.8rem;
     }
 }
 
@@ -187,16 +197,19 @@ html, body {
         max-width: 800px;
         padding: 40px;
         border-radius: 40px;
+        font-size: 3rem;
     }
     
     .content h1,
     .content h2 {
         margin-bottom: 20px;
+        font-size: 3.6rem;
     }
     
     .content p {
         margin-bottom: 16px;
         line-height: 1.8;
+        font-size: 3rem;
     }
 }
 
@@ -205,6 +218,16 @@ html, body {
     .content {
         max-width: 900px;
         padding: 48px;
+        font-size: 3.2rem;
+    }
+    
+    .content h1,
+    .content h2 {
+        font-size: 3.8rem;
+    }
+    
+    .content p {
+        font-size: 3.2rem;
     }
 }
 
@@ -216,16 +239,19 @@ html, body {
     .content {
         max-height: 90vh;
         padding: 16px 24px;
+        font-size: 2rem;
     }
     
     .content h1,
     .content h2 {
         margin-bottom: 10px;
+        font-size: 2.4rem;
     }
     
     .content p {
         margin-bottom: 10px;
         line-height: 1.5;
+        font-size: 2rem;
     }
 }
 /* story-viewer-animations.css - Add these styles to your story-viewer CSS */

@@ -22,6 +22,7 @@
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -35,7 +36,8 @@
 
         <!-- Completion Message -->
         <div class="progress-comment" id="completionMessage">
-            <strong>Congratulations!</strong><br>
+            <strong class="congrats">Congratulations!</strong><br>
+            
             You've earned a <strong style="color: #FFD700;">GOLD BADGE</strong>!<br>
             Ready to test your vocabulary knowledge?
         </div>
@@ -62,6 +64,7 @@
                 .catch(err => console.error('Error loading component:', err));
         }
         
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('speak-container', '../components/speak-button.html');

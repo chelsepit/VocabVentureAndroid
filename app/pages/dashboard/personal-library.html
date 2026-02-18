@@ -15,6 +15,7 @@
 <body>
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -109,6 +110,7 @@
 
         // Load the files (Paths are relative to THIS file)
         // We go up one level (..) to 'pages', then into 'components'
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
     </script>
