@@ -2,26 +2,28 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const VocabVentureDB = require('./app/js/database');
 
+let db;
+let mainWindow;
+
+
 app.commandLine.appendSwitch('--disable-http-cache');
 app.commandLine.appendSwitch('--disable-gpu-shader-disk-cache');
 app.commandLine.appendSwitch('--disable-application-cache');
-// Initialize database
-const db = new VocabVentureDB();
-
-let mainWindow;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 800,
+        autoHideMenuBar: true, 
+        icon: path.join(__dirname, 'app/assets/images/app-logo/vocabventure_logo.ico'),
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
         }
     });
 
-    // Open DevTools (remove this in production)
-    mainWindow.webContents.openDevTools();
+    // // Open DevTools (remove this in production)
+    // mainWindow.webContents.openDevTools();
     
     // Load welcome page initially
     mainWindow.loadFile('app/pages/dashboard/welcome.html');
@@ -47,6 +49,7 @@ function createWindow() {
 // ============================================
 
 app.whenReady().then(() => {
+    db = new VocabVentureDB();   
     createWindow();
 
     app.on('activate', () => {
