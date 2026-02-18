@@ -35,7 +35,7 @@ function loadResults() {
 async function displayResults() {
     const score = quizResults.score;
     const total = quizResults.total;
-    const passedQuiz = score >= 4; // Need 4 or 5 out of 5 (80%+)
+    const passedQuiz = score > 4; // Need 4 or 5 out of 5 (80%+)
     
     // Update score display
     document.getElementById('scoreDisplay').textContent = `${score}/${total}`;
