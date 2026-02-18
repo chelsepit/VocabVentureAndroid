@@ -1,17 +1,19 @@
-const Database = require('better-sqlite3');
 const path = require('path');
+const Database = require('better-sqlite3');
 const fs = require('fs');
 
 class VocabVentureDB {
     constructor() {
         // Create database directory if it doesn't exist
-        const dbDir = path.join(__dirname, '../../database');
-        if (!fs.existsSync(dbDir)) {
-            fs.mkdirSync(dbDir, { recursive: true });
-        }
+      const { app } = require('electron');
 
-        // Initialize database
-        const dbPath = path.join(dbDir, 'vocabventure.db');
+const dbDir = app.getPath('userData');
+
+if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+}
+
+const dbPath = path.join(dbDir, 'vocabventure.db');
         const dbExists = fs.existsSync(dbPath);
         
         this.db = new Database(dbPath);
