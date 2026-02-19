@@ -210,14 +210,14 @@ function showEmptyState(container) {
                 border-radius: 24px;
                 padding: 18px 32px;
                 margin: 12px auto 0;
-                max-width: 320px;
+                max-width: 600px;
                 width: 100%;
                 text-align: center;
                 box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             ">
                 <h3 style="
                     color: #7B3F00;
-                    font-size: 26px;
+                    font-size: 2rem;
                     font-weight: 800;
                     margin: 0 0 10px;
                     line-height: 1.3;
@@ -225,7 +225,7 @@ function showEmptyState(container) {
 
                 <p style="
                     color: #5a3a1a;
-                    font-size: 15px;
+                    font-size: 1.8rem;
                     font-weight: 600;
                     margin: 0;
                     line-height: 1.6;
@@ -238,20 +238,19 @@ function showEmptyState(container) {
                 class="start-button header-font font-extrabold" 
                 onclick="goToLibrary()"
                 style="
-                    margin-top: 20px;
+                    margin-top: 50px;
                     width: 100%;
                     max-width: 320px;
-                    background: #FFD93D;
-                    color: #333;
-                    font-size: 16px;
-                    padding: 14px 32px;
+                    color: #ffffff;
+                    font-size: 1.8rem;
+                    padding: 20px 32px;
                     border-radius: 40px;
                     border: 3px solid #FF6B35;
                     cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.3);
-                    font-weight: 700;
-                    min-height: 44px;
+                    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+                    box-shadow: 0 6px 0 #E65100, 0 10px 15px rgba(0,0,0,0.2);
+                    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+                    min-height: 80px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
