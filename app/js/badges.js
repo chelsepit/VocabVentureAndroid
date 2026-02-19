@@ -1,5 +1,4 @@
 // badges.js - Dynamic Badge Loading and Display
-
 const { ipcRenderer } = require('electron');
 
 // Check authentication
@@ -197,11 +196,75 @@ function updateBadgeStats(stats) {
 // ============================================
 function showEmptyState(container) {
     container.innerHTML = `
-        <div class="empty-state">
+        <div class="empty-state" style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        ">
             <img src="../../assets/images/badges/locked-badge.png" alt="No badges" style="width: 120px; opacity: 0.5;">
-            <h3>No Badges Yet!</h3>
-            <p>Complete stories and quizzes to earn your first badge.</p>
-            <button class="start-button" onclick="goToLibrary()">Start Reading</button>
+            
+            <div style="
+                background: rgba(255, 255, 255, 0.82);
+                backdrop-filter: blur(6px);
+                border-radius: 24px;
+                padding: 18px 32px;
+                margin: 12px auto 0;
+                max-width: 320px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            ">
+                <h3 style="
+                    color: #7B3F00;
+                    font-size: 26px;
+                    font-weight: 800;
+                    margin: 0 0 10px;
+                    line-height: 1.3;
+                ">No Badges Yet!</h3>
+
+                <p style="
+                    color: #5a3a1a;
+                    font-size: 15px;
+                    font-weight: 600;
+                    margin: 0;
+                    line-height: 1.6;
+                    text-align: justify;
+                    text-align-last: center;
+                ">Complete stories and quizzes to earn your first badge.</p>
+            </div>
+
+            <button 
+                class="start-button header-font font-extrabold" 
+                onclick="goToLibrary()"
+                style="
+                    margin-top: 20px;
+                    width: 100%;
+                    max-width: 320px;
+                    background: #FFD93D;
+                    color: #333;
+                    font-size: 16px;
+                    padding: 14px 32px;
+                    border-radius: 40px;
+                    border: 3px solid #FF6B35;
+                    cursor: pointer;
+                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.3);
+                    font-weight: 700;
+                    min-height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-decoration: none;
+                    white-space: nowrap;
+                "
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 24px rgba(255, 107, 53, 0.4)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 16px rgba(255, 107, 53, 0.3)';"
+                onmousedown="this.style.transform='scale(0.95)';"
+                onmouseup="this.style.transform='translateY(-2px)';"
+            >
+                Start Reading
+            </button>
         </div>
     `;
 }
