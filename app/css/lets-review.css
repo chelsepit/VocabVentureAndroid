@@ -10,7 +10,7 @@
     background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
-    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
 /* =========================
@@ -22,16 +22,10 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 700px;
+    max-width: 820px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -45%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 /* =========================
@@ -39,16 +33,18 @@
    ========================= */
 .title-header {
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     font-family: 'title-font', 'Baloo 2', arial;
-    font-weight: 700;
-    margin-bottom: 15px;
+    font-weight: 800;
+    margin-bottom: 18px;
     animation: float 3s ease-in-out infinite;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    letter-spacing: 1px;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50%       { transform: translateY(-8px); }
 }
 
 /* =========================
@@ -56,34 +52,56 @@
    ========================= */
 .finish-content {
     background: #5DADE2;
-    backdrop-filter: none;
-    padding: 50px 40px;
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    padding: 70px 40px 40px; 
+    border-radius: 40px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
-  
-    opacity: 0.9;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border: 4px solid rgba(255, 255, 255, 0.75);
+    position: relative; 
+    opacity: 0;
+    transform: scale(0.9);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes popIn {
     from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1); }
 }
 
+/* =========================
+   WORD COUNTER BADGE (inside card, top-right)
+   ========================= */
+.word-counter-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    
+    background: rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+}
 /* =========================
    WORD TITLE
    ========================= */
 .word-title {
     color: white;
-    font-size: 2.8rem;
+    font-size: 3.2rem;
     font-family: 'title-font', 'Baloo 2', arial;
     font-weight: 800;
-    margin-bottom: 25px;
-    letter-spacing: 1px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* =========================
@@ -91,157 +109,300 @@
    ========================= */
 .review-desc {
     color: white;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     font-family: 'Nunito', sans-serif;
     font-weight: 600;
     line-height: 1.6;
     margin-bottom: 30px;
-    max-width: 500px;
+    max-width: 520px;
 }
 
 /* =========================
    AUDIO BUTTON
    ========================= */
 .audio-button {
-    width: 80px;
-    height: 80px;
+    width: 78px;
+    height: 78px;
     border-radius: 50%;
-    background: #FFA500;
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
-    margin-bottom: 120px;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 0 #E65100, 0 12px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 38px;
 }
 
 .audio-button:hover {
-    transform: scale(1.1);
-    background: #FFB84D;
-    box-shadow: 0 8px 25px rgba(255, 165, 0, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 11px 0 #E65100, 0 16px 24px rgba(0, 0, 0, 0.25);
 }
 
 .audio-button:active {
-    transform: scale(0.95);
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #E65100, 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .audio-button img {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     filter: brightness(0) invert(1);
 }
 
 /* =========================
-   RESPONSIVE DESIGN
+   NAVIGATION BUTTONS (inside card)
    ========================= */
+.review-nav {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
 
-/* Tablets */
+.review-nav button {
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex: 1;
+    max-width: 220px;
+}
+
+/* Previous */
+.prev-button {
+    background: white;
+    color: #3a7bbf;
+    box-shadow: 0 6px 0 #b0cee8, 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.prev-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #b0cee8, 0 14px 24px rgba(0, 0, 0, 0.15);
+}
+
+.prev-button:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #b0cee8;
+}
+
+.prev-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Back to Results */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    
+    width: 110px; 
+    
+    padding: 8px 16px;
+    
+    background: rgba(255, 255, 255, 0.993);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    
+    white-space: nowrap;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.back-button:hover {
+    background: rgb(255, 255, 255);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.back-button:active {
+    transform: translateY(0);
+}
+
+/* Next */
+.next-button {
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    color: white;
+    box-shadow: 0 6px 0 #E65100, 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.next-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #E65100, 0 14px 24px rgba(0, 0, 0, 0.15);
+}
+
+.next-button:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #E65100;
+}
+
+.next-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* =========================
+   RESPONSIVE — Tablets
+   ========================= */
 @media (max-width: 768px) {
     .review-container {
-        width: 85%;
+        width: 88%;
     }
 
     .title-header {
-        font-size: 2.5rem;
-        margin-bottom: 25px;
+        font-size: 2.2rem;
+        margin-bottom: 14px;
     }
 
     .finish-content {
-        padding: 40px 30px;
+        padding: 44px 30px 34px;
+        border-radius: 30px;
     }
 
     .word-title {
-        font-size: 2.3rem;
-        margin-bottom: 20px;
+        font-size: 2.6rem;
     }
 
     .review-desc {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+        font-size: 1.8rem;
     }
 
     .audio-button {
-        width: 70px;
-        height: 70px;
+        width: 68px;
+        height: 68px;
     }
 
     .audio-button img {
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .review-nav {
+        gap: 10px;
+    }
+
+    .review-nav button {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        max-width: none;
     }
 }
 
-/* Small Phones */
+/* =========================
+   RESPONSIVE — Small Phones
+   ========================= */
 @media (max-width: 480px) {
     .review-container {
-        width: 90%;
+        width: 92%;
     }
 
     .title-header {
-        font-size: 2rem;
-        margin-bottom: 20px;
+        font-size: 1.8rem;
+        margin-bottom: 12px;
     }
 
     .finish-content {
-        padding: 30px 20px;
-        border-radius: 20px;
+        padding: 60px 20px 30px;
+        border-radius: 24px;
+    }
+
+    .word-counter-badge {
+        top: 15px;
+        right: 15px;
+        padding: 6px 12px;
     }
 
     .word-title {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
+        font-size: 2rem;
+        margin-bottom: 14px;
     }
 
     .review-desc {
-        font-size: 1rem;
-        margin-bottom: 20px;
+        font-size: 1.5rem;
+        margin-bottom: 22px;
     }
 
     .audio-button {
         width: 60px;
         height: 60px;
+        margin-bottom: 28px;
     }
 
     .audio-button img {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .review-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .review-nav button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 13px 20px;
+    }
+
+    .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
 }
 
-/* Landscape Mode Fix (Short Screens) */
+/* =========================
+   RESPONSIVE — Landscape Short Screens
+   ========================= */
 @media (max-height: 600px) {
-    .review-container {
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
-
     .title-header {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
-
-    .finish-content {
-        padding: 20px 25px;
-    }
-
-    .word-title {
         font-size: 1.6rem;
         margin-bottom: 10px;
     }
 
+    .finish-content {
+        padding: 34px 30px 24px;
+    }
+
+    .word-title {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
     .review-desc {
-        font-size: 0.9rem;
-        margin-bottom: 15px;
+        font-size: 1.5rem;
+        margin-bottom: 16px;
     }
 
     .audio-button {
-        width: 50px;
-        height: 50px;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 22px;
     }
 
     .audio-button img {
-        width: 25px;
-        height: 25px;
+        width: 26px;
+        height: 26px;
     }
 }
