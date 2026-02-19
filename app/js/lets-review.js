@@ -81,26 +81,35 @@ function extractVocabulary() {
         
         if (!question) return;
         
-        // Get the correct answer word
-        const correctWord = question.options[question.correctAnswer];
+        // For Quiz 2, use the underlinedWord (what was actually tested)
+        const wordToFind = question.underlinedWord || question.options[question.correctAnswer];
+        
+        console.log(`Question ${questionIndex}: Looking for word "${wordToFind}"`);
         
         // Find this word in the story's vocabulary
+        let foundMatch = false;
         storyData.segments.forEach(segment => {
             if (segment.vocabulary && segment.vocabulary.length > 0) {
                 segment.vocabulary.forEach(vocab => {
                     // Match by word (case-insensitive, handle spaces/hyphens)
                     const normalizedVocabWord = vocab.word.toLowerCase().replace(/[\s-]/g, '');
-                    const normalizedCorrectWord = correctWord.toLowerCase().replace(/[\s-]/g, '');
+                    const normalizedSearchWord = wordToFind.toLowerCase().replace(/[\s-]/g, '');
                     
-                    if (normalizedVocabWord === normalizedCorrectWord) {
+                    if (normalizedVocabWord === normalizedSearchWord) {
                         // Avoid duplicates
                         if (!vocabularyWords.some(v => v.word === vocab.word)) {
                             vocabularyWords.push(vocab);
+                            foundMatch = true;
+                            console.log(`✓ Matched "${wordToFind}" to vocabulary word "${vocab.word}"`);
                         }
                     }
                 });
             }
         });
+        
+        if (!foundMatch) {
+            console.log(`✗ Could not find vocabulary match for "${wordToFind}"`);
+        }
     });
     
     console.log(`Found ${vocabularyWords.length} vocabulary words from incorrect answers`);

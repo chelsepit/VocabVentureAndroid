@@ -80,10 +80,9 @@ function loadQuestion(index) {
         
         // CHANGED CLASS TO answer-btn (The long style)
         button.className = 'answer-btn'; 
-        
-        // Format as A., B., C.
-        const letter = String.fromCharCode(65 + idx); // 65 is 'A' in ASCII
-        button.textContent = `${letter}. ${option}`;
+
+        const choices = idx;
+        button.textContent = `${option}`;
         
         button.onclick = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
@@ -120,6 +119,8 @@ function checkAnswer(selectedIndex) {
         correct: isCorrect
     });
     
+    console.log('Stored answer:', {questionIndex: currentQuestionIndex, selectedIndex, correct: isCorrect, correctAnswer: question.correctAnswer});
+
     // Show feedback
     showFeedback(isCorrect, question.explanation);
     
