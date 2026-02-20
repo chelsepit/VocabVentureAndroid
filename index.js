@@ -223,18 +223,22 @@ ipcMain.handle('story:getCompletionStatus', async (event, data) => {
         // Check if story is fully complete
         const storyCompleted = completedSegments >= totalSegments;
         
-        // Check quiz completion
+        // Check quiz completion — only a perfect score (5/5) unlocks progression
         const quizStmt = db.db.prepare(`
-            SELECT quiz_number, badge_type
+            SELECT quiz_number, MAX(score) as best_score, total_questions
             FROM quiz_results
             WHERE user_id = ? AND story_id = ?
-            ORDER BY completed_at DESC
+            GROUP BY quiz_number
         `);
-        
+
         const quizResults = quizStmt.all(userId, storyId);
-        
-        const quiz1Completed = quizResults.some(q => q.quiz_number === 1);
-        const quiz2Completed = quizResults.some(q => q.quiz_number === 2);
+
+        const quiz1Result = quizResults.find(q => q.quiz_number === 1);
+        const quiz2Result = quizResults.find(q => q.quiz_number === 2);
+
+        // Only perfect score unlocks next stage
+        const quiz1Completed = quiz1Result ? quiz1Result.best_score === quiz1Result.total_questions : false;
+        const quiz2Completed = quiz2Result ? quiz2Result.best_score === quiz2Result.total_questions : false;
         
         // Get last accessed time
         const lastAccessStmt = db.db.prepare(`
@@ -273,7 +277,46 @@ ipcMain.handle('story:getCompletionStatus', async (event, data) => {
 
 ipcMain.handle('quiz:save', async (event, { userId, storyId, quizNumber, score, totalQuestions }) => {
     try {
-        return db.saveQuizResult(userId, storyId, quizNumber, score, totalQuestions);
+        // Check if a result already exists for this user/story/quiz
+        const existing = db.db.prepare(`
+            SELECT id, score FROM quiz_results
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ?
+            ORDER BY score DESC
+            LIMIT 1
+        `).get(userId, storyId, quizNumber);
+
+        // Badge: quiz 1 perfect = silver, quiz 2 perfect = gold, otherwise bronze
+        const isPerfect = score === totalQuestions;
+        let badgeType;
+        if (isPerfect) {
+            badgeType = quizNumber === 1 ? 'silver' : 'gold';
+        } else {
+            badgeType = 'bronze';
+        }
+
+        if (!existing) {
+            // First attempt — always save
+            const stmt = db.db.prepare(`
+                INSERT INTO quiz_results (user_id, story_id, quiz_number, score, total_questions, badge_type)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `);
+            stmt.run(userId, storyId, quizNumber, score, totalQuestions, badgeType);
+            console.log(`💾 Quiz ${quizNumber} first attempt saved: ${score}/${totalQuestions} (${badgeType})`);
+            return { success: true };
+        } else if (score > existing.score) {
+            // Retake with better score — update existing row
+            db.db.prepare(`
+                UPDATE quiz_results
+                SET score = ?, badge_type = ?, completed_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND story_id = ? AND quiz_number = ?
+            `).run(score, badgeType, userId, storyId, quizNumber);
+            console.log(`📈 Quiz ${quizNumber} score improved: ${existing.score} → ${score} (${badgeType})`);
+            return { success: true };
+        } else {
+            // Retake with same or worse score — don't overwrite
+            console.log(`📊 Quiz ${quizNumber} retake score (${score}) not better than best (${existing.score}), skipping`);
+            return { success: true };
+        }
     } catch (error) {
         console.error('Save quiz result error:', error);
         throw error;

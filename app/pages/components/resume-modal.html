@@ -29,12 +29,20 @@ function handleResumeModalOverlayClick(event) {
 
 // Handle cancel button
 function handleResumeModalCancel() {
-    hideResumeModal();
-    // For quizzes, trigger normal start
+    // Check which page we're on
     if (typeof startPicAWord === 'function') {
-        // Do nothing - let user click START
+        // Quiz 1 (Pick-a-Word) - just hide modal, let user click START
+        hideResumeModal();
     } else if (typeof startDecodeWord === 'function') {
-        // Do nothing - let user click START
+        // Quiz 2 (Decode the Word) - just hide modal, let user click START
+        hideResumeModal();
+    } else {
+        // Story viewer - treat cancel as "Start Over"
+        if (typeof startOver === 'function') {
+            startOver();
+        } else {
+            hideResumeModal();
+        }
     }
 }
 </script>

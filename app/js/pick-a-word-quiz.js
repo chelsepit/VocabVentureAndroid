@@ -15,10 +15,16 @@ function getStoryId() {
   return parseInt(urlStoryId || sessionStoryId) || 1;
 }
 
+// Get current user ID (falls back to lastUserId)
+function getUserId() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  return currentUser?.id || parseInt(localStorage.getItem('lastUserId')) || 'guest';
+}
+
 // Check for saved quiz progress
 function getSavedQuizProgress() {
   const storyId = getStoryId();
-  const savedProgress = localStorage.getItem(`quiz1_progress_${storyId}`);
+  const savedProgress = localStorage.getItem(`quiz1_progress_${getUserId()}_${storyId}`);
   if (savedProgress) {
     try {
       return JSON.parse(savedProgress);
@@ -33,7 +39,7 @@ function getSavedQuizProgress() {
 // Save quiz progress to localStorage
 function saveQuizProgress(questionIndex, score, answers) {
   const storyId = getStoryId();
-  localStorage.setItem(`quiz1_progress_${storyId}`, JSON.stringify({
+  localStorage.setItem(`quiz1_progress_${getUserId()}_${storyId}`, JSON.stringify({
     questionIndex: questionIndex,
     score: score,
     answers: answers,
@@ -86,7 +92,7 @@ function startAgain() {
   hideResumeModal();
 
   const storyId = getStoryId();
-  localStorage.removeItem(`quiz1_progress_${storyId}`);
+  localStorage.removeItem(`quiz1_progress_${getUserId()}_${storyId}`);
 
   // Reset state
   currentQuestionIndex = 0;
@@ -185,7 +191,7 @@ function loadQuestion(index) {
         const button = document.createElement("button");
         button.className = "start-button";
      
-        button.textContent = `$${option}`;
+        button.textContent = `${option}`;
 
         button.onclick = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
@@ -285,14 +291,9 @@ function showFeedback(isCorrect, explanation) {
 }
 
 // Calculate badge type based on score
+// Quiz 1: perfect score = silver, anything less = bronze
 function calculateBadgeType(score, total) {
-  if (score === total) {
-    return "gold";
-  } else if (score >= 3 && score <= 4) {
-    return "silver";
-  } else {
-    return "bronze";
-  }
+  return score === total ? 'silver' : 'bronze';
 }
 
 // Finish quiz
@@ -301,7 +302,7 @@ function finishQuiz() {
   const storyId = getStoryId();
 
   // Clear saved progress since quiz is complete
-  localStorage.removeItem(`quiz1_progress_${storyId}`);
+  localStorage.removeItem(`quiz1_progress_${getUserId()}_${storyId}`);
 
   // Store quiz results with badge type
   sessionStorage.setItem(

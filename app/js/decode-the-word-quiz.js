@@ -15,10 +15,16 @@ function getStoryId() {
     return parseInt(urlStoryId || sessionStoryId) || 1;
 }
 
+// Get current user ID (falls back to lastUserId)
+function getUserId() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  return currentUser?.id || parseInt(localStorage.getItem('lastUserId')) || 'guest';
+}
+
 // Check for saved quiz progress
 function getSavedQuizProgress() {
   const storyId = getStoryId();
-  const savedProgress = localStorage.getItem(`quiz2_progress_${storyId}`);
+  const savedProgress = localStorage.getItem(`quiz2_progress_${getUserId()}_${storyId}`);
   if (savedProgress) {
     try {
       return JSON.parse(savedProgress);
@@ -33,7 +39,7 @@ function getSavedQuizProgress() {
 // Save quiz progress to localStorage
 function saveQuizProgress(questionIndex, score, answers) {
   const storyId = getStoryId();
-  localStorage.setItem(`quiz2_progress_${storyId}`, JSON.stringify({
+  localStorage.setItem(`quiz2_progress_${getUserId()}_${storyId}`, JSON.stringify({
     questionIndex: questionIndex,
     score: score,
     answers: answers,
@@ -86,7 +92,7 @@ function startAgain() {
   hideResumeModal();
 
   const storyId = getStoryId();
-  localStorage.removeItem(`quiz2_progress_${storyId}`);
+  localStorage.removeItem(`quiz2_progress_${getUserId()}_${storyId}`);
 
   // Reset state
   currentQuestionIndex = 0;
@@ -288,14 +294,9 @@ function showFeedback(isCorrect, explanation) {
 }
 
 // Calculate badge type based on score
+// Quiz 2: perfect score = gold, anything less = bronze
 function calculateBadgeType(score, total) {
-    if (score === total) {
-        return 'gold';
-    } else if (score >= 3 && score <= 4) {
-        return 'silver';
-    } else {
-        return 'bronze';
-    }
+    return score === total ? 'gold' : 'bronze';
 }
 
 // Finish quiz
@@ -304,7 +305,7 @@ function finishQuiz() {
     const storyId = getStoryId();
     
     // Clear saved progress since quiz is complete
-    localStorage.removeItem(`quiz2_progress_${storyId}`);
+    localStorage.removeItem(`quiz2_progress_${getUserId()}_${storyId}`);
     
     // Store quiz results with badge type
     sessionStorage.setItem('quiz2Results', JSON.stringify({

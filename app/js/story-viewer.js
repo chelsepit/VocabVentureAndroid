@@ -51,45 +51,68 @@ function getSegmentFromUrl() {
     return segment && segment > 0 ? segment - 1 : 0;
 }
 
+// Wait for modal element to exist in DOM (loaded async via loadComponent)
+function waitForModal(timeout = 5000) {
+    return new Promise((resolve) => {
+        if (document.getElementById('resumeModalOverlay')) {
+            return resolve(true);
+        }
+        const start = Date.now();
+        const observer = new MutationObserver(() => {
+            if (document.getElementById('resumeModalOverlay')) {
+                observer.disconnect();
+                resolve(true);
+            } else if (Date.now() - start > timeout) {
+                observer.disconnect();
+                resolve(false);
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        // Safety timeout
+        setTimeout(() => { observer.disconnect(); resolve(false); }, timeout);
+    });
+}
+
 // Check for last viewed segment and show resume modal if exists
 async function checkAndShowResumeModal(storyId) {
+    console.log('🔍 checkAndShowResumeModal called, storyId:', storyId);
     try {
         const { ipcRenderer } = require('electron');
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        // Fallback used elsewhere in the app (beforeunload) — needed so resume works consistently
         const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
         const userId = currentUser?.id || fallbackUserId;
+        console.log('👤 userId:', userId, '| currentUser:', currentUser?.id, '| fallback:', fallbackUserId);
 
         if (userId) {
-            const lastViewed = await ipcRenderer.invoke('progress:getLastViewed', {
+            const lastViewedRaw = await ipcRenderer.invoke('progress:getLastViewed', {
                 userId: userId,
                 storyId: storyId
             });
 
-            // Only show modal if saved segment is > 1 (segment 1 = beginning, no need to ask)
-            if (lastViewed && lastViewed.segmentId > 1) {
-                console.log('📍 Last viewed segment found:', lastViewed.segmentId);
+            // IPC handler returns either a plain number or an object with segmentId
+            const lastViewedSegment = (lastViewedRaw && typeof lastViewedRaw === 'object')
+                ? lastViewedRaw.segmentId
+                : lastViewedRaw;
 
-                // Wait for modal to be loaded in DOM
-                let attempts = 0;
-                while (!document.getElementById('resumeModalOverlay') && attempts < 40) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                    attempts++;
+            console.log('📦 lastViewed raw:', JSON.stringify(lastViewedRaw), '→ segment:', lastViewedSegment);
+
+            if (lastViewedSegment && lastViewedSegment > 1) {
+                console.log('📍 Last viewed segment found:', lastViewedSegment);
+
+                const modal = document.getElementById('resumeModalOverlay');
+                if (modal) {
+                    showResumeModal(lastViewedSegment);
+                    return lastViewedSegment;
                 }
 
-                if (document.getElementById('resumeModalOverlay')) {
-                    showResumeModal(lastViewed.segmentId);
-                    return lastViewed.segmentId;
-                }
-
-                console.warn('⚠️ Resume modal overlay not found; cannot show resume modal');
-                return lastViewed.segmentId;
+                console.warn('⚠️ resumeModalOverlay not found in DOM');
+                return lastViewedSegment;
             }
         } else {
-            console.warn('⚠️ No userId found (currentUser/lastUserId). Cannot load last viewed progress.');
+            console.warn('⚠️ No userId found. Cannot load last viewed progress.');
         }
     } catch (error) {
-        console.error('Error checking last viewed:', error);
+        console.error('❌ Error in checkAndShowResumeModal:', error);
     }
     return 0;
 }
@@ -137,9 +160,11 @@ function continueGame() {
     isInitialLoad = false;
 
     if (currentStory && savedResumeSegment > 0) {
-        const segmentIndex = savedResumeSegment - 1; // Convert from 1-based to 0-based
+        const segmentIndex = savedResumeSegment - 1;
         if (segmentIndex >= 0 && segmentIndex < currentStory.segments.length) {
-            loadSegment(segmentIndex);
+            currentSegmentIndex = segmentIndex;
+            loadSegment(segmentIndex); // progress save is enabled now (hasUserChosenResumeAction = true)
+            console.log(`📍 Resumed at segment ${savedResumeSegment}`);
         } else {
             loadSegment(0);
         }
@@ -151,7 +176,7 @@ function continueGame() {
 // Initialize story viewer
 async function initStoryViewer() {
     const storyId = getStoryIdFromUrl();
-    console.log('Loading story ID:', storyId);
+    console.log('🚀 initStoryViewer START, storyId:', storyId);
 
     const story = await loadStoryData(storyId);
     if (!story) return;
@@ -165,22 +190,28 @@ async function initStoryViewer() {
     setupVolumeControl();
     setupSpeakButton();
 
-    // Wait a bit for modal component to load via HTML's loadComponent()
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // ⭐ Wait for the resume modal HTML to be injected before checking saved progress
+    console.log('⏳ Waiting for resumeModalReady...', typeof window.resumeModalReady);
+    if (window.resumeModalReady) {
+        await window.resumeModalReady;
+        console.log('✅ resumeModalReady resolved');
+    } else {
+        console.warn('⚠️ window.resumeModalReady is not defined — modal may not be loaded!');
+    }
 
-    // Check for last viewed segment and show modal if exists
-    // Modal handlers (continueGame / startOver) will call loadSegment again if needed
+    console.log('🔍 resumeModalOverlay in DOM?', !!document.getElementById('resumeModalOverlay'));
+
     const savedSegment = await checkAndShowResumeModal(storyId);
+    console.log('📍 savedSegment returned:', savedSegment);
 
-    // If there's saved progress, DO NOT load any segment yet.
-    // Show the modal first, then Continue/Start Over will decide what to load.
-    // This prevents the story from flashing/starting at Part 1 and avoids accidental resets.
     if (savedSegment && savedSegment > 1) {
-        console.log('⏸️ Waiting for user choice on resume modal...');
+        console.log(`📍 Loading saved segment ${savedSegment} behind the modal...`);
+        currentSegmentIndex = savedSegment - 1;
+        loadSegment(currentSegmentIndex, { skipProgressSave: true });
         return;
     }
 
-    // No saved progress to resume; start at the beginning and allow saving immediately.
+    console.log('▶️ No saved segment > 1, starting from beginning');
     hasUserChosenResumeAction = true;
     isInitialLoad = false;
     currentSegmentIndex = 0;
@@ -411,7 +442,7 @@ async function saveLastViewedSegment(segmentNumber) {
 
         if (userId) {
             await ipcRenderer.invoke('progress:saveLastViewed', {
-                userId: userId,
+                userId: currentUser.id || fallbackUserId,
                 storyId: storyId,
                 segmentId: segmentNumber
             });
@@ -436,7 +467,7 @@ async function markSegmentAsCompleted(segmentNumber) {
 
         if (userId) {
             await ipcRenderer.invoke('progress:markSegmentComplete', {
-                userId: userId,
+                userId: currentUser.id || fallbackUserId,
                 storyId: storyId,
                 segmentId: segmentNumber
             });
