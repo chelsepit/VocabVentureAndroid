@@ -26,6 +26,9 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
         // Create tables (will only create if they don't exist)
         this.initializeTables();
         
+        // Collapse any legacy multi-category badge rows into one badge per story
+        this.collapseMultiCategoryBadges();
+        
         console.log('Database initialized at:', dbPath);
     }
 
@@ -213,6 +216,61 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
         `);
         
         console.log('    ✓ user_badges migrated');
+    }
+
+    // Collapse multi-category badges (quiz-1, quiz-2, story-completion) into
+    // a single 'story-completion' badge per story at the highest earned level.
+    collapseMultiCategoryBadges() {
+        try {
+            // Find all users/stories that have more than one badge category
+            const affected = this.db.prepare(`
+                SELECT user_id, story_id
+                FROM user_badges
+                WHERE badge_category != 'story-completion'
+                GROUP BY user_id, story_id
+            `).all();
+
+            if (affected.length === 0) return;
+
+            const badgeHierarchy = { 'bronze': 1, 'silver': 2, 'gold': 3 };
+
+            for (const row of affected) {
+                // Get all badges for this user+story
+                const allBadges = this.db.prepare(`
+                    SELECT * FROM user_badges
+                    WHERE user_id = ? AND story_id = ?
+                `).all(row.user_id, row.story_id);
+
+                // Find the highest badge level across all categories
+                let best = 'bronze';
+                let earliestDate = null;
+                for (const b of allBadges) {
+                    if ((badgeHierarchy[b.badge_type] || 0) > (badgeHierarchy[best] || 0)) {
+                        best = b.badge_type;
+                    }
+                    if (!earliestDate || b.earned_at < earliestDate) {
+                        earliestDate = b.earned_at;
+                    }
+                }
+
+                // Delete all badges for this user+story
+                this.db.prepare(`
+                    DELETE FROM user_badges WHERE user_id = ? AND story_id = ?
+                `).run(row.user_id, row.story_id);
+
+                // Insert single consolidated badge
+                this.db.prepare(`
+                    INSERT OR IGNORE INTO user_badges (user_id, story_id, badge_type, badge_category, earned_at)
+                    VALUES (?, ?, ?, 'story-completion', ?)
+                `).run(row.user_id, row.story_id, best, earliestDate);
+
+                console.log(`  Consolidated story ${row.story_id} badges → ${best}`);
+            }
+
+            console.log(`✅ Collapsed multi-category badges for ${affected.length} story/user pairs`);
+        } catch (error) {
+            console.error('Error collapsing badges:', error);
+        }
     }
 
     parseLegacyBadgeId(badgeId) {
@@ -535,42 +593,37 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
     // ============================================
     // BADGE METHODS - REFINED
     // ============================================
-awardBadge(userId, storyId, badgeType, badgeCategory) {
+awardBadge(userId, storyId, badgeType) {
+    // ONE badge per story — always category 'story-completion'.
+    // Upgrades in place: bronze → silver → gold. Never downgrades.
     try {
-        // Check if user already has a badge for this category
-        const existingBadge = this.getStoryBadge(userId, storyId, badgeCategory);
-        
-        // Badge hierarchy: bronze < silver < gold
         const badgeHierarchy = { 'bronze': 1, 'silver': 2, 'gold': 3 };
-        
+
+        const existingBadge = this.db.prepare(`
+            SELECT * FROM user_badges
+            WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
+        `).get(userId, storyId);
+
         if (existingBadge) {
             const existingLevel = badgeHierarchy[existingBadge.badge_type] || 0;
             const newLevel = badgeHierarchy[badgeType] || 0;
-            
-            // Only update if the new badge is better
+
             if (newLevel > existingLevel) {
-                console.log(`Upgrading badge for story ${storyId} ${badgeCategory}: ${existingBadge.badge_type} → ${badgeType}`);
-                
-                // Update the badge type (keeps original earned_at timestamp)
-                const stmt = this.db.prepare(`
-                    UPDATE user_badges 
-                    SET badge_type = ?
-                    WHERE user_id = ? AND story_id = ? AND badge_category = ?
-                `);
-                return stmt.run(badgeType, userId, storyId, badgeCategory);
+                console.log(`🎖️ Upgrading story ${storyId} badge: ${existingBadge.badge_type} → ${badgeType}`);
+                return this.db.prepare(`
+                    UPDATE user_badges SET badge_type = ?
+                    WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
+                `).run(badgeType, userId, storyId);
             } else {
-                console.log(`Badge already exists with same or better level: ${existingBadge.badge_type}`);
-                return null; // Don't downgrade or duplicate
+                console.log(`Badge already at ${existingBadge.badge_type}, no downgrade for ${badgeType}`);
+                return null;
             }
         } else {
-            // No existing badge, insert new one
-            console.log(`Awarding new ${badgeType} badge for story ${storyId} ${badgeCategory}`);
-            
-            const stmt = this.db.prepare(`
+            console.log(`🎖️ Awarding new ${badgeType} badge for story ${storyId}`);
+            return this.db.prepare(`
                 INSERT INTO user_badges (user_id, story_id, badge_type, badge_category)
-                VALUES (?, ?, ?, ?)
-            `);
-            return stmt.run(userId, storyId, badgeType, badgeCategory);
+                VALUES (?, ?, ?, 'story-completion')
+            `).run(userId, storyId, badgeType);
         }
     } catch (error) {
         console.error('Error awarding badge:', error);
@@ -578,27 +631,21 @@ awardBadge(userId, storyId, badgeType, badgeCategory) {
     }
 }
 
-getStoryBadge(userId, storyId, badgeCategory) {
+getStoryBadge(userId, storyId) {
+    // Returns the single badge for a story (always category 'story-completion')
     const stmt = this.db.prepare(`
         SELECT * FROM user_badges 
-        WHERE user_id = ? AND story_id = ? AND badge_category = ?
+        WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
     `);
-    return stmt.get(userId, storyId, badgeCategory);
+    return stmt.get(userId, storyId);
 }
 
-// Get all badges ordered by earned_at (oldest first)
+// Get all badges ordered by earned_at (oldest first) — one badge per story
 getAllUserBadgesOrdered(userId) {
     const stmt = this.db.prepare(`
-        SELECT 
-            ub.*,
-            CASE 
-                WHEN ub.badge_category = 'story-completion' THEN 'Story Complete'
-                WHEN ub.badge_category = 'quiz-1' THEN 'Quiz 1'
-                WHEN ub.badge_category = 'quiz-2' THEN 'Quiz 2'
-                ELSE ub.badge_category
-            END as badge_label
-        FROM user_badges ub
-        WHERE user_id = ?
+        SELECT *
+        FROM user_badges
+        WHERE user_id = ? AND badge_category = 'story-completion'
         ORDER BY earned_at ASC
     `);
     return stmt.all(userId);
@@ -669,16 +716,25 @@ getBadgeStats(userId) {
         const completedSegments = storyProgress.filter(p => p.completed).length;
         const storyCompleted = completedSegments === totalSegments;
         
-        // Get quiz badges
-        const quiz1Badge = this.getStoryBadge(userId, storyId, 'quiz-1');
-        const quiz2Badge = this.getStoryBadge(userId, storyId, 'quiz-2');
-        
+        // Check quiz completion via quiz_results (perfect score required)
+        const quizResults = this.db.prepare(`
+            SELECT quiz_number, MAX(score) as best_score, total_questions
+            FROM quiz_results
+            WHERE user_id = ? AND story_id = ?
+            GROUP BY quiz_number
+        `).all(userId, storyId);
+
+        const quiz1Result = quizResults.find(q => q.quiz_number === 1);
+        const quiz2Result = quizResults.find(q => q.quiz_number === 2);
+        const quiz1Completed = quiz1Result ? quiz1Result.best_score === quiz1Result.total_questions : false;
+        const quiz2Completed = quiz2Result ? quiz2Result.best_score === quiz2Result.total_questions : false;
+
         return {
             storyCompleted,
             completedSegments,
             totalSegments,
-            quiz1Completed: quiz1Badge !== undefined,
-            quiz2Completed: quiz2Badge !== undefined
+            quiz1Completed,
+            quiz2Completed
         };
     }
 

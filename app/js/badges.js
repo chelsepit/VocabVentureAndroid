@@ -149,10 +149,19 @@ function formatDate(dateString) {
 
 function getBadgeTooltip(badge) {
     const type = badge.badge_type.toUpperCase();
-    const label = formatBadgeLabel(badge);
+    const storyId = badge.story_id;
     const date = formatDate(badge.earned_at);
-    
-    return `${type} BADGE\n${label}\nEarned: ${date}`;
+
+    let achievement;
+    if (badge.badge_type === 'gold') {
+        achievement = `Story ${storyId} completed\nQuiz 1 passed ✓\nQuiz 2 passed ✓`;
+    } else if (badge.badge_type === 'silver') {
+        achievement = `Story ${storyId} completed\nQuiz 1 passed ✓`;
+    } else {
+        achievement = `Story ${storyId} completed`;
+    }
+
+    return `${type} BADGE\n${achievement}\nEarned: ${date}`;
 }
 
 // ============================================

@@ -67,12 +67,11 @@ async function saveStoryCompletion() {
                 });
             }
             
-            // Award BRONZE badge for completing the story
+            // Award BRONZE badge for completing the story (1 badge per story, upgrades later)
             await ipcRenderer.invoke('badge:award', {
                 userId: currentUser.id,
                 storyId: completedStory.id,
-                badgeType: 'bronze',
-                badgeCategory: 'story-completion'
+                badgeType: 'bronze'
             });
             
             console.log('✅ Story completion saved - BRONZE badge awarded');

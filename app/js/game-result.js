@@ -82,7 +82,7 @@ async function displayResults() {
         } else {
             // Failed Quiz 2 → Stay SILVER
             resultTitle = 'ALMOST THERE!';
-            resultMessage = `You need 4-5 correct to upgrade to Gold. You got ${score}/5. Keep trying!`;
+            resultMessage = `You need 5 correct to upgrade to Gold. You got ${score}/5. Keep trying!`;
             badgeType = 'silver';
             
             // ⭐ Play nicejob2 audio
@@ -152,28 +152,18 @@ function playAudioSequence(audioTypes) {
     playNext();
 }
 
-// Upgrade badge in database
+// Upgrade the story badge (one badge per story, upgrades in place)
 async function upgradeBadge(newBadgeType) {
     try {
         const { ipcRenderer } = require('electron');
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         
         if (currentUser) {
-            // Save quiz result
-            await ipcRenderer.invoke('quiz:save', {
+            // award handles upgrade logic: only upgrades, never downgrades
+            await ipcRenderer.invoke('badge:award', {
                 userId: currentUser.id,
                 storyId: storyId,
-                quizNumber: currentQuizNumber,
-                score: quizResults.score,
-                totalQuestions: quizResults.total,
                 badgeType: newBadgeType
-            });
-            
-            // Upgrade badge
-            await ipcRenderer.invoke('badge:upgrade', {
-                userId: currentUser.id,
-                storyId: storyId,
-                newBadgeType: newBadgeType
             });
             
             console.log(`✅ Badge upgraded to ${newBadgeType.toUpperCase()}`);
