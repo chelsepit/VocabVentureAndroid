@@ -304,15 +304,9 @@ async function resumeToCorrectPage(storyId, userId) {
         console.log(`Resume status for story ${storyId}:`, status);
 
         if (!status.storyCompleted) {
-            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                userId: userId,
-                storyId: storyId
-            });
-            if (lastSegment > 0) {
-                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
-            } else {
-                window.location.href = `story-viewer.html?id=${storyId}`;
-            }
+            // Always open the story viewer without forcing a segment.
+            // The story viewer itself will show the resume modal and handle Continue/Start Over.
+            window.location.href = `story-viewer.html?id=${storyId}`;
         } else if (!status.quiz1Completed) {
             sessionStorage.setItem('quizStoryId', storyId);
             window.location.href = `pick-a-word.html?story=${storyId}`;
@@ -320,15 +314,8 @@ async function resumeToCorrectPage(storyId, userId) {
             sessionStorage.setItem('quizStoryId', storyId);
             window.location.href = `decode-the-word.html?story=${storyId}`;
         } else {
-            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                userId: userId,
-                storyId: storyId
-            });
-            if (lastSegment > 0) {
-                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
-            } else {
-                window.location.href = `story-viewer.html?id=${storyId}`;
-            }
+            // All done — go back to story viewer. No resume modal needed, but opening normally is fine.
+            window.location.href = `story-viewer.html?id=${storyId}`;
         }
     } catch (error) {
         console.error('Error resuming story:', error);

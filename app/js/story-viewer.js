@@ -5,7 +5,9 @@ let currentSegmentIndex = 0;
 let storyData = null;
 let currentAudio = null;
 let isSpeaking = false;
-let isInitialLoad = true; // Prevents overwriting saved position on first load
+let isInitialLoad = true; // Prevents overwriting saved position on first load until user chooses resume/start-over
+let savedResumeSegment = 0; // Store the saved segment for resume modal handlers
+let hasUserChosenResumeAction = false; // True after user clicks Continue or Start Over
 
 // Get story ID from URL parameters
 function getStoryIdFromUrl() {
@@ -49,28 +51,140 @@ function getSegmentFromUrl() {
     return segment && segment > 0 ? segment - 1 : 0;
 }
 
+// Check for last viewed segment and show resume modal if exists
+async function checkAndShowResumeModal(storyId) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        // Fallback used elsewhere in the app (beforeunload) — needed so resume works consistently
+        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
+        const userId = currentUser?.id || fallbackUserId;
+
+        if (userId) {
+            const lastViewed = await ipcRenderer.invoke('progress:getLastViewed', {
+                userId: userId,
+                storyId: storyId
+            });
+
+            // Only show modal if saved segment is > 1 (segment 1 = beginning, no need to ask)
+            if (lastViewed && lastViewed.segmentId > 1) {
+                console.log('📍 Last viewed segment found:', lastViewed.segmentId);
+
+                // Wait for modal to be loaded in DOM
+                let attempts = 0;
+                while (!document.getElementById('resumeModalOverlay') && attempts < 40) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+
+                if (document.getElementById('resumeModalOverlay')) {
+                    showResumeModal(lastViewed.segmentId);
+                    return lastViewed.segmentId;
+                }
+
+                console.warn('⚠️ Resume modal overlay not found; cannot show resume modal');
+                return lastViewed.segmentId;
+            }
+        } else {
+            console.warn('⚠️ No userId found (currentUser/lastUserId). Cannot load last viewed progress.');
+        }
+    } catch (error) {
+        console.error('Error checking last viewed:', error);
+    }
+    return 0;
+}
+
+// Show resume modal
+function showResumeModal(savedSegment) {
+    const modal = document.getElementById('resumeModalOverlay');
+    if (modal) {
+        savedResumeSegment = savedSegment; // Store for handlers
+        modal.classList.remove('hidden');
+        console.log('📻 Resume modal shown - saved at segment:', savedSegment);
+    }
+}
+
+// Hide resume modal
+function hideResumeModal() {
+    const modal = document.getElementById('resumeModalOverlay');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+// Start over button handler
+function startOver() {
+    console.log('🔄 Starting over from beginning');
+    hideResumeModal();
+
+    // User made an explicit choice; allow saving from now on
+    hasUserChosenResumeAction = true;
+    isInitialLoad = false;
+
+    currentSegmentIndex = 0;
+    if (currentStory) {
+        loadSegment(0);
+    }
+}
+
+// Continue button handler
+function continueGame() {
+    console.log('▶️ Continuing from last viewed segment:', savedResumeSegment);
+    hideResumeModal();
+
+    // User made an explicit choice; allow saving from now on
+    hasUserChosenResumeAction = true;
+    isInitialLoad = false;
+
+    if (currentStory && savedResumeSegment > 0) {
+        const segmentIndex = savedResumeSegment - 1; // Convert from 1-based to 0-based
+        if (segmentIndex >= 0 && segmentIndex < currentStory.segments.length) {
+            loadSegment(segmentIndex);
+        } else {
+            loadSegment(0);
+        }
+    } else {
+        loadSegment(0);
+    }
+}
+
 // Initialize story viewer
 async function initStoryViewer() {
     const storyId = getStoryIdFromUrl();
     console.log('Loading story ID:', storyId);
-    
+
     const story = await loadStoryData(storyId);
     if (!story) return;
-    
+
     currentStory = story;
-    
-    const resumeSegment = getSegmentFromUrl();
-    currentSegmentIndex = resumeSegment;
-    
-    console.log('Starting at segment:', currentSegmentIndex + 1);
-    
+
     document.title = story.title + ' - VocabVenture';
     document.getElementById('totalSegments').textContent = story.totalSegments;
-    
-    loadSegment(currentSegmentIndex);
+
     setupNavigation();
     setupVolumeControl();
     setupSpeakButton();
+
+    // Wait a bit for modal component to load via HTML's loadComponent()
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Check for last viewed segment and show modal if exists
+    // Modal handlers (continueGame / startOver) will call loadSegment again if needed
+    const savedSegment = await checkAndShowResumeModal(storyId);
+
+    // If there's saved progress, DO NOT load any segment yet.
+    // Show the modal first, then Continue/Start Over will decide what to load.
+    // This prevents the story from flashing/starting at Part 1 and avoids accidental resets.
+    if (savedSegment && savedSegment > 1) {
+        console.log('⏸️ Waiting for user choice on resume modal...');
+        return;
+    }
+
+    // No saved progress to resume; start at the beginning and allow saving immediately.
+    hasUserChosenResumeAction = true;
+    isInitialLoad = false;
+    currentSegmentIndex = 0;
+    loadSegment(0);
 }
 
 // ⭐ Setup speak button (works with both emoji and image icons)
@@ -206,21 +320,25 @@ function setupVolumeControl() {
 }
 
 // Load a specific segment
-// Load a specific segment
-function loadSegment(index) {
+function loadSegment(index, options = {}) {
     if (!currentStory || index < 0 || index >= currentStory.segments.length) {
         return;
     }
-    
+
     stopCurrentAudio();
-    
+
     currentSegmentIndex = index;
     const segment = currentStory.segments[index];
-    
+
     console.log('Loading segment:', index + 1, segment);
-    
-    saveLastViewedSegment(index + 1);
-    markSegmentAsCompleted(index + 1);
+
+    const shouldSkipSave = options.skipProgressSave === true || !hasUserChosenResumeAction;
+    if (!shouldSkipSave) {
+        saveLastViewedSegment(index + 1);
+        markSegmentAsCompleted(index + 1);
+    } else {
+        console.log('⏭️ Skipping progress save (waiting for resume/start-over choice)');
+    }
     
     document.getElementById('currentSegment').textContent = index + 1;
     
@@ -284,16 +402,23 @@ async function saveLastViewedSegment(segmentNumber) {
     try {
         const { ipcRenderer } = require('electron');
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
+        const userId = currentUser?.id || fallbackUserId;
         const storyId = getStoryIdFromUrl();
-        
-        if (currentUser) {
+
+        // Save to sessionStorage for quick access
+        sessionStorage.setItem(`lastViewed_story_${storyId}`, segmentNumber);
+
+        if (userId) {
             await ipcRenderer.invoke('progress:saveLastViewed', {
-                userId: currentUser.id,
+                userId: userId,
                 storyId: storyId,
                 segmentId: segmentNumber
             });
-            
+
             console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
+        } else {
+            console.warn('⚠️ No userId found; last viewed segment not saved to DB');
         }
     } catch (error) {
         console.error('Error saving last viewed segment:', error);
@@ -305,15 +430,17 @@ async function markSegmentAsCompleted(segmentNumber) {
     try {
         const { ipcRenderer } = require('electron');
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
+        const userId = currentUser?.id || fallbackUserId;
         const storyId = getStoryIdFromUrl();
-        
-        if (currentUser) {
+
+        if (userId) {
             await ipcRenderer.invoke('progress:markSegmentComplete', {
-                userId: currentUser.id,
+                userId: userId,
                 storyId: storyId,
                 segmentId: segmentNumber
             });
-            
+
             console.log(`✅ Segment ${segmentNumber} marked as completed`);
         }
     } catch (error) {
@@ -456,7 +583,6 @@ function showCompletionScreen() {
     window.location.href = `finish-book.html?story=${storyId}`;
 }
 
-// Listen for voice changes
 // Listen for voice changes
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
