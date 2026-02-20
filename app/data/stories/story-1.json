@@ -86,8 +86,8 @@
       "illustration": "assets/videos/story-1/segment-6.mp4"
     },
     {
-      "id": 7,
-      "text": "there entered her body a spirit who had rice and sugar-cane with him, and he said to her: \"Dayapan, take these to your home and plant them in the ground, and after a while they will grow large enough to reap. Then when they are ripe, build a granary to put the rice in until you shall need it, and a sugar-press to crush the cane. And when these are finished, make the ceremony Sayung, and you will be well.\"",
+      "id": 7.1,
+      "text": "there entered her body a spirit who had rice and sugar-cane with him, and he said to her: \"Dayapan, take these to your home and plant them in the ground, and after a while they will grow large enough to reap.",
       "vocabulary": [
         {
           "word": "sugar-cane",
@@ -98,8 +98,16 @@
           "audio-girl": "assets/audio/story-1/girl/sugar-cane.mp3"
         }
       ],
-      "audio-boy": "assets/audio/story-1/boy/segment-7.mp3",
-      "audio-girl": "assets/audio/story-1/girl/segment-7.mp3",
+      "audio-boy": "assets/audio/story-1/boy/segment-7.1.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-7.1.mp3",
+      "illustration": "assets/videos/story-1/segment-7.mp4"
+    },
+    {
+      "id": 7.2,
+      "text": "Then when they are ripe, build a granary to put the rice in until you shall need it, and a sugar-press to crush the cane. And when these are finished, make the ceremony Sayung, and you will be well.\"",
+      "vocabulary": [],
+      "audio-boy": "assets/audio/story-1/boy/segment-7.2.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-7.2.mp3",
       "illustration": "assets/videos/story-1/segment-7.mp4"
     },
     {
