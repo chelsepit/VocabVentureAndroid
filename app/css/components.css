@@ -720,11 +720,164 @@ input:checked + .toggle-slider:before {
     }
 }
 
+
+/* =========================
+   RESUME MODAL COMPONENT
+   ========================= */
+
+/* Overlay Background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Hidden State */
+.modal-overlay.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* The Modal Box */
+.resume-modal {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 35px;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    border: 5px solid #5DADE2; /* Matches your blue card */
+    
+    transform: scale(0.9);
+    animation: modalPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes modalPopIn {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Modal Text */
+.modal-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.2rem;
+    color: #FF9800;
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.modal-desc {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.15rem;
+    color: #555555;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+/* Modal Buttons Container */
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Base Button Style */
+.modal-btn {
+    padding: 14px 20px;
+    border-radius: 50px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+}
+
+.btn-restart {
+    background: white;
+    color: #5DADE2;
+    border: 3px solid #5DADE2;
+    box-shadow: 0 6px 0 #3a7bbf, 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-restart:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #3a7bbf, 0 14px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-restart:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #3a7bbf;
+}
+
+/* Continue Button (Primary) */
+.btn-continue {
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    color: white;
+    box-shadow: 0 6px 0 #E65100, 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-continue:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #E65100, 0 14px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-continue:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #E65100;
+}
+
+/* Cancel Button */
+.modal-cancel-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    padding: 4px 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    min-touch-target: 44px;
+    line-height: 1;
+}
+
+.modal-cancel-btn:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.modal-cancel-btn:active {
+    transform: scale(0.95);
+}
+
 /* ========================================
    RESPONSIVE BREAKPOINTS
    ======================================== */
 /* Large Mobile: 480px - 0px */
-@media (min-width: 481px) {
+@media (min-width: 480px) {
     .components {
         top: 16px;
         left: 16px;
@@ -758,6 +911,29 @@ input:checked + .toggle-slider:before {
     .speak-button-icon {
         width: 40px;
         height: 40px;
+    }
+
+    .resume-modal {
+        padding: 30px 20px;
+        border-radius: 25px;
+    }
+    
+    .modal-title {
+        font-size: 1.8rem;
+    }
+    
+    .modal-desc {
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+    
+    .modal-buttons {
+        flex-direction: column-reverse; /* Continue on top, Start Over below */
+        gap: 12px;
+    }
+    
+    .modal-btn {
+        width: 100%;
     }
 }
 

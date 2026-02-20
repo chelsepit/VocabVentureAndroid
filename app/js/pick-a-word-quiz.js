@@ -15,6 +15,94 @@ function getStoryId() {
   return parseInt(urlStoryId || sessionStoryId) || 1;
 }
 
+// Check for saved quiz progress
+function getSavedQuizProgress() {
+  const storyId = getStoryId();
+  const savedProgress = localStorage.getItem(`quiz1_progress_${storyId}`);
+  if (savedProgress) {
+    try {
+      return JSON.parse(savedProgress);
+    } catch (e) {
+      console.error('Error parsing saved progress:', e);
+      return null;
+    }
+  }
+  return null;
+}
+
+// Save quiz progress to localStorage
+function saveQuizProgress(questionIndex, score, answers) {
+  const storyId = getStoryId();
+  localStorage.setItem(`quiz1_progress_${storyId}`, JSON.stringify({
+    questionIndex: questionIndex,
+    score: score,
+    answers: answers,
+    timestamp: Date.now()
+  }));
+  console.log(`📊 Quiz 1 progress saved - Question ${questionIndex + 1}, Score: ${score}`);
+}
+
+// Show resume modal for quiz
+function showQuizResumeModal(savedProgress) {
+  const modal = document.getElementById('resumeModalOverlay');
+  if (modal) {
+    modal.classList.remove('hidden');
+    console.log('📻 Quiz resume modal shown - saved at question:', savedProgress.questionIndex + 1);
+  }
+}
+
+// Hide resume modal
+function hideResumeModal() {
+  const modal = document.getElementById('resumeModalOverlay');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// Resume quiz from saved progress
+function continueGame() {
+  console.log('▶️ Resuming quiz from saved progress');
+  hideResumeModal();
+  
+  const savedProgress = getSavedQuizProgress();
+  if (savedProgress && quizData) {
+    currentQuestionIndex = savedProgress.questionIndex;
+    score = savedProgress.score;
+    userAnswers = savedProgress.answers;
+    
+    // Show quiz screen
+    document.getElementById('quizIntro').style.display = 'none';
+    document.getElementById('quizQuestion').style.display = 'block';
+    
+    // Load the next unanswered question
+    loadQuestion(currentQuestionIndex);
+    console.log(`📍 Resumed at question ${currentQuestionIndex + 1}, current score: ${score}`);
+  }
+}
+
+// Start quiz again from beginning
+function startAgain() {
+  console.log('🔄 Starting quiz over');
+  hideResumeModal();
+
+  const storyId = getStoryId();
+  localStorage.removeItem(`quiz1_progress_${storyId}`);
+
+  // Reset state
+  currentQuestionIndex = 0;
+  score = 0;
+  userAnswers = [];
+
+  // Go back to the START screen (intro) so the user sees the starting picture/prompt again
+  document.getElementById('quizQuestion').style.display = 'none';
+  document.getElementById('quizIntro').style.display = 'block';
+}
+
+// For backward compatibility with story-viewer's continueGame
+function startOver() {
+  startAgain();
+}
+
 // Load story data and quiz
 async function loadQuizData() {
   const storyId = getStoryId();
@@ -32,6 +120,13 @@ async function loadQuizData() {
 
     document.getElementById("totalQuestions").textContent =
       quizData.questions.length;
+
+    // Check for saved progress
+    const savedProgress = getSavedQuizProgress();
+    if (savedProgress && savedProgress.questionIndex < quizData.questions.length) {
+      console.log('🔄 Found saved quiz progress - showing resume modal');
+      showQuizResumeModal(savedProgress);
+    }
   } catch (error) {
     console.error("Error loading quiz:", error);
     alert("Failed to load quiz. Redirecting to library...");
@@ -117,6 +212,9 @@ function checkAnswer(selectedIndex) {
     correct: isCorrect,
   });
 
+  // Save progress to localStorage
+  saveQuizProgress(currentQuestionIndex, score, userAnswers);
+
   // Show feedback
   showFeedback(isCorrect, question.explanation);
 
@@ -200,6 +298,10 @@ function calculateBadgeType(score, total) {
 // Finish quiz
 function finishQuiz() {
   const badgeType = calculateBadgeType(score, quizData.questions.length);
+  const storyId = getStoryId();
+
+  // Clear saved progress since quiz is complete
+  localStorage.removeItem(`quiz1_progress_${storyId}`);
 
   // Store quiz results with badge type
   sessionStorage.setItem(
@@ -217,7 +319,6 @@ function finishQuiz() {
   saveQuizResults(badgeType);
 
   // Go to result page
-  const storyId = getStoryId();
   window.location.href = `game-result.html?story=${storyId}&quiz=1`;
 }
 

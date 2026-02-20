@@ -1,0 +1,40 @@
+<div id="resumeModalOverlay" class="modal-overlay hidden" onclick="handleResumeModalOverlayClick(event)">
+    <div class="resume-modal" onclick="event.stopPropagation()">
+        <h2 class="modal-title">Welcome Back!</h2>
+        <p class="modal-desc">Do you want to continue where you left off, or start from the beginning?</p>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn btn-restart" onclick="startOver()">
+                Start Over
+            </button>
+            
+            <button class="modal-btn btn-continue" onclick="continueGame()">
+                Continue
+            </button>
+        </div>
+        
+        <button class="modal-cancel-btn" onclick="handleResumeModalCancel()" title="Cancel">
+            ✕
+        </button>
+    </div>
+</div>
+
+<script>
+// Handle clicking on overlay to close modal
+function handleResumeModalOverlayClick(event) {
+    if (event.target.id === 'resumeModalOverlay') {
+        handleResumeModalCancel();
+    }
+}
+
+// Handle cancel button
+function handleResumeModalCancel() {
+    hideResumeModal();
+    // For quizzes, trigger normal start
+    if (typeof startPicAWord === 'function') {
+        // Do nothing - let user click START
+    } else if (typeof startDecodeWord === 'function') {
+        // Do nothing - let user click START
+    }
+}
+</script>

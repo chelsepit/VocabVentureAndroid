@@ -310,16 +310,8 @@ async function resumeToCorrectPage(storyId, userId) {
         console.log(`Resume status for story ${storyId}:`, status);
 
         if (!status.storyCompleted) {
-            // Story not finished — resume story viewer at last segment
-            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                userId: userId,
-                storyId: storyId
-            });
-            if (lastSegment > 0) {
-                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
-            } else {
-                window.location.href = `story-viewer.html?id=${storyId}`;
-            }
+            // Story not finished — go to story viewer (modal will handle resume)
+            window.location.href = `story-viewer.html?id=${storyId}`;
         } else if (!status.quiz1Completed) {
             // Story done, quiz 1 not started — go to pick-a-word
             sessionStorage.setItem('quizStoryId', storyId);
@@ -329,16 +321,8 @@ async function resumeToCorrectPage(storyId, userId) {
             sessionStorage.setItem('quizStoryId', storyId);
             window.location.href = `decode-the-word.html?story=${storyId}`;
         } else {
-            // All done — go back to story (last segment)
-            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                userId: userId,
-                storyId: storyId
-            });
-            if (lastSegment > 0) {
-                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
-            } else {
-                window.location.href = `story-viewer.html?id=${storyId}`;
-            }
+            // All done — go back to story (modal will handle resume)
+            window.location.href = `story-viewer.html?id=${storyId}`;
         }
     } catch (error) {
         console.error('Error resuming story:', error);
