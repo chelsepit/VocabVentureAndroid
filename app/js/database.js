@@ -405,11 +405,16 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
     // ============================================
     
     saveProgress(userId, storyId, segmentId) {
+        // ON CONFLICT DO UPDATE preserves last_viewed_segment
+        // INSERT OR REPLACE would delete+reinsert, resetting it to DEFAULT 1
         const stmt = this.db.prepare(`
-            INSERT OR REPLACE INTO progress (user_id, story_id, segment_id, completed, completed_at)
-            VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
+            INSERT INTO progress (user_id, story_id, segment_id, completed, completed_at, last_viewed_segment)
+            VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP, ?)
+            ON CONFLICT(user_id, story_id, segment_id)
+            DO UPDATE SET completed = 1, completed_at = CURRENT_TIMESTAMP,
+                last_viewed_segment = MAX(last_viewed_segment, excluded.last_viewed_segment)
         `);
-        return stmt.run(userId, storyId, segmentId);
+        return stmt.run(userId, storyId, segmentId, segmentId);
     }
 
     // Save last viewed segment

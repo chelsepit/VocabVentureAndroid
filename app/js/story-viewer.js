@@ -5,6 +5,7 @@ let currentSegmentIndex = 0;
 let storyData = null;
 let currentAudio = null;
 let isSpeaking = false;
+let isInitialLoad = true; // Prevents overwriting saved position on first load
 
 // Get story ID from URL parameters
 function getStoryIdFromUrl() {
@@ -482,9 +483,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 });
 
-// Cleanup
+// Cleanup - save current segment position when leaving for any reason
 window.addEventListener('beforeunload', () => {
     stopCurrentAudio();
+    // Synchronously save current position using sendBeacon so it completes before page unloads
+    if (currentStory && currentSegmentIndex >= 0) {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
+        const storyId = getStoryIdFromUrl();
+        if (userId) {
+            // ipcRenderer.invoke is async but we call it anyway - Electron handles this fine on beforeunload
+            ipcRenderer.invoke('progress:saveLastViewed', {
+                userId: userId,
+                storyId: storyId,
+                segmentId: currentSegmentIndex + 1
+            });
+        }
+    }
 });
 
 // Initialize

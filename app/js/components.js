@@ -279,6 +279,12 @@ function setupGlobalHandlers() {
 window.handleLogout = function() {
     console.log('🚪 Logging out...');
     
+    // ⭐ Preserve userId so progress can be resumed after re-login
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        localStorage.setItem('lastUserId', currentUser.id);
+    }
+    
     // ⭐ NEW: Stop dashboard music on logout
     if (window.dashboardMusic) {
         window.dashboardMusic.stop();

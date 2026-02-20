@@ -293,11 +293,65 @@ function renderOrganizedBooks() {
     attachBookClickHandlers();
 }
 
+
+// ============================================
+// RESUME STORY - Routes to correct page based on quiz progress
+// ============================================
+async function resumeToCorrectPage(storyId, userId) {
+    try {
+        const totalSegments = getTotalSegments(storyId);
+
+        const status = await ipcRenderer.invoke('story:getCompletionStatus', {
+            userId: userId,
+            storyId: storyId,
+            totalSegments: totalSegments
+        });
+
+        console.log(`Resume status for story ${storyId}:`, status);
+
+        if (!status.storyCompleted) {
+            // Story not finished — resume story viewer at last segment
+            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
+                userId: userId,
+                storyId: storyId
+            });
+            if (lastSegment > 0) {
+                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
+            } else {
+                window.location.href = `story-viewer.html?id=${storyId}`;
+            }
+        } else if (!status.quiz1Completed) {
+            // Story done, quiz 1 not started — go to pick-a-word
+            sessionStorage.setItem('quizStoryId', storyId);
+            window.location.href = `pick-a-word.html?story=${storyId}`;
+        } else if (!status.quiz2Completed) {
+            // Quiz 1 done, quiz 2 not started — go to decode-the-word
+            sessionStorage.setItem('quizStoryId', storyId);
+            window.location.href = `decode-the-word.html?story=${storyId}`;
+        } else {
+            // All done — go back to story (last segment)
+            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
+                userId: userId,
+                storyId: storyId
+            });
+            if (lastSegment > 0) {
+                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
+            } else {
+                window.location.href = `story-viewer.html?id=${storyId}`;
+            }
+        }
+    } catch (error) {
+        console.error('Error resuming story:', error);
+        window.location.href = `story-viewer.html?id=${storyId}`;
+    }
+}
+
 // ============================================
 // ATTACH BOOK CLICK HANDLERS
 // ============================================
 function attachBookClickHandlers() {
     const allBooks = document.querySelectorAll('.book-item[data-story-id]');
+    const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
     
     allBooks.forEach(book => {
         // Remove existing listeners by cloning
@@ -314,29 +368,7 @@ function attachBookClickHandlers() {
             }
             
             console.log(`Opening story ${storyId}`);
-            
-            // Get last viewed segment
-            try {
-                const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                    userId: currentUser.id,
-                    storyId: storyId
-                });
-                
-                // Navigate to story viewer with last segment
-                if (lastSegment > 0) {
-                    // Resume from last viewed segment
-                    console.log(`Resuming story ${storyId} from segment ${lastSegment}`);
-                    window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
-                } else {
-                    // Start from beginning
-                    console.log(`Starting story ${storyId} from beginning`);
-                    window.location.href = `story-viewer.html?id=${storyId}`;
-                }
-            } catch (error) {
-                console.error('Error getting last viewed segment:', error);
-                // Fallback to beginning
-                window.location.href = `story-viewer.html?id=${storyId}`;
-            }
+            await resumeToCorrectPage(storyId, userId);
         });
         
         // Add hover effects

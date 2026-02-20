@@ -289,6 +289,54 @@ function performSearch(query) {
 }
 
 // ============================================
+// RESUME STORY - Routes to correct page based on quiz progress
+// ============================================
+async function resumeToCorrectPage(storyId, userId) {
+    try {
+        const totalSegments = getTotalSegments(storyId);
+
+        const status = await ipcRenderer.invoke('story:getCompletionStatus', {
+            userId: userId,
+            storyId: storyId,
+            totalSegments: totalSegments
+        });
+
+        console.log(`Resume status for story ${storyId}:`, status);
+
+        if (!status.storyCompleted) {
+            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
+                userId: userId,
+                storyId: storyId
+            });
+            if (lastSegment > 0) {
+                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
+            } else {
+                window.location.href = `story-viewer.html?id=${storyId}`;
+            }
+        } else if (!status.quiz1Completed) {
+            sessionStorage.setItem('quizStoryId', storyId);
+            window.location.href = `pick-a-word.html?story=${storyId}`;
+        } else if (!status.quiz2Completed) {
+            sessionStorage.setItem('quizStoryId', storyId);
+            window.location.href = `decode-the-word.html?story=${storyId}`;
+        } else {
+            const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
+                userId: userId,
+                storyId: storyId
+            });
+            if (lastSegment > 0) {
+                window.location.href = `story-viewer.html?id=${storyId}&segment=${lastSegment}`;
+            } else {
+                window.location.href = `story-viewer.html?id=${storyId}`;
+            }
+        }
+    } catch (error) {
+        console.error('Error resuming story:', error);
+        window.location.href = `story-viewer.html?id=${storyId}`;
+    }
+}
+
+// ============================================
 // ATTACH BOOK CLICK HANDLERS
 // ============================================
 function attachBookClicks() {
@@ -297,6 +345,7 @@ function attachBookClicks() {
             const isActive = book.dataset.active === "true";
             const id = parseInt(book.dataset.id);
             const title = book.dataset.title;
+            const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
 
             if (!isActive) {
                 console.log('Story not yet available:', title);
@@ -304,22 +353,7 @@ function attachBookClicks() {
             }
 
             console.log(`Opening story ${id}: ${title}`);
-            
-            try {
-                const lastSegment = await ipcRenderer.invoke('progress:getLastViewed', {
-                    userId: currentUser.id,
-                    storyId: id
-                });
-                
-                if (lastSegment > 0) {
-                    window.location.href = `story-viewer.html?id=${id}&segment=${lastSegment}`;
-                } else {
-                    window.location.href = `story-viewer.html?id=${id}`;
-                }
-            } catch (error) {
-                console.error('Error getting last viewed segment:', error);
-                window.location.href = `story-viewer.html?id=${id}`;
-            }
+            await resumeToCorrectPage(id, userId);
         });
         
         // Add hover effect for active books

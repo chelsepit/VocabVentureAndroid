@@ -89,10 +89,8 @@ function loadQuestion(index) {
     question.options.forEach((option, idx) => {
         const button = document.createElement("button");
         button.className = "start-button";
-
-        // Format as A., B., C.
-        const letter = String.fromCharCode(65 + idx); // 65 is 'A' in ASCII
-        button.textContent = `${letter}. ${option}`;
+     
+        button.textContent = `$${option}`;
 
         button.onclick = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
