@@ -345,9 +345,10 @@ ipcMain.handle('quiz:getBestScore', async (event, { userId, storyId, quizNumber 
 // BADGE HANDLERS
 // ============================================
 
-ipcMain.handle('badge:award', async (event, { userId, storyId, badgeType, badgeCategory }) => {
+ipcMain.handle('badge:award', async (event, { userId, storyId, badgeType }) => {
     try {
-        return db.awardBadge(userId, storyId, badgeType, badgeCategory);
+        // One badge per story — awardBadge handles upgrade logic internally
+        return db.awardBadge(userId, storyId, badgeType);
     } catch (error) {
         console.error('Error awarding badge:', error);
         throw error;
@@ -390,27 +391,11 @@ ipcMain.handle('badge:getStory', async (event, { userId, storyId }) => {
     }
 });
 
-// Add this IPC handler to your index.js (main process)
-
-// ⭐ NEW: Upgrade badge (replaces existing badge with higher tier)
+// badge:upgrade now delegates to awardBadge (same upgrade logic)
 ipcMain.handle('badge:upgrade', async (event, { userId, storyId, newBadgeType }) => {
     try {
-        // Delete old badge for this story
-        const deleteStmt = db.db.prepare(`
-            DELETE FROM user_badges 
-            WHERE user_id = ? AND story_id = ? AND badge_category = 'story-completion'
-        `);
-        deleteStmt.run(userId, storyId);
-        
-        // Award new badge
-        const insertStmt = db.db.prepare(`
-            INSERT INTO user_badges (user_id, story_id, badge_type, badge_category)
-            VALUES (?, ?, ?, 'story-completion')
-        `);
-        insertStmt.run(userId, storyId, newBadgeType);
-        
-        console.log(`🎖️ Badge upgraded: User ${userId}, Story ${storyId} → ${newBadgeType.toUpperCase()}`);
-        
+        const result = db.awardBadge(userId, storyId, newBadgeType);
+        console.log(`🎖️ Badge upgrade attempted: User ${userId}, Story ${storyId} → ${newBadgeType.toUpperCase()}`);
         return { success: true };
     } catch (error) {
         console.error('Error upgrading badge:', error);

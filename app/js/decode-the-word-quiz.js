@@ -331,7 +331,7 @@ async function saveQuizResults(badgeType) {
         const storyId = getStoryId();
         
         if (currentUser) {
-            // Save quiz result with badge type
+            // Save quiz result score only — badge:upgrade in game-result.js handles the badge
             await ipcRenderer.invoke('quiz:save', {
                 userId: currentUser.id,
                 storyId: storyId,
@@ -341,15 +341,7 @@ async function saveQuizResults(badgeType) {
                 badgeType: badgeType
             });
             
-            // Award badge for Quiz 2
-            await ipcRenderer.invoke('badge:award', {
-                userId: currentUser.id,
-                storyId: storyId,
-                badgeType: badgeType,
-                badgeCategory: 'quiz-2'
-            });
-            
-            console.log(`Quiz 2 results saved - ${badgeType} badge awarded`);
+            console.log(`Quiz 2 results saved (${badgeType})`);
         }
     } catch (error) {
         console.error('Error saving quiz results:', error);
