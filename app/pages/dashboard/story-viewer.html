@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/book-stories.css">
     <link rel="stylesheet" href="../../css/font.css">
+
 </head>
 
 <body>
@@ -31,6 +32,11 @@
         <div class="left-group">
             <div id="settings-container"></div>
             <div id="burger-container"></div>
+            <div id="home-container"></div>
+        </div>
+        <div id="speak-container"></div>
+    </div>
+
         </div>
         <div id="speak-container"></div>
     </div>
@@ -43,11 +49,13 @@
         <p id="storyText">Loading story...</p>
     </div>
 
-    <!-- Navigation Controls -->
-    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px;">
+    <!-- Navigation Controls-->
+    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px; align-items: center;">
         <button id="prevBtn" class="nav-btn">← Previous</button>
         <button id="nextBtn" class="nav-btn">Next →</button>
     </div>
+
+    
 
     <!-- Progress Indicator -->
     <div class="progress-indicator">
@@ -75,6 +83,7 @@
         // Load components
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('speak-container', '../components/speak-button.html');
         loadComponent('definition-container', '../components/definition-card.html');
     </script>

@@ -62,7 +62,7 @@ async function displayResults() {
         } else {
             // Failed Quiz 1 → Stay BRONZE
             resultTitle = 'NOT QUITE!';
-            resultMessage = `You need 4-5 correct to upgrade to Silver. You got ${score}/5. Try again!`;
+            resultMessage = `You need 5 correct to upgrade to Silver. You got ${score}/5. Try again!`;
             badgeType = 'bronze';
             
             // ⭐ Play nicejob audio for failed attempt
