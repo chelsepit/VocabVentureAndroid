@@ -37,10 +37,6 @@
         <div id="speak-container"></div>
     </div>
 
-        </div>
-        <div id="speak-container"></div>
-    </div>
-
     <!-- Definition Card -->
     <div id="definition-container"></div>
 
@@ -58,8 +54,6 @@
         <button id="nextBtn" class="nav-btn">Next →</button>
     </div>
 
-    
-
     <!-- Progress Indicator -->
     <div class="progress-indicator">
         <div>
@@ -68,10 +62,11 @@
     </div>
 
     <script>
+        // Load a component into an element (returns a Promise)
         function loadComponent(elementId, filePath) {
-            fetch(filePath)
+            return fetch(filePath)
                 .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) throw new Error('Network response was not ok: ' + filePath);
                     return response.text();
                 })
                 .then(data => {
@@ -83,13 +78,16 @@
                 .catch(err => console.error('Error loading component:', err));
         }
 
-        // Load components
+        // Load non-critical components (fire and forget — order doesn't matter)
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('home-container', '../components/home-button.html');
         loadComponent('speak-container', '../components/speak-button.html');
         loadComponent('definition-container', '../components/definition-card.html');
-        loadComponent('resume-modal-container', '../components/resume-modal.html');
+
+        // ⭐ The resume modal MUST be in the DOM before initStoryViewer checks for saved progress.
+        // We store the promise so story-viewer.js can await it before calling initStoryViewer.
+        window.resumeModalReady = loadComponent('resume-modal-container', '../components/resume-modal.html');
     </script>
 
     <script src="../../js/components.js"></script>
