@@ -8,29 +8,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
-    
     <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
 <body>
     <div class="components">
         <div class="left-group">
-            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
-        <div id="speak-container"></div>
     </div>
 
-    <!-- Main Library Container -->
     <div class="library-container">
-        <!-- Header Section -->
         <div class="library-header">
-            <!-- Back Button - FIXED: Same folder, just use filename -->
             <a href="library.html" class="back-button">
                 <span class="header-font" style="color: white; font-size: 1.5rem; font-weight: 600; padding: 1px 5px;">Back</span>
             </a>
-            
             <div class="library-title-wrapper">
                 <h1 class="header-font text-white drop-shadow-lg" style="font-size: 2.5rem !important;">
                     What do you want to <span class="italic title-font">read</span> today?
@@ -38,16 +31,12 @@
             </div>
         </div>
 
-        <!-- Recent Reads Wrapper -->
         <div class="library-content-wrapper">
-            <!-- Recent Reads Section -->
             <section class="bookshelf-section">
                 <div class="section-header">
                     <h2 class="section-title">Recent Reads</h2>
                 </div>
-
                 <div class="book-grid" id="recentReads">
-                    <!-- Books will be dynamically loaded by personal-library.js -->
                     <div class="book-item" data-story-id="1">
                         <img src="../../assets/images/books/folktales/folktale-book-1.png" alt="Book 1">
                         <div class="progress-container">
@@ -70,16 +59,12 @@
             </section>
         </div>
 
-        <!-- Completed Books Wrapper -->
         <div class="library-content-wrapper">
-            <!-- Completed Books Section -->
             <section class="bookshelf-section">
                 <div class="section-header">
                     <h2 class="section-title">Completed Books</h2>
                 </div>
-
                 <div class="book-grid" id="completedBooks">
-                    <!-- Completed books will be dynamically loaded -->
                     <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
                         <p style="color: #6b7280; font-size: 1.1rem;">No completed books yet!</p>
                         <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 10px;">Finish stories to see them here</p>
@@ -92,25 +77,10 @@
     <script>
         function loadComponent(elementId, filePath) {
             fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    
-                    // After HTML is inserted, initialize the Javascript for buttons
-                    // (This calls the function we defined in components.js)
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
+                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
+                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-
-        // Load the files (Paths are relative to THIS file)
-        // We go up one level (..) to 'pages', then into 'components'
-        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
     </script>

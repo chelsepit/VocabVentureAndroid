@@ -10,28 +10,21 @@
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/welcome-page.css">
-    <link rel="stylesheet" href="../../css/components.css">
 </head>
 <body>
-    <!-- Settings Menu Component -->
     <div class="components">
         <div class="left-group">
             <div id="settings-container"></div>
         </div>
     </div>
 
-    <!-- Background Scene -->
     <div class="welcome-background"></div>
 
-    <!-- Welcome Content -->
     <div class="welcome-content">
         <div class="text-center mt-10 fade-in">
-            <!-- Main Greeting -->
             <h1 class="header-font text-4xl md:text-6xl font-extrabold mb-2" style="color: #000000;">
                 Hello, <span id="userName">Student</span>!
             </h1>
-
-            <!-- Subtitle -->
             <p class="body-font text-3xl md:text-4xl text-black mt-2">
                 Your Word Journey Starts Here
             </p>
@@ -39,7 +32,6 @@
 
         <div class="flex-grow"></div>
 
-        <!-- Start Reading Button -->
         <div class="mb-12 fade-in" style="animation-delay: 0.3s;">
             <button class="start-button header-font font-extrabold" onclick="startReading()">
                 Start Reading
@@ -47,52 +39,41 @@
         </div>
     </div>
 
-    <script type="module">
-        // Get current user
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    <!-- DB init first, always -->
+    <script type="module" src="../../js/app-init.js"></script>
 
+    <script type="module">
+        // Auth check
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser) {
-            // Not logged in, redirect to login
             window.location.href = '../auth/login.html';
         } else {
-            // Extract first name from full name
             const firstName = currentUser.username.split(' ')[0];
             document.getElementById('userName').textContent = firstName;
         }
 
+        // Load settings component
+        fetch('../components/settings-menu.html')
+            .then(r => r.text())
+            .then(data => {
+                document.getElementById('settings-container').innerHTML = data;
+                if (window.initializeComponents) window.initializeComponents();
+            })
+            .catch(err => console.error('Error loading component:', err));
+    </script>
+
+    <script type="module" src="../../js/components.js"></script>
+    <script type="module" src="../../js/dashboard-music.js"></script>
+
+    <script>
         function startReading() {
             const button = event.target;
             button.style.transform = 'scale(0.95)';
-
             setTimeout(() => {
                 button.style.transform = '';
                 window.location.href = '../dashboard/library.html';
             }, 150);
         }
     </script>
-    <script type="module">
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
-                .catch(err => console.error('Error loading component:', err));
-        }
-
-        // Load components
-        loadComponent('home-container', '../components/home-button.html');
-        loadComponent('settings-container', '../components/settings-menu.html');
-    </script>
-    <script type="module" src="../../js/app-init.js"></script>
-    <script type="module" src="../../js/components.js"></script>
-    <script type="module" src="../../js/dashboard-music.js"></script><!-- ⭐ ADDED: Background music -->
-
 </body>
 </html>

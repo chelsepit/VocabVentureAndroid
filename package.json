@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "VocabVenture Android App — Capacitor",
   "scripts": {
+<<<<<<< Updated upstream
     "cap:sync":   "npx cap sync",
     "cap:open":   "npx cap open android",
     "cap:run":    "npx cap run android"
@@ -14,5 +15,50 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^8.1.0"
+=======
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build:electron": "electron-builder",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android",
+    "cap:run:android": "npx cap run android"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
+    "@electron/rebuild": "^4.0.3",
+    "electron": "^40.4.0",
+    "electron-builder": "^26.7.0"
+  },
+  "dependencies": {
+    "@capacitor-community/sqlite": "^8.0.0",
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "better-sqlite3": "^12.6.2"
+  },
+  "build": {
+    "appId": "com.vocabventure.app",
+    "productName": "VocabVenture",
+    "icon": "app/assets/images/app-logo/vocabventure_logo.ico",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "**/*",
+      "!android",
+      "!node_modules/.cache"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "app/assets/images/app-logo/vocabventure_logo.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
+>>>>>>> Stashed changes
   }
 }

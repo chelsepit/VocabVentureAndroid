@@ -1,60 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story Viewer - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/book-stories.css">
     <link rel="stylesheet" href="../../css/font.css">
-
 </head>
-
 <body>
-    <!-- Video Background -->
     <div class="video-background">
         <video id="storyVideo" autoplay muted playsinline>
             <source id="videoSource" src="" type="video/mp4">
         </video>
     </div>
 
-    <!-- Components -->
     <div class="components">
         <div class="left-group">
             <div id="settings-container"></div>
             <div id="burger-container"></div>
-            <div id="home-container"></div>
         </div>
         <div id="speak-container"></div>
     </div>
 
-    <!-- Definition Card -->
     <div id="definition-container"></div>
 
-    <!-- Resume Modal -->
-    <div id="resume-modal-container"></div>
-
-    <!-- Story Content -->
     <div class="content" id="storyContent">
         <p id="storyText">Loading story...</p>
     </div>
 
-    <!-- Navigation Controls-->
-    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px; align-items: center;">
+    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px;">
         <button id="prevBtn" class="nav-btn">← Previous</button>
         <button id="nextBtn" class="nav-btn">Next →</button>
     </div>
 
-    <!-- Progress Indicator -->
     <div class="progress-indicator">
         <div>
             Segment <span id="currentSegment">1</span> / <span id="totalSegments">1</span>
@@ -62,32 +46,30 @@
     </div>
 
     <script>
-        // Load a component into an element (returns a Promise)
         function loadComponent(elementId, filePath) {
-            return fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok: ' + filePath);
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
+            fetch(filePath)
+                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
+                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-
-        // Load non-critical components (fire and forget — order doesn't matter)
+        // Track when resume modal is ready
+        window.resumeModalReady = new Promise(resolve => {
+            window._resolveResumeModal = resolve;
+        });
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('home-container', '../components/home-button.html');
         loadComponent('speak-container', '../components/speak-button.html');
         loadComponent('definition-container', '../components/definition-card.html');
-
-        // ⭐ The resume modal MUST be in the DOM before initStoryViewer checks for saved progress.
-        // We store the promise so story-viewer.js can await it before calling initStoryViewer.
-        window.resumeModalReady = loadComponent('resume-modal-container', '../components/resume-modal.html');
+        // Load resume modal and resolve the promise when done
+        fetch('../components/resume-modal.html')
+            .then(r => r.text())
+            .then(data => {
+                const div = document.createElement('div');
+                div.innerHTML = data;
+                document.body.appendChild(div);
+                window._resolveResumeModal(true);
+            })
+            .catch(() => window._resolveResumeModal(false));
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>
@@ -96,5 +78,4 @@
     <script type="module" src="../../js/book-stories.js"></script>
     <script type="module" src="../../js/story-viewer.js"></script>
 </body>
-
 </html>

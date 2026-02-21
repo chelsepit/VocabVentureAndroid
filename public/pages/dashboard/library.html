@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library - VocabVenture</title>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
@@ -16,7 +14,7 @@
 </head>
 <body>
     <div class="components">
-        <div class="left-group">   
+        <div class="left-group">
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -38,55 +36,35 @@
 
             <div class="genre-nav">
                 <button type="button" class="genre-tag active" data-genre="folktales">
-                    <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales">
-                    <span>Folktales</span>
+                    <img src="../../assets/images/icons/folktales-icon.svg" alt="Folktales"><span>Folktales</span>
                 </button>
                 <button type="button" class="genre-tag" data-genre="myths">
-                    <img src="../../assets/images/icons/myths-icon.svg" alt="Myths">
-                    <span>Myths</span>
+                    <img src="../../assets/images/icons/myths-icon.svg" alt="Myths"><span>Myths</span>
                 </button>
                 <button type="button" class="genre-tag" data-genre="fables">
-                    <img src="../../assets/images/icons/fables-icon.svg" alt="Fables">
-                    <span>Fables</span>
+                    <img src="../../assets/images/icons/fables-icon.svg" alt="Fables"><span>Fables</span>
                 </button>
                 <button type="button" class="genre-tag" data-genre="short-stories">
-                    <img src="../../assets/images/icons/short-stories-icon.svg" alt="Short Stories">
-                    <span>Short Stories</span>
+                    <img src="../../assets/images/icons/short-stories-icon.svg" alt="Short Stories"><span>Short Stories</span>
                 </button>
                 <button type="button" class="genre-tag" data-genre="legends">
-                    <img src="../../assets/images/icons/legends-icon.svg" alt="Legends">
-                    <span>Legends</span>
+                    <img src="../../assets/images/icons/legends-icon.svg" alt="Legends"><span>Legends</span>
                 </button>
             </div>
         </div>
 
         <div class="library-content-wrapper" id="libraryContent"></div>
+    </div>
 
     <script>
         function loadComponent(elementId, filePath) {
             fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    
-                    // After HTML is inserted, initialize the Javascript for buttons
-                    // (This calls the function we defined in components.js)
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
+                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
+                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-
-        // Load the files (Paths are relative to THIS file)
-        // We go up one level (..) to 'pages', then into 'components'
-        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('libraryContent', '../components/selected-genre.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>

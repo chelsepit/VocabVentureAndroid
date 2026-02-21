@@ -67,6 +67,11 @@
             </div>
         </div>
     </div>
+ <!-- DB + Bridge (must load before page scripts) -->
+    <script src="../../db/db-core.js"></script>
+    <script src="../../js/electron-db-init.js"></script>
+    <script type="module" src="../../js/app-init.js"></script>
+    <script src="../../js/bridge.js"></script>
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/auth.js"></script>

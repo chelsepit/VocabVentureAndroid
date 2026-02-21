@@ -1,79 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulary Review - VocabVenture</title>
+    <title>Decode the Word - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/lets-review.css">
+    <link rel="stylesheet" href="../../css/decode-the-world.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
-
 <body>
     <div class="finish-background"></div>
 
     <div class="components">
         <div class="left-group">
-            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
     </div>
 
-    <div class="review-container">
-        <div class="title-header">LET'S REVIEW!</div>
+    <!-- Intro Screen -->
+    <div id="quizIntro" class="finish-content">
+        <div class="title-header">Decode the Word!</div>
+        <div class="progress-comment">
+            Get ready to boost your word power while having fun!<br>
+            Figure out the word's meaning in the sentence.<br>
+            Let's get started and begin your word adventure—have fun and enjoy!
+        </div>
+        <div class="finish-button">
+            <button class="start-button" onclick="startDecodeWord()">START</button>
+        </div>
+    </div>
 
-        <div class="finish-content">
-            
-            <button id="backBtn" class="back-button" onclick="goBackToResults()">
-                ← Back
-            </button>
-
-            <div class="word-counter-badge">
-                Word <span id="currentWordIndex">1</span> / <span id="totalWords">10</span>
+    <!-- Quiz Question Screen -->
+    <div id="quizQuestion" class="finish-content" style="display: none;">
+        <div class="title-header">Decode the Word!</div>
+        <div class="progress-indicator">
+            <span class="progress-text">Questions <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
+        </div>
+        <div class="progress-comment">
+            <div class="sentence-text">
+                <span id="sentenceText">The king commanded his soldiers to guard the castle.</span>
             </div>
-
-            <div class="word-title" id="currentWord">LOADING...</div>
-
-            <div class="review-desc" id="wordDefinition">Loading definition...</div>
-
-            <div class="audio-button" onclick="playCurrentWordAudio()">
-                <img src="../../assets/images/icons/replay-icon.svg" alt="Play audio">
+            <div class="question-prompt">
+                <span id="questionPrompt">What does commanded mean?</span>
             </div>
+        </div>
+        <div class="finish-button" id="answerButtons"></div>
+        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;"></div>
+    </div>
 
-            <div class="review-nav">
-                <button id="prevWordBtn" class="prev-button" onclick="previousWord()">Previous</button>
-                <button id="nextWordBtn" class="next-button" onclick="nextWord()">Next →</button>
-            </div>
-
+    <!-- Resume Modal -->
+    <div id="resumeModalOverlay" class="hidden">
+        <div class="resume-modal">
+            <p>You have a saved quiz in progress. Continue where you left off?</p>
+            <button onclick="continueGame()">Continue</button>
+            <button onclick="startAgain()">Start Over</button>
         </div>
     </div>
 
     <script>
         function loadComponent(elementId, filePath) {
             fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) window.initializeComponents();
-                })
+                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
+                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-        loadComponent('home-container',     '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
-        loadComponent('burger-container',   '../components/burger-nav.html');
-        loadComponent('speak-container',    '../components/speak-button.html');
+        loadComponent('burger-container', '../components/burger-nav.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>
@@ -81,4 +78,7 @@
     <script type="module" src="../../js/lets-review.js"></script>
 </body>
 
+    <script src="../../js/components.js"></script>
+    <script src="../../js/decode-the-word-quiz.js"></script>
+</body>
 </html>

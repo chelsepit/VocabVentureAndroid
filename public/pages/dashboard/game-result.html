@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Results - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/game-result.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
-
 <body>
     <div class="finish-background"></div>
 
     <div class="components">
         <div class="left-group">
-            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
-    </div> 
+    </div>
 
     <div class="finish-content">
-        <div class="title-header" id="resultTitle">
-            HOORAY!
-        </div>
-
-        <div class="progress-comment" id="resultMessage">
-            You're a vocabulary champ! 🏆        
-        </div>
-
-        <div class="score" id="scoreDisplay">
-            0/0
-        </div>
-
+        <div class="title-header" id="resultTitle">HOORAY!</div>
+        <div class="progress-comment" id="resultMessage">You're a vocabulary champ! 🏆</div>
+        <div class="score" id="scoreDisplay">0/0</div>
         <div class="finish-button">
             <button class="exit-button" onclick="exitToLibrary()">EXIT</button>
             <button class="proceed-button" id="proceedButton" onclick="proceedNext()">PROCEED</button>
@@ -50,27 +35,16 @@
     <script>
         function loadComponent(elementId, filePath) {
             fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
+                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
+                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('speak-container', '../components/speak-button.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/components.js"></script>
     <script type="module" src="../../js/game-result.js"></script>
 </body>
-
 </html>
