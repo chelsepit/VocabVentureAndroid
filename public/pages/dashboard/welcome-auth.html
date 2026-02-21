@@ -47,9 +47,7 @@
         </div>
     </div>
 
-    <script>
-        const { ipcRenderer } = require('electron');
-
+    <script type="module">
         // Get current user
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -72,7 +70,7 @@
             }, 150);
         }
     </script>
-    <script>
+    <script type="module">
         function loadComponent(elementId, filePath) {
             fetch(filePath)
                 .then(response => {
@@ -92,8 +90,9 @@
         loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
     </script>
-    <script src="../../js/components.js"></script>
-        <script src="../../js/dashboard-music.js"></script><!-- ⭐ ADDED: Background music -->
+    <script type="module" src="../../js/app-init.js"></script>
+    <script type="module" src="../../js/components.js"></script>
+    <script type="module" src="../../js/dashboard-music.js"></script><!-- ⭐ ADDED: Background music -->
 
 </body>
 </html>
