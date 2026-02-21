@@ -10,7 +10,6 @@
 
 import { initDB } from './db/db-interface.js';
 
-// Works on both Capacitor (deviceready) and browser (load)
 let initialized = false;
 
 async function bootstrap() {
@@ -19,10 +18,12 @@ async function bootstrap() {
     try {
         await initDB();
         console.log('✅ VocabVenture DB ready');
-        // Fire a custom event other scripts can listen for
+        window.__dbReady = true;
         document.dispatchEvent(new CustomEvent('db:ready'));
     } catch (err) {
         console.error('❌ DB init failed:', err);
+        // Still dispatch so pages don't hang forever — they'll error gracefully
+        document.dispatchEvent(new CustomEvent('db:ready'));
     }
 }
 

@@ -13,7 +13,6 @@
 <body>
     <div class="auth-wrapper">
         <div class="login-card">
-            <!-- Logo/Title -->
             <div class="text-center mb-8">
                 <h1 class="title-font text-4xl font-extrabold mb-2" style="color: var(--orange-accent);">
                     VocabVenture
@@ -21,10 +20,8 @@
                 <p class="text-gray-600 text-lg" id="pageSubtitle">Welcome back! Let's continue learning!</p>
             </div>
 
-            <!-- Error/Success Messages -->
             <div id="messageContainer"></div>
 
-            <!-- LOGIN FORM -->
             <form id="loginForm">
                 <div class="mb-6">
                     <label class="block text-gray-700 font-bold mb-2 text-lg">
@@ -58,7 +55,6 @@
                 </button>
             </form>
 
-            <!-- Toggle between Login and Register -->
             <div class="toggle-mode">
                 <p class="text-gray-600">
                     New here?
@@ -67,14 +63,8 @@
             </div>
         </div>
     </div>
- <!-- DB + Bridge (must load before page scripts) -->
-    <script src="../../db/db-core.js"></script>
-    <script src="../../js/electron-db-init.js"></script>
-    <script type="module" src="../../js/app-init.js"></script>
-    <script src="../../js/bridge.js"></script>
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/auth.js"></script>
-    <script type="module" src="../../js/dashboard-music.js"></script>
 </body>
 </html>

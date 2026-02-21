@@ -21,7 +21,7 @@
                     Welcome to <span class="title-font">VocabVenture</span> — a playful way to grow your words.
                 </p>
                 <button class="inline-block submit-btn title-font font-semibold" onclick="goToLogin()">
-                     Get Started
+                    Get Started
                 </button>
             </div>
             <div class="mt-10 border-t pt-6">
@@ -32,11 +32,14 @@
         </div>
     </div>
 
-    <script type="module">
+    <!-- goToLogin MUST be a plain script (NOT module) so onclick="" can find it -->
+    <script>
         function goToLogin() {
             window.location.href = '../auth/login.html';
         }
     </script>
+
     <script type="module" src="../../js/app-init.js"></script>
-    <script type="module" src="../../js/dashboard-music.js"></script></body>
+    <script type="module" src="../../js/dashboard-music.js"></script>
+</body>
 </html>

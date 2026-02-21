@@ -1,32 +1,42 @@
-// sqlite-capacitor.js
-// Capacitor SQLite implementation — replaces better-sqlite3 + IPC entirely.
-// ALL other JS files must import from db-interface.js, never directly from here.
+// sqlite-capacitor.js — NO bundler required
+// Uses the raw CapacitorSQLite plugin directly from window.Capacitor.Plugins
 
-import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
+const DB_NAME = 'vocabventure';
 
-const sqlite = new SQLiteConnection(CapacitorSQLite);
-let db = null;
+function getPlugin() {
+    const plugin = window?.Capacitor?.Plugins?.CapacitorSQLite;
+    if (!plugin) throw new Error('CapacitorSQLite plugin not available');
+    return plugin;
+}
 
 export const capacitorDB = {
 
     // ============================================
-    // INIT — call once on app start
+    // INIT
     // ============================================
     async init() {
         try {
-            const isConn = (await sqlite.isConnection('vocabventure', false)).result;
-            if (isConn) {
-                db = await sqlite.retrieveConnection('vocabventure', false);
-            } else {
-                db = await sqlite.createConnection(
-                    'vocabventure',
-                    false,
-                    'no-encryption',
-                    1,
-                    false
-                );
+            const plugin = getPlugin();
+
+            // createConnection is safe to call even if connection exists —
+            // we catch and ignore the "already exists" error
+            try {
+                await plugin.createConnection({
+                    database: DB_NAME,
+                    encrypted: false,
+                    mode: 'no-encryption',
+                    version: 1,
+                    readonly: false
+                });
+            } catch (connErr) {
+                // "already exists" is fine — just means we called init twice
+                const msg = connErr?.message ?? '';
+                if (!msg.toLowerCase().includes('already') && !msg.toLowerCase().includes('exist')) {
+                    throw connErr;
+                }
             }
-            await db.open();
+
+            await plugin.open({ database: DB_NAME, readonly: false });
             await this._initializeTables();
             console.log('✅ Capacitor SQLite initialized');
         } catch (error) {
@@ -39,23 +49,26 @@ export const capacitorDB = {
     // LOW-LEVEL HELPERS
     // ============================================
     async run(sql, params = []) {
-        return await db.run(sql, params);
+        const plugin = getPlugin();
+        return await plugin.run({ database: DB_NAME, statement: sql, values: params, transaction: false });
     },
 
     async query(sql, params = []) {
-        const result = await db.query(sql, params);
+        const plugin = getPlugin();
+        const result = await plugin.query({ database: DB_NAME, statement: sql, values: params });
         return result.values ?? [];
     },
 
     async execute(sql) {
-        return await db.execute(sql);
+        const plugin = getPlugin();
+        return await plugin.execute({ database: DB_NAME, statements: sql, transaction: false });
     },
 
     // ============================================
     // SCHEMA
     // ============================================
     async _initializeTables() {
-        await db.execute(`
+        await this.execute(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
@@ -63,7 +76,8 @@ export const capacitorDB = {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(username, birthdate)
             );
-
+        `);
+        await this.execute(`
             CREATE TABLE IF NOT EXISTS progress (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
@@ -75,7 +89,8 @@ export const capacitorDB = {
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 UNIQUE(user_id, story_id, segment_id)
             );
-
+        `);
+        await this.execute(`
             CREATE TABLE IF NOT EXISTS quiz_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
@@ -87,7 +102,8 @@ export const capacitorDB = {
                 completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
-
+        `);
+        await this.execute(`
             CREATE TABLE IF NOT EXISTS user_badges (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
@@ -100,14 +116,14 @@ export const capacitorDB = {
             );
         `);
 
-        // Safe migration: add last_viewed_segment if missing (for existing DBs)
+        // Safe migration for existing DBs
         try {
-            const cols = await this.query("PRAGMA table_info(progress)");
+            const cols = await this.query('PRAGMA table_info(progress)', []);
             const hasCol = cols.some(c => c.name === 'last_viewed_segment');
             if (!hasCol) {
-                await db.execute("ALTER TABLE progress ADD COLUMN last_viewed_segment INTEGER DEFAULT 1");
+                await this.execute('ALTER TABLE progress ADD COLUMN last_viewed_segment INTEGER DEFAULT 1;');
             }
-        } catch (_) { /* fresh install, column already in CREATE TABLE */ }
+        } catch (_) { /* fresh install — column already in CREATE TABLE */ }
     },
 
     // ============================================
@@ -122,12 +138,7 @@ export const capacitorDB = {
             const user = rows[0];
             return {
                 success: true,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    birthdate: user.birthdate,
-                    created_at: user.created_at
-                }
+                user: { id: user.id, username: user.username, birthdate: user.birthdate, created_at: user.created_at }
             };
         }
         return { success: false, message: 'Invalid name or birthdate. Please try again or register.' };
@@ -180,11 +191,10 @@ export const capacitorDB = {
 
     async getLastViewedSegment(userId, storyId) {
         const rows = await this.query(
-            `SELECT MAX(last_viewed_segment) as last_segment
-             FROM progress WHERE user_id = ? AND story_id = ?`,
+            `SELECT MAX(last_viewed_segment) as last_segment FROM progress WHERE user_id = ? AND story_id = ?`,
             [userId, storyId]
         );
-        return (rows[0]?.last_segment) || 0;
+        return rows[0]?.last_segment || 0;
     },
 
     async getProgress(userId, storyId) {
@@ -198,8 +208,7 @@ export const capacitorDB = {
         return await this.query(
             `SELECT story_id, COUNT(*) as completed_segments, 14 as total_segments,
                     MAX(completed_at) as last_activity
-             FROM progress WHERE user_id = ? AND completed = 1
-             GROUP BY story_id`,
+             FROM progress WHERE user_id = ? AND completed = 1 GROUP BY story_id`,
             [userId]
         );
     },
@@ -236,9 +245,7 @@ export const capacitorDB = {
         );
 
         return {
-            completedSegments,
-            totalSegments,
-            storyCompleted,
+            completedSegments, totalSegments, storyCompleted,
             quiz1Completed: quiz1Badge !== null,
             quiz2Completed: quiz2Badge !== null,
             lastAccessed: lastAccessRows[0]?.lastAccessed ?? null
@@ -295,7 +302,6 @@ export const capacitorDB = {
             }
             return null;
         }
-
         return await this.run(
             `INSERT INTO user_badges (user_id, story_id, badge_type, badge_category) VALUES (?, ?, ?, ?)`,
             [userId, storyId, badgeType, badgeCategory]
@@ -316,8 +322,7 @@ export const capacitorDB = {
 
     async getAllUserBadges(userId) {
         return await this.query(
-            `SELECT * FROM user_badges WHERE user_id = ? ORDER BY earned_at DESC`,
-            [userId]
+            `SELECT * FROM user_badges WHERE user_id = ? ORDER BY earned_at DESC`, [userId]
         );
     },
 
@@ -350,8 +355,7 @@ export const capacitorDB = {
 
     async getUserBadges(userId, storyId) {
         return await this.query(
-            `SELECT * FROM user_badges WHERE user_id = ? AND story_id = ?`,
-            [userId, storyId]
+            `SELECT * FROM user_badges WHERE user_id = ? AND story_id = ?`, [userId, storyId]
         );
     },
 
@@ -378,13 +382,11 @@ export const capacitorDB = {
         const progress = await this.getOverallProgress(userId);
         const badges = await this.getAllUserBadges(userId);
         const quizResults = await this.query(
-            `SELECT score, total_questions FROM quiz_results WHERE user_id = ?`,
-            [userId]
+            `SELECT score, total_questions FROM quiz_results WHERE user_id = ?`, [userId]
         );
         const avgScore = quizResults.length > 0
             ? quizResults.reduce((s, q) => s + (q.score / q.total_questions * 100), 0) / quizResults.length
             : 0;
-
         return {
             progress,
             totalBadges: badges.length,
