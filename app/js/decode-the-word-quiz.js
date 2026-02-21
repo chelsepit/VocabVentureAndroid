@@ -183,7 +183,7 @@ function loadQuestion(index) {
         button.className = 'answer-btn'; 
 
         const choices = idx;
-        button.textContent = `${option}`;
+        button.textContent = `${String(option).toLowerCase()}`;
         
         button.onclick = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
