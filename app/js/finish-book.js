@@ -37,7 +37,7 @@ function displayBronzeBadge() {
         completionMessage.innerHTML = `
             <strong class="congrats">Congratulations!</strong><br>
             
-            You've earned a <strong style="color: #CD7F32;">BRONZE BADGE</strong> for completing <strong>"${completedStory.title}"</strong>!<br>
+            You've earned a <strong style="color: #ffffff;">BRONZE BADGE</strong> for completing <strong>"${completedStory.title}"</strong>!<br>
             <br>
         `;
     }

@@ -191,7 +191,7 @@ function loadQuestion(index) {
         const button = document.createElement("button");
         button.className = "start-button";
      
-        button.textContent = `${option}`;
+        button.textContent = `${String(option).toLowerCase()}`;
 
         button.onclick = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
