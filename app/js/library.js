@@ -178,7 +178,6 @@ function getTotalSegments(storyId) {
     // Render single book
     function renderBook(story) {
         const locked = !story.isActive;
-        const initialWidth = locked ? '0%' : '0%';
         
         return `
             <div class="book-item ${locked ? "locked" : ""}"
@@ -188,11 +187,15 @@ function getTotalSegments(storyId) {
                  data-story-id="${story.id}">
              
                 <div class="book-cover-wrapper">
-                    <img src="../../${story.coverImage}" alt="${story.title}">
+                    <img 
+                        src="../../${story.coverImage}" 
+                        alt="${story.title}"
+                        onload="this.closest('.book-item').querySelector('.progress-container').style.opacity='1'"
+                    >
                     ${locked ? `<div class="coming-soon">Coming Soon</div>` : ""}
                 </div>
-                <div class="progress-container">
-                    <div class="progress-fill" style="width: ${initialWidth};" data-progress="${story.id}"></div>
+                <div class="progress-container" style="opacity: 0; transition: opacity 0.3s ease;">
+                    <div class="progress-fill" style="width: 0%;" data-progress="${story.id}"></div>
                 </div>
             </div>
         `;
@@ -359,6 +362,3 @@ function attachBookClicks() {
     });
 }
 
-// ============================================
-// SEARCH AND FILTER
-// ============================================

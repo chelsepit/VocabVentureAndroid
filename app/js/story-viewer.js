@@ -1,13 +1,18 @@
 // story-viewer.js - Manual Speak Button (Works with image icons)
+// OPTIMIZED: Preloads next segment video while current one plays
 
 let currentStory = null;
 let currentSegmentIndex = 0;
 let storyData = null;
 let currentAudio = null;
 let isSpeaking = false;
-let isInitialLoad = true; // Prevents overwriting saved position on first load until user chooses resume/start-over
-let savedResumeSegment = 0; // Store the saved segment for resume modal handlers
-let hasUserChosenResumeAction = false; // True after user clicks Continue or Start Over
+let isInitialLoad = true;
+let savedResumeSegment = 0;
+let hasUserChosenResumeAction = false;
+
+// ⚡ Preload cache: keeps the next video blob URL ready
+let preloadedVideos = {}; // { segmentIndex: objectURL }
+let preloadedVideoElements = {}; // { segmentIndex: HTMLVideoElement }
 
 // Get story ID from URL parameters
 function getStoryIdFromUrl() {
@@ -19,9 +24,7 @@ function getStoryIdFromUrl() {
 async function loadStoryData(storyId) {
     try {
         const response = await fetch(`../../data/stories/story-${storyId}.json`);
-        if (!response.ok) {
-            throw new Error('Story not found');
-        }
+        if (!response.ok) throw new Error('Story not found');
         storyData = await response.json();
         console.log('Story loaded:', storyData.title);
         return storyData;
@@ -51,12 +54,10 @@ function getSegmentFromUrl() {
     return segment && segment > 0 ? segment - 1 : 0;
 }
 
-// Wait for modal element to exist in DOM (loaded async via loadComponent)
+// Wait for modal element to exist in DOM
 function waitForModal(timeout = 5000) {
     return new Promise((resolve) => {
-        if (document.getElementById('resumeModalOverlay')) {
-            return resolve(true);
-        }
+        if (document.getElementById('resumeModalOverlay')) return resolve(true);
         const start = Date.now();
         const observer = new MutationObserver(() => {
             if (document.getElementById('resumeModalOverlay')) {
@@ -68,7 +69,6 @@ function waitForModal(timeout = 5000) {
             }
         });
         observer.observe(document.body, { childList: true, subtree: true });
-        // Safety timeout
         setTimeout(() => { observer.disconnect(); resolve(false); }, timeout);
     });
 }
@@ -81,35 +81,28 @@ async function checkAndShowResumeModal(storyId) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
         const userId = currentUser?.id || fallbackUserId;
-        console.log('👤 userId:', userId, '| currentUser:', currentUser?.id, '| fallback:', fallbackUserId);
 
         if (userId) {
             const lastViewedRaw = await ipcRenderer.invoke('progress:getLastViewed', {
-                userId: userId,
-                storyId: storyId
+                userId,
+                storyId
             });
 
-            // IPC handler returns either a plain number or an object with segmentId
             const lastViewedSegment = (lastViewedRaw && typeof lastViewedRaw === 'object')
                 ? lastViewedRaw.segmentId
                 : lastViewedRaw;
 
-            console.log('📦 lastViewed raw:', JSON.stringify(lastViewedRaw), '→ segment:', lastViewedSegment);
-
             if (lastViewedSegment && lastViewedSegment > 1) {
-                console.log('📍 Last viewed segment found:', lastViewedSegment);
-
                 const modal = document.getElementById('resumeModalOverlay');
                 if (modal) {
                     showResumeModal(lastViewedSegment);
                     return lastViewedSegment;
                 }
-
                 console.warn('⚠️ resumeModalOverlay not found in DOM');
                 return lastViewedSegment;
             }
         } else {
-            console.warn('⚠️ No userId found. Cannot load last viewed progress.');
+            console.warn('⚠️ No userId found.');
         }
     } catch (error) {
         console.error('❌ Error in checkAndShowResumeModal:', error);
@@ -121,7 +114,7 @@ async function checkAndShowResumeModal(storyId) {
 function showResumeModal(savedSegment) {
     const modal = document.getElementById('resumeModalOverlay');
     if (modal) {
-        savedResumeSegment = savedSegment; // Store for handlers
+        savedResumeSegment = savedSegment;
         modal.classList.remove('hidden');
         console.log('📻 Resume modal shown - saved at segment:', savedSegment);
     }
@@ -130,32 +123,23 @@ function showResumeModal(savedSegment) {
 // Hide resume modal
 function hideResumeModal() {
     const modal = document.getElementById('resumeModalOverlay');
-    if (modal) {
-        modal.classList.add('hidden');
-    }
+    if (modal) modal.classList.add('hidden');
 }
 
 // Start over button handler
 function startOver() {
     console.log('🔄 Starting over from beginning');
     hideResumeModal();
-
-    // User made an explicit choice; allow saving from now on
     hasUserChosenResumeAction = true;
     isInitialLoad = false;
-
     currentSegmentIndex = 0;
-    if (currentStory) {
-        loadSegment(0);
-    }
+    if (currentStory) loadSegment(0);
 }
 
 // Continue button handler
 function continueGame() {
     console.log('▶️ Continuing from last viewed segment:', savedResumeSegment);
     hideResumeModal();
-
-    // User made an explicit choice; allow saving from now on
     hasUserChosenResumeAction = true;
     isInitialLoad = false;
 
@@ -163,13 +147,64 @@ function continueGame() {
         const segmentIndex = savedResumeSegment - 1;
         if (segmentIndex >= 0 && segmentIndex < currentStory.segments.length) {
             currentSegmentIndex = segmentIndex;
-            loadSegment(segmentIndex); // progress save is enabled now (hasUserChosenResumeAction = true)
-            console.log(`📍 Resumed at segment ${savedResumeSegment}`);
+            loadSegment(segmentIndex, { skipProgressSave: true });
         } else {
             loadSegment(0);
         }
     } else {
         loadSegment(0);
+    }
+}
+
+// ⚡ PRELOAD: Fetch the next segment's video into memory so it's instant when needed
+async function preloadNextSegment(currentIndex) {
+    if (!currentStory) return;
+    
+    const nextIndex = currentIndex + 1;
+    if (nextIndex >= currentStory.segments.length) return;
+    if (preloadedVideos[nextIndex]) return; // Already preloaded
+    
+    const nextSegment = currentStory.segments[nextIndex];
+    if (!nextSegment || !nextSegment.illustration) return;
+    
+    const videoPath = '../../' + nextSegment.illustration;
+    
+    try {
+        console.log(`⚡ Preloading video for segment ${nextIndex + 1}: ${videoPath}`);
+        
+        // Fetch the video file and store as a blob URL so it plays from memory
+        const response = await fetch(videoPath);
+        if (!response.ok) throw new Error('Fetch failed');
+        
+        const blob = await response.blob();
+        const objectURL = URL.createObjectURL(blob);
+        preloadedVideos[nextIndex] = objectURL;
+        
+        // Also prime a hidden video element so the browser decodes the first frame
+        const hiddenVideo = document.createElement('video');
+        hiddenVideo.src = objectURL;
+        hiddenVideo.preload = 'auto';
+        hiddenVideo.muted = true;
+        hiddenVideo.style.display = 'none';
+        hiddenVideo.load(); // Triggers buffering
+        document.body.appendChild(hiddenVideo);
+        preloadedVideoElements[nextIndex] = hiddenVideo;
+        
+        console.log(`✅ Segment ${nextIndex + 1} video preloaded`);
+    } catch (err) {
+        console.warn(`⚠️ Could not preload segment ${nextIndex + 1}:`, err.message);
+    }
+}
+
+// ⚡ Cleanup old preloaded blobs to avoid memory leaks
+function cleanupPreloadedVideo(index) {
+    if (preloadedVideos[index]) {
+        URL.revokeObjectURL(preloadedVideos[index]);
+        delete preloadedVideos[index];
+    }
+    if (preloadedVideoElements[index]) {
+        preloadedVideoElements[index].remove();
+        delete preloadedVideoElements[index];
     }
 }
 
@@ -190,7 +225,6 @@ async function initStoryViewer() {
     setupVolumeControl();
     setupSpeakButton();
 
-    // ⭐ Wait for the resume modal HTML to be injected before checking saved progress
     console.log('⏳ Waiting for resumeModalReady...', typeof window.resumeModalReady);
     if (window.resumeModalReady) {
         await window.resumeModalReady;
@@ -199,10 +233,7 @@ async function initStoryViewer() {
         console.warn('⚠️ window.resumeModalReady is not defined — modal may not be loaded!');
     }
 
-    console.log('🔍 resumeModalOverlay in DOM?', !!document.getElementById('resumeModalOverlay'));
-
     const savedSegment = await checkAndShowResumeModal(storyId);
-    console.log('📍 savedSegment returned:', savedSegment);
 
     if (savedSegment && savedSegment > 1) {
         console.log(`📍 Loading saved segment ${savedSegment} behind the modal...`);
@@ -218,7 +249,7 @@ async function initStoryViewer() {
     loadSegment(0);
 }
 
-// ⭐ Setup speak button (works with both emoji and image icons)
+// ⭐ Setup speak button
 function setupSpeakButton() {
     console.log('🎤 Setting up speak button...');
     
@@ -229,22 +260,16 @@ function setupSpeakButton() {
         const speakBtn = document.getElementById('speakBtn');
         
         if (speakBtn) {
-            console.log('✅ Speak button found!');
-            
-            // Remove any existing listeners
             const newBtn = speakBtn.cloneNode(true);
             speakBtn.parentNode.replaceChild(newBtn, speakBtn);
             
-            // Set initial state to MUTED
             updateSpeakButtonContent(newBtn, false);
             newBtn.title = 'Click to play audio';
             newBtn.style.cursor = 'pointer';
             
-            // Add click handler
             newBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🎤 Speak button clicked!');
                 toggleSpeak();
             });
             
@@ -253,7 +278,6 @@ function setupSpeakButton() {
         } else {
             attempts++;
             if (attempts < maxAttempts) {
-                console.log(`⏳ Speak button not found, attempt ${attempts}/${maxAttempts}`);
                 setTimeout(trySetup, 300);
             } else {
                 console.error('❌ Speak button not found after', maxAttempts, 'attempts');
@@ -265,65 +289,43 @@ function setupSpeakButton() {
     trySetup();
 }
 
-// ⭐ Update speak button content (handles both emoji and image icons)
+// ⭐ Update speak button content
 function updateSpeakButtonContent(btn, isSpeaking) {
-    // Check if button has an img child (icon version)
     const icon = btn.querySelector('img.speak-button-icon');
     
     if (icon) {
-        // Image icon version
-        if (isSpeaking) {
-            icon.src = '../../assets/images/icons/speak-icon.svg';
-            icon.alt = 'speaking';
-        } else {
-            icon.src = '../../assets/images/icons/speak-icon.svg';
-            icon.alt = 'muted';
-        }
+        icon.src = '../../assets/images/icons/speak-icon.svg';
+        icon.alt = isSpeaking ? 'speaking' : 'muted';
     } else {
-        // Emoji version
-        if (isSpeaking) {
-            btn.innerHTML = '🔊';
-        } else {
-            btn.innerHTML = '🔇';
-        }
+        btn.innerHTML = isSpeaking ? '🔊' : '🔇';
     }
 }
 
 // ⭐ Toggle speak on/off
 function toggleSpeak() {
-    console.log('🎤 toggleSpeak called, isSpeaking:', isSpeaking);
-    
     if (isSpeaking) {
         stopCurrentAudio();
-        console.log('🔇 Audio stopped');
     } else {
-        if (!currentStory || !currentStory.segments[currentSegmentIndex]) {
-            console.error('❌ No story or segment available');
-            return;
-        }
+        if (!currentStory || !currentStory.segments[currentSegmentIndex]) return;
         
         const segment = currentStory.segments[currentSegmentIndex];
         const selectedVoice = localStorage.getItem('selected_voice') || 'boy';
         const audioPath = segment[`audio-${selectedVoice}`];
         
-        console.log('🎤 Audio path:', audioPath);
-        
         if (audioPath) {
             playSegmentAudio(audioPath);
-            console.log('🔊 Audio playing');
         } else {
             console.error('❌ No audio path found');
         }
     }
 }
 
-// ⭐ Update speak button (finds button each time)
+// ⭐ Update speak button
 function updateSpeakButton() {
     const speakBtn = document.getElementById('speakBtn');
     if (speakBtn) {
         updateSpeakButtonContent(speakBtn, isSpeaking);
         speakBtn.title = isSpeaking ? 'Click to stop audio' : 'Click to play audio';
-        console.log(isSpeaking ? '🔊 Button: SPEAKING' : '🔇 Button: MUTED');
     }
 }
 
@@ -338,23 +340,15 @@ function setupVolumeControl() {
                 const volume = this.value;
                 volumeValue.textContent = volume;
                 localStorage.setItem('volume', volume);
-                
-                if (currentAudio) {
-                    currentAudio.volume = parseInt(volume) / 100;
-                    console.log(`🔊 Volume adjusted to ${volume}%`);
-                }
+                if (currentAudio) currentAudio.volume = parseInt(volume) / 100;
             });
-            
-            console.log('✅ Volume control initialized');
         }
     }, 500);
 }
 
 // Load a specific segment
 function loadSegment(index, options = {}) {
-    if (!currentStory || index < 0 || index >= currentStory.segments.length) {
-        return;
-    }
+    if (!currentStory || index < 0 || index >= currentStory.segments.length) return;
 
     stopCurrentAudio();
 
@@ -373,110 +367,73 @@ function loadSegment(index, options = {}) {
     
     document.getElementById('currentSegment').textContent = index + 1;
     
-    // Get story text element
     const storyTextElement = document.getElementById('storyText');
-    
-    // Get content container
     const contentContainer = document.getElementById('storyContent');
     
-    // ⭐ HIDE BOTH container and text initially
+    // Hide content while video plays
     contentContainer.style.opacity = '0';
     storyTextElement.style.opacity = '0';
     storyTextElement.style.transform = 'translateY(30px)';
     storyTextElement.style.transition = 'none';
-    storyTextElement.style.animation = 'none'; // Stop any previous animation
+    storyTextElement.style.animation = 'none';
     
-    // Update video
     const videoSource = document.getElementById('videoSource');
     const video = document.getElementById('storyVideo');
     
-    videoSource.src = '../../' + segment.illustration;
+    // ⚡ Use preloaded blob URL if available, otherwise fall back to file path
+    const videoPath = '../../' + segment.illustration;
+    const preloadedSrc = preloadedVideos[index];
+    
+    if (preloadedSrc) {
+        console.log(`⚡ Using preloaded video for segment ${index + 1}`);
+        videoSource.src = preloadedSrc;
+    } else {
+        console.log(`📂 Loading video directly for segment ${index + 1}`);
+        videoSource.src = videoPath;
+    }
+    
     video.load();
     video.loop = false;
     
-    // Show BOTH container and text when video ends
+    // Show content when video ends
     video.onended = () => {
-        video.currentTime = video.duration; // Keep last frame
+        video.currentTime = video.duration;
         
-        // Animate BOTH container and text in
         setTimeout(() => {
-            // ⭐ Show the container
             contentContainer.style.transition = 'opacity 0.8s ease-out';
             contentContainer.style.opacity = '1';
             
-            // Show the text
             storyTextElement.style.transition = 'opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
             storyTextElement.style.opacity = '1';
             storyTextElement.style.transform = 'translateY(0)';
             
-            // After entrance animation, add continuous gentle floating
             setTimeout(() => {
                 storyTextElement.style.transition = 'none';
                 storyTextElement.style.animation = 'gentleFloat 3s ease-in-out infinite';
-            }, 1000); // Wait for entrance animation to finish
-        }, 300); // Small delay before animation starts
+            }, 1000);
+        }, 300);
+        
+        // ⚡ Start preloading the NEXT segment as soon as current video finishes
+        preloadNextSegment(index);
     };
     
+    // ⚡ Also kick off preload immediately when segment loads
+    // (handles cases where user navigates before video ends)
     video.play();
     
-    // Update the text content (but it's hidden until video ends)
+    // Start preloading next segment right away (in parallel with current video playing)
+    preloadNextSegment(index);
+    
+    // Cleanup the blob we just consumed (previous segment's preload for index-1)
+    if (index > 0) {
+        cleanupPreloadedVideo(index - 1);
+    }
+    
     updateStoryText(segment);
     
     isSpeaking = false;
     updateSpeakButton();
-    
     updateNavigationButtons();
-}
-
-// Save last viewed segment
-async function saveLastViewedSegment(segmentNumber) {
-    try {
-        const { ipcRenderer } = require('electron');
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
-        const userId = currentUser?.id || fallbackUserId;
-        const storyId = getStoryIdFromUrl();
-
-        // Save to sessionStorage for quick access
-        sessionStorage.setItem(`lastViewed_story_${storyId}`, segmentNumber);
-
-        if (userId) {
-            await ipcRenderer.invoke('progress:saveLastViewed', {
-                userId: currentUser.id || fallbackUserId,
-                storyId: storyId,
-                segmentId: segmentNumber
-            });
-
-            console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
-        } else {
-            console.warn('⚠️ No userId found; last viewed segment not saved to DB');
-        }
-    } catch (error) {
-        console.error('Error saving last viewed segment:', error);
-    }
-}
-
-// Mark segment as completed
-async function markSegmentAsCompleted(segmentNumber) {
-    try {
-        const { ipcRenderer } = require('electron');
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
-        const userId = currentUser?.id || fallbackUserId;
-        const storyId = getStoryIdFromUrl();
-
-        if (userId) {
-            await ipcRenderer.invoke('progress:markSegmentComplete', {
-                userId: currentUser.id || fallbackUserId,
-                storyId: storyId,
-                segmentId: segmentNumber
-            });
-
-            console.log(`✅ Segment ${segmentNumber} marked as completed`);
-        }
-    } catch (error) {
-        console.error('Error marking segment as completed:', error);
-    }
 }
 
 // Update story text
@@ -495,7 +452,6 @@ function updateStoryText(segment) {
             
             if (regex.test(textHtml)) {
                 regex.lastIndex = 0;
-
                 const vocabAudioPath = vocab[`audio-${selectedVoice}`] || '';
                 
                 textHtml = textHtml.replace(regex, (match) => {
@@ -525,8 +481,6 @@ function playSegmentAudio(audioPath) {
     const volume = parseInt(localStorage.getItem('volume') || '70') / 100;
     currentAudio.volume = volume;
     
-    console.log(`🔊 Playing audio: ${audioPath} at ${Math.round(volume * 100)}% volume`);
-    
     isSpeaking = true;
     updateSpeakButton();
     
@@ -537,7 +491,6 @@ function playSegmentAudio(audioPath) {
     });
     
     currentAudio.addEventListener('ended', () => {
-        console.log('🔊 Audio ended');
         currentAudio = null;
         isSpeaking = false;
         updateSpeakButton();
@@ -550,9 +503,7 @@ function setupNavigation() {
     const nextBtn = document.getElementById('nextBtn');
     
     prevBtn.addEventListener('click', () => {
-        if (currentSegmentIndex > 0) {
-            loadSegment(currentSegmentIndex - 1);
-        }
+        if (currentSegmentIndex > 0) loadSegment(currentSegmentIndex - 1);
     });
     
     nextBtn.addEventListener('click', () => {
@@ -614,6 +565,54 @@ function showCompletionScreen() {
     window.location.href = `finish-book.html?story=${storyId}`;
 }
 
+// Save last viewed segment
+async function saveLastViewedSegment(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
+        const userId = currentUser?.id || fallbackUserId;
+        const storyId = getStoryIdFromUrl();
+
+        sessionStorage.setItem(`lastViewed_story_${storyId}`, segmentNumber);
+
+        if (userId) {
+            await ipcRenderer.invoke('progress:saveLastViewed', {
+                userId: currentUser.id || fallbackUserId,
+                storyId,
+                segmentId: segmentNumber
+            });
+            console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
+        } else {
+            console.warn('⚠️ No userId found; last viewed segment not saved to DB');
+        }
+    } catch (error) {
+        console.error('Error saving last viewed segment:', error);
+    }
+}
+
+// Mark segment as completed
+async function markSegmentAsCompleted(segmentNumber) {
+    try {
+        const { ipcRenderer } = require('electron');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const fallbackUserId = parseInt(localStorage.getItem('lastUserId'));
+        const userId = currentUser?.id || fallbackUserId;
+        const storyId = getStoryIdFromUrl();
+
+        if (userId) {
+            await ipcRenderer.invoke('progress:markSegmentComplete', {
+                userId: currentUser.id || fallbackUserId,
+                storyId,
+                segmentId: segmentNumber
+            });
+            console.log(`✅ Segment ${segmentNumber} marked as completed`);
+        }
+    } catch (error) {
+        console.error('Error marking segment as completed:', error);
+    }
+}
+
 // Listen for voice changes
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
@@ -625,7 +624,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 stopCurrentAudio();
                 setTimeout(() => {
                     updateStoryText(currentStory.segments[currentSegmentIndex]);
-                    console.log('🎤 Voice changed to Boy - vocabulary audio updated');
                 }, 100);
             });
             
@@ -633,27 +631,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 stopCurrentAudio();
                 setTimeout(() => {
                     updateStoryText(currentStory.segments[currentSegmentIndex]);
-                    console.log('🎤 Voice changed to Girl - vocabulary audio updated');
                 }, 100);
             });
         }
     }, 500);
 });
 
-// Cleanup - save current segment position when leaving for any reason
+// Cleanup - save current segment position when leaving
 window.addEventListener('beforeunload', () => {
     stopCurrentAudio();
-    // Synchronously save current position using sendBeacon so it completes before page unloads
+    
+    // Revoke all preloaded blob URLs to free memory
+    Object.values(preloadedVideos).forEach(url => URL.revokeObjectURL(url));
+    preloadedVideos = {};
+    
     if (currentStory && currentSegmentIndex >= 0) {
         const { ipcRenderer } = require('electron');
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
         const storyId = getStoryIdFromUrl();
         if (userId) {
-            // ipcRenderer.invoke is async but we call it anyway - Electron handles this fine on beforeunload
             ipcRenderer.invoke('progress:saveLastViewed', {
-                userId: userId,
-                storyId: storyId,
+                userId,
+                storyId,
                 segmentId: currentSegmentIndex + 1
             });
         }
