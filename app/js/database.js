@@ -351,7 +351,7 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
             console.log('Note: Could not add last_viewed_segment column:', error.message);
         }
 
-        // Create quiz_results table - REFINED with badge_type
+        // Create quiz_results table - REFINED with badge_type and partial progress tracking
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS quiz_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -361,10 +361,30 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
                 score INTEGER,
                 total_questions INTEGER,
                 badge_type TEXT,
+                partial_score INTEGER DEFAULT NULL,
+                partial_question_index INTEGER DEFAULT NULL,
                 completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         `);
+
+        // Ensure partial progress columns exist for existing databases
+        try {
+            const quizTableInfo = this.db.prepare("PRAGMA table_info(quiz_results)").all();
+            const hasPartialScore = quizTableInfo.some(col => col.name === 'partial_score');
+            const hasPartialIndex = quizTableInfo.some(col => col.name === 'partial_question_index');
+
+            if (!hasPartialScore) {
+                this.db.exec(`ALTER TABLE quiz_results ADD COLUMN partial_score INTEGER DEFAULT NULL`);
+                console.log('✓ Added partial_score column to quiz_results');
+            }
+            if (!hasPartialIndex) {
+                this.db.exec(`ALTER TABLE quiz_results ADD COLUMN partial_question_index INTEGER DEFAULT NULL`);
+                console.log('✓ Added partial_question_index column to quiz_results');
+            }
+        } catch (error) {
+            console.log('Note: Could not add partial progress columns:', error.message);
+        }
 
         // Create user_badges table - REFINED with badge_type and story_id
         this.db.exec(`
@@ -585,7 +605,7 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
         const stmt = this.db.prepare(`
             SELECT MAX(score) as best_score, total_questions, badge_type
             FROM quiz_results 
-            WHERE user_id = ? AND story_id = ? AND quiz_number = ?
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ? AND score IS NOT NULL
         `);
         return stmt.get(userId, storyId, quizNumber);
     }
@@ -720,7 +740,7 @@ getBadgeStats(userId) {
         const quizResults = this.db.prepare(`
             SELECT quiz_number, MAX(score) as best_score, total_questions
             FROM quiz_results
-            WHERE user_id = ? AND story_id = ?
+            WHERE user_id = ? AND story_id = ? AND score IS NOT NULL
             GROUP BY quiz_number
         `).all(userId, storyId);
 
