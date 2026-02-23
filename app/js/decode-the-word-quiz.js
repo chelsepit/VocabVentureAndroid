@@ -21,31 +21,43 @@ function getUserId() {
   return currentUser?.id || parseInt(localStorage.getItem('lastUserId')) || 'guest';
 }
 
-// Check for saved quiz progress
-function getSavedQuizProgress() {
+// Check for saved quiz progress (from DB)
+async function getSavedQuizProgress() {
   const storyId = getStoryId();
-  const savedProgress = localStorage.getItem(`quiz2_progress_${getUserId()}_${storyId}`);
-  if (savedProgress) {
-    try {
-      return JSON.parse(savedProgress);
-    } catch (e) {
-      console.error('Error parsing saved progress:', e);
-      return null;
-    }
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser) return null;
+  try {
+    const { ipcRenderer } = require('electron');
+    const partial = await ipcRenderer.invoke('quiz:getPartial', {
+      userId: currentUser.id,
+      storyId: storyId,
+      quizNumber: 2
+    });
+    return partial; // { partialScore, partialQuestionIndex } or null
+  } catch (e) {
+    console.error('Error getting partial quiz progress:', e);
+    return null;
   }
-  return null;
 }
 
-// Save quiz progress to localStorage
-function saveQuizProgress(questionIndex, score, answers) {
+// Save quiz progress to DB (partial only — does NOT affect score/completion status)
+async function saveQuizProgress(questionIndex, score, answers) {
   const storyId = getStoryId();
-  localStorage.setItem(`quiz2_progress_${getUserId()}_${storyId}`, JSON.stringify({
-    questionIndex: questionIndex,
-    score: score,
-    answers: answers,
-    timestamp: Date.now()
-  }));
-  console.log(`📊 Quiz 2 progress saved - Question ${questionIndex + 1}, Score: ${score}`);
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser) return;
+  try {
+    const { ipcRenderer } = require('electron');
+    await ipcRenderer.invoke('quiz:savePartial', {
+      userId: currentUser.id,
+      storyId: storyId,
+      quizNumber: 2,
+      partialScore: score,
+      partialQuestionIndex: questionIndex
+    });
+    console.log(`📊 Quiz 2 partial progress saved to DB - Question ${questionIndex + 1}, Score: ${score}`);
+  } catch (e) {
+    console.error('Error saving partial quiz progress:', e);
+  }
 }
 
 // Show resume modal for quiz
@@ -66,15 +78,15 @@ function hideResumeModal() {
 }
 
 // Resume quiz from saved progress
-function continueGame() {
+async function continueGame() {
   console.log('▶️ Resuming quiz from saved progress');
   hideResumeModal();
   
-  const savedProgress = getSavedQuizProgress();
+  const savedProgress = await getSavedQuizProgress();
   if (savedProgress && quizData) {
-    currentQuestionIndex = savedProgress.questionIndex;
-    score = savedProgress.score;
-    userAnswers = savedProgress.answers;
+    currentQuestionIndex = savedProgress.partialQuestionIndex;
+    score = savedProgress.partialScore;
+    userAnswers = [];
     
     // Show quiz screen
     document.getElementById('quizIntro').style.display = 'none';
@@ -87,12 +99,24 @@ function continueGame() {
 }
 
 // Start quiz again from beginning
-function startAgain() {
+async function startAgain() {
   console.log('🔄 Starting quiz over');
   hideResumeModal();
 
-  const storyId = getStoryId();
-  localStorage.removeItem(`quiz2_progress_${getUserId()}_${storyId}`);
+  // Clear partial progress from DB
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (currentUser) {
+    try {
+      const { ipcRenderer } = require('electron');
+      await ipcRenderer.invoke('quiz:clearPartial', {
+        userId: currentUser.id,
+        storyId: getStoryId(),
+        quizNumber: 2
+      });
+    } catch (e) {
+      console.error('Error clearing partial progress:', e);
+    }
+  }
 
   // Reset state
   currentQuestionIndex = 0;
@@ -126,9 +150,9 @@ async function loadQuizData() {
         
         document.getElementById('totalQuestions').textContent = quizData.questions.length;
 
-        // Check for saved progress
-        const savedProgress = getSavedQuizProgress();
-        if (savedProgress && savedProgress.questionIndex < quizData.questions.length) {
+        // Check for saved partial progress in DB
+        const savedProgress = await getSavedQuizProgress();
+        if (savedProgress && savedProgress.partialQuestionIndex < quizData.questions.length) {
           console.log('🔄 Found saved quiz progress - showing resume modal');
           showQuizResumeModal(savedProgress);
         }
@@ -300,12 +324,24 @@ function calculateBadgeType(score, total) {
 }
 
 // Finish quiz
-function finishQuiz() {
+async function finishQuiz() {
     const badgeType = calculateBadgeType(score, quizData.questions.length);
     const storyId = getStoryId();
     
-    // Clear saved progress since quiz is complete
-    localStorage.removeItem(`quiz2_progress_${getUserId()}_${storyId}`);
+    // Clear partial progress from DB since quiz is complete (saveQuizResults also clears via DB method)
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        try {
+            const { ipcRenderer } = require('electron');
+            await ipcRenderer.invoke('quiz:clearPartial', {
+                userId: currentUser.id,
+                storyId: storyId,
+                quizNumber: 2
+            });
+        } catch (e) {
+            console.error('Error clearing partial progress on finish:', e);
+        }
+    }
     
     // Store quiz results with badge type
     sessionStorage.setItem('quiz2Results', JSON.stringify({

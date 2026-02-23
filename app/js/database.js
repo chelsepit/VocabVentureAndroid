@@ -351,7 +351,7 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
             console.log('Note: Could not add last_viewed_segment column:', error.message);
         }
 
-        // Create quiz_results table - REFINED with badge_type
+        // Create quiz_results table - REFINED with badge_type and partial progress tracking
         this.db.exec(`
             CREATE TABLE IF NOT EXISTS quiz_results (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -361,10 +361,30 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
                 score INTEGER,
                 total_questions INTEGER,
                 badge_type TEXT,
+                partial_score INTEGER DEFAULT NULL,
+                partial_question_index INTEGER DEFAULT NULL,
                 completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             )
         `);
+
+        // Ensure partial progress columns exist for existing databases
+        try {
+            const quizTableInfo = this.db.prepare("PRAGMA table_info(quiz_results)").all();
+            const hasPartialScore = quizTableInfo.some(col => col.name === 'partial_score');
+            const hasPartialIndex = quizTableInfo.some(col => col.name === 'partial_question_index');
+
+            if (!hasPartialScore) {
+                this.db.exec(`ALTER TABLE quiz_results ADD COLUMN partial_score INTEGER DEFAULT NULL`);
+                console.log('✓ Added partial_score column to quiz_results');
+            }
+            if (!hasPartialIndex) {
+                this.db.exec(`ALTER TABLE quiz_results ADD COLUMN partial_question_index INTEGER DEFAULT NULL`);
+                console.log('✓ Added partial_question_index column to quiz_results');
+            }
+        } catch (error) {
+            console.log('Note: Could not add partial progress columns:', error.message);
+        }
 
         // Create user_badges table - REFINED with badge_type and story_id
         this.db.exec(`
@@ -542,9 +562,63 @@ const dbPath = path.join(dbDir, 'vocabventure.db');
     // QUIZ METHODS - REFINED
     // ============================================
     
+    // ============================================
+    // PARTIAL QUIZ PROGRESS (mid-quiz saves — never affects score/completion)
+    // ============================================
+
+    savePartialQuizProgress(userId, storyId, quizNumber, partialScore, partialQuestionIndex) {
+        // Upsert: update partial columns if a row exists, else insert a stub row with NULL score
+        const existing = this.db.prepare(`
+            SELECT id FROM quiz_results
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ? AND score IS NULL
+            ORDER BY completed_at DESC LIMIT 1
+        `).get(userId, storyId, quizNumber);
+
+        if (existing) {
+            this.db.prepare(`
+                UPDATE quiz_results
+                SET partial_score = ?, partial_question_index = ?
+                WHERE id = ?
+            `).run(partialScore, partialQuestionIndex, existing.id);
+        } else {
+            // NULL score = not yet completed; getStoryCompletionStatus uses MAX(score) so NULLs are ignored
+            this.db.prepare(`
+                INSERT INTO quiz_results (user_id, story_id, quiz_number, score, total_questions, badge_type, partial_score, partial_question_index)
+                VALUES (?, ?, ?, NULL, NULL, NULL, ?, ?)
+            `).run(userId, storyId, quizNumber, partialScore, partialQuestionIndex);
+        }
+    }
+
+    getPartialQuizProgress(userId, storyId, quizNumber) {
+        const row = this.db.prepare(`
+            SELECT partial_score, partial_question_index, score
+            FROM quiz_results
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ? AND score IS NULL
+            ORDER BY completed_at DESC LIMIT 1
+        `).get(userId, storyId, quizNumber);
+
+        if (!row || row.partial_question_index === null) return null;
+
+        return {
+            partialScore: row.partial_score,
+            partialQuestionIndex: row.partial_question_index
+        };
+    }
+
+    clearPartialQuizProgress(userId, storyId, quizNumber) {
+        // Delete stub rows (score IS NULL) so resume modal never shows after finishing
+        this.db.prepare(`
+            DELETE FROM quiz_results
+            WHERE user_id = ? AND story_id = ? AND quiz_number = ? AND score IS NULL
+        `).run(userId, storyId, quizNumber);
+    }
+
     saveQuizResult(userId, storyId, quizNumber, score, totalQuestions) {
         // Calculate badge type based on score
         const badgeType = this.calculateQuizBadge(score, totalQuestions);
+
+        // Remove any partial stub rows first so resume modal never appears after completion
+        this.clearPartialQuizProgress(userId, storyId, quizNumber);
         
         const stmt = this.db.prepare(`
             INSERT INTO quiz_results (user_id, story_id, quiz_number, score, total_questions, badge_type)
