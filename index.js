@@ -48,8 +48,18 @@ function createWindow() {
 // APP LIFECYCLE
 // ============================================
 
-app.whenReady().then(() => {
-    db = new VocabVentureDB();   
+app.whenReady().then(async () => {
+    db = new VocabVentureDB();
+
+    // ⚡ Nuclear cache clear — wipes ALL cached assets before window loads
+    // This ensures replaced audio/image files are always served fresh from disk
+    const { session } = require('electron');
+    await session.defaultSession.clearCache();
+    await session.defaultSession.clearStorageData({
+        storages: ['cachestorage', 'shadercache', 'serviceworkers']
+    });
+    console.log('✅ All caches cleared');
+
     createWindow();
 
     app.on('activate', () => {
