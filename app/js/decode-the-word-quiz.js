@@ -175,17 +175,35 @@ function checkAnswer(selectedIndex) {
 }
 
 function showFeedback(isCorrect, explanation) {
-  const feedbackElement = document.getElementById('feedbackMessage');
-  if (isCorrect) {
-    feedbackElement.innerHTML = `<div style="color:#ffffff;"><div style="font-size:2rem;margin-bottom:10px;">✓</div><div style="font-size:2.3rem;">Correct!</div><div style="font-size:1.8rem;margin-top:10px;font-weight:normal;opacity:0.9;">${explanation}</div></div>`;
-    feedbackElement.style.background = 'rgba(74, 222, 128, 0.2)';
-    feedbackElement.style.border = '2px solid #4ade80';
-  } else {
-    feedbackElement.innerHTML = `<div style="color:#ffffff;"><div style="font-size:2rem;margin-bottom:10px;">✗</div><div style="font-size:2.3rem;">Not quite!</div><div style="font-size:1.8rem;margin-top:10px;font-weight:normal;opacity:0.9;">${explanation}</div></div>`;
-    feedbackElement.style.background = 'rgba(239, 68, 68, 0.2)';
-    feedbackElement.style.border = '2px solid #ef4444';
-  }
-  feedbackElement.style.display = 'block';
+    const feedbackElement = document.getElementById('feedbackMessage');
+    
+    if (isCorrect) {
+        feedbackElement.innerHTML = `
+            <div style="color: #ffffff;">
+                <div style="font-size: clamp(1.8rem, 3.5vh, 1.8rem); margin-bottom: 10px;">✓</div>
+                <div style="font-size: clamp(1.6rem, 3.5vh, 1.8rem);">Correct!</div>
+                <div style="font-size: clamp(1.3rem, 3.5vh, 1.8rem); margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                    ${explanation}
+                </div>
+            </div>
+        `;
+        feedbackElement.style.background = 'rgba(74, 222, 128, 0.2)';
+        feedbackElement.style.border = '2px solid #4ade80';
+    } else {
+        feedbackElement.innerHTML = `
+            <div style="color: #ffffff;">
+                <div style="font-size: clamp(1.8rem, 3.5vh, 1.8rem); margin-bottom: 10px;">✗</div>
+                <div style="font-size: clamp(1.6rem, 3.5vh, 1.8rem);">Not quite!</div>
+                <div style="font-size: clamp(1.3rem, 3.5vh, 1.8rem); margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                    ${explanation}
+                </div>
+            </div>
+        `;
+        feedbackElement.style.background = 'rgba(239, 68, 68, 0.2)';
+        feedbackElement.style.border = '2px solid #ef4444';
+    }
+    
+    feedbackElement.style.display = 'block';
 }
 
 function calculateBadgeType(score, total) {

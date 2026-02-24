@@ -1,6 +1,16 @@
 /* =========================
-   BACKGROUND
+   DECODE THE WORLD GAME - REFACTORED
+   FULL MOBILE RESPONSIVENESS
    ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
 .finish-background {
     position: fixed;
     top: 0;
@@ -13,15 +23,11 @@
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
-/* =========================
-   MAIN CONTENT CONTAINER
-   ========================= */
 .finish-content {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.85);
-    opacity: 0;
+    transform: translate(-50%, -50%);
     
     display: flex;
     flex-direction: column;
@@ -30,18 +36,17 @@
     text-align: center;
 
     background: #5DADE2;
-    backdrop-filter: none;
-    padding: 50px;
-    border-radius: 40px;
-    border: none;
+    padding: clamp(25px, 5vw, 50px);
+    border-radius: clamp(28px, 5vw, 40px);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    width: 90%;
+    width: clamp(92%, 90vw, 90%);
     max-width: 700px;
-    max-height: 85vh;
+    max-height: 88vh;
     overflow-y: auto;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     z-index: 100;
+    opacity: 0;
 }
 
 @keyframes popIn {
@@ -55,95 +60,88 @@
     }
 }
 
-/* =========================
-   TITLE HEADER
-   ========================= */
 .title-header {
     font-family: 'header-font', cursive; 
-    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-size: clamp(2rem, 6vw, 4rem);
     font-weight: 800; 
 
     color: #FFEB3B; 
     
-    -webkit-text-stroke: 3px white;
+    -webkit-text-stroke: clamp(2px, 0.4vw, 3px) white;
     
-    text-shadow: 4px 4px 0px #F57F17; 
-    margin-bottom: 30px;
+    text-shadow: 3px 3px 0px #F57F17; 
+    margin-bottom: clamp(20px, 4vw, 30px);
     
     animation: float 3s ease-in-out infinite;
 }
 
-/* =========================
-   TEXT / QUESTION
-   ========================= */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
 .progress-comment {
     font-family: 'body-font', 'Nunito', sans-serif;
     color: white;
-    font-size: 1.8rem;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
     font-weight: 700;
     line-height: 1.5;
-    max-width: 90%;
-    margin-bottom: 35px;
+    max-width: 92%;
+    margin-bottom: clamp(25px, 5vw, 35px);
 }
 
-/* Progress indicator */
 .progress-indicator {
     text-align: center;
-    margin-bottom: clamp(23px, 4vw, 28px);
+    margin-bottom: clamp(18px, 4vw, 28px);
 }
 
 .progress-text {
     font-family: 'Nunito', sans-serif;
     font-weight: 2rem;
     color: white;
-    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-size: clamp(1rem, 3.5vw, 2rem);
 }
 
-/* Sentence text with context */
 .sentence-text {
-    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    font-size: clamp(1rem, 3vw, 1.4rem);
     line-height: 1.8;
     color: white;
     text-align: center;
-    margin-bottom: clamp(12px, 2.5vw, 20px);
+    margin-bottom: clamp(10px, 2.5vw, 20px);
 }
 
-/* Question prompt */
 .question-prompt {
-    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-size: clamp(0.95rem, 2.8vw, 1.3rem);
     font-weight: 700;
     color: white;
     text-align: center;
-    margin-top: clamp(12px, 2.5vw, 20px);
+    margin-top: clamp(10px, 2.5vw, 20px);
 }
 
-/* =========================
-   BUTTONS
-   ========================= */
 .finish-button {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 2vw, 15px);
+    gap: clamp(10px, 2vw, 15px);
     width: 100%;
     max-width: 100%;
     align-items: stretch;
 }
 
 .start-button {
-    padding: clamp(12px, 3vw, 18px) clamp(25px, 4vw, 40px);
+    padding: clamp(12px, 2.8vw, 18px) clamp(20px, 4vw, 40px);
     background: #FFA500;
     color: white;
     border: none;
     border-radius: 50px;
     font-family: 'Baloo 2', sans-serif;
     font-weight: 800;
-    font-size: clamp(1rem, 3.5vw, 1.5rem);
+    font-size: clamp(0.95rem, 3.2vw, 1.5rem);
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
     letter-spacing: 0.5px;
     box-shadow: 0 8px 0 rgba(0, 0, 0, 0.2);
-    min-height: clamp(44px, 8vh, 60px);
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -162,166 +160,176 @@
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
+/* Feedback Message Styles - Responsive */
+#feedbackMessage {
+    display: none;
+    padding: clamp(14px, 3vw, 20px);
+    border-radius: clamp(10px, 2.5vw, 14px);
+    margin-top: clamp(12px, 2.5vw, 16px);
+    margin-bottom: clamp(12px, 2.5vw, 16px);
+    text-align: center;
+    color: white;
+    animation: fadeIn 0.3s ease-out;
+    max-width: 100%;
+    overflow: hidden;
+}
 
-/* Large Tablets & Small Desktops */
-@media (max-width: 1024px) {
-    .finish-content {
-        max-width: 650px;
-        padding: clamp(30px, 5vw, 50px);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#feedbackMessage > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(8px, 2vw, 12px);
+}
+
+.feedback-emoji {
+    font-size: clamp(1.6rem, 4vh, 2rem);
+    line-height: 1;
+    animation: bounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.feedback-title {
+    font-size: clamp(1.4rem, 3.5vh, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.feedback-explanation {
+    font-size: clamp(1.1rem, 3vh, 1.3rem);
+    font-weight: 400;
+    opacity: 0.95;
+    line-height: 1.5;
+    max-width: 90%;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    #feedbackMessage {
+        padding: clamp(10px, 2vh, 12px);
+        margin-top: clamp(8px, 1.5vh, 10px);
+        margin-bottom: clamp(8px, 1.5vh, 10px);
     }
-
-    .title-header {
-        font-size: clamp(2rem, 6vw, 3rem);
-        margin-bottom: clamp(20px, 4vw, 28px);
+    
+    .feedback-emoji {
+        font-size: clamp(1.4rem, 3vh, 1.6rem);
     }
-
-    .progress-comment {
-        font-size: clamp(1.2rem, 4vw, 1.6rem);
-        margin-bottom: clamp(25px, 4vw, 32px);
+    
+    .feedback-title {
+        font-size: clamp(1.2rem, 2.5vh, 1.4rem);
     }
-
-    .finish-button {
-        gap: clamp(8px, 2vw, 12px);
+    
+    .feedback-explanation {
+        font-size: clamp(0.95rem, 2.2vh, 1.1rem);
     }
 }
 
-/* Tablets */
-@media (max-width: 768px) {
-    .finish-content {
-        width: 88%;
-        max-width: 550px;
-        padding: clamp(25px, 4vw, 45px);
-    }
+/* Answer Buttons */
+.answer-btn {
+    width: 100%;
+    padding: clamp(12px, 3vw, 16px) clamp(14px, 3vw, 18px);
+    margin-bottom: clamp(10px, 2vw, 12px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+    color: #333;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: clamp(8px, 2vw, 12px);
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.4;
+}
 
-    .title-header {
-        font-size: clamp(1.8rem, 5vw, 2.5rem);
-        margin-bottom: clamp(18px, 3vw, 25px);
-    }
+.answer-btn:hover:not(:disabled) {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.8);
+}
 
-    .progress-comment {
-        font-size: clamp(1rem, 3.5vw, 1.4rem);
-        line-height: 1.4;
-        margin-bottom: clamp(22px, 4vw, 30px);
-        max-width: 95%;
-    }
+.answer-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-    .finish-button {
-        gap: clamp(8px, 2vw, 12px);
+.answer-btn:disabled {
+    cursor: not-allowed;
+}
+
+/* Landscape Mobile Optimization */
+@media (max-height: 600px) and (orientation: landscape) {
+    .answer-btn {
+        padding: clamp(8px, 1.5vh, 10px) clamp(12px, 2vw, 14px);
+        margin-bottom: clamp(6px, 1.2vh, 8px);
+        font-size: clamp(13px, 2.5vw, 14px);
+        min-height: 40px;
     }
 }
 
-/* Small Tablets & Large Phones */
-@media (max-width: 600px) {
-    .finish-content {
-        width: 90%;
-        padding: clamp(20px, 3vw, 40px);
-    }
 
-    .title-header {
-        font-size: clamp(1.6rem, 4.5vw, 2.2rem);
-        margin-bottom: clamp(16px, 3vw, 22px);
-    }
-
-    .progress-comment {
-        font-size: clamp(0.95rem, 3vw, 1.2rem);
-        margin-bottom: clamp(20px, 3vw, 28px);
-    }
-
-    .finish-button {
-        gap: clamp(8px, 2vw, 10px);
-    }
-}
-
-/* Small Phones */
-@media (max-width: 480px) {
-    .finish-content {
-        width: 92%;
-        padding: clamp(18px, 3vw, 35px);
-    }
-
-    .title-header {
-        font-size: clamp(1.4rem, 4vw, 2rem);
-        margin-bottom: clamp(14px, 2.5vw, 20px);
-    }
-
-    .progress-comment {
-        font-size: clamp(0.9rem, 2.8vw, 1.1rem);
-        line-height: 1.4;
-        margin-bottom: clamp(18px, 3vw, 25px);
-        max-width: 100%;
-    }
-
-    .finish-button {
-        gap: clamp(6px, 1.5vw, 10px);
-    }
-}
-
-/* Extra Small Phones */
-@media (max-width: 380px) {
     .finish-content {
         width: 94%;
-        padding: clamp(15px, 2.5vw, 30px);
+        padding: clamp(18px, 4vw, 24px);
     }
 
     .title-header {
-        font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+        font-size: clamp(1.6rem, 5vw, 2rem);
+    }
+
+    .progress-comment {
+        font-size: clamp(1.1rem, 3vw, 1.3rem);
+    }
+}
+
+/* Landscape Short Screens */
+@media (max-height: 700px) and (orientation: landscape) {
+    .finish-content {
+        padding: clamp(14px, 2vw, 22px);
+        max-height: 92vh;
+    }
+
+    .title-header {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
         margin-bottom: clamp(12px, 2vw, 18px);
     }
 
     .progress-comment {
-        font-size: clamp(0.85rem, 2.5vw, 1rem);
-        margin-bottom: clamp(16px, 2.5vw, 22px);
+        font-size: clamp(1rem, 2.5vw, 1.3rem);
+        margin-bottom: clamp(16px, 3vw, 24px);
     }
 
     .finish-button {
-        gap: clamp(6px, 1.5vw, 8px);
+        gap: clamp(8px, 1.5vw, 10px);
     }
 }
 
-/* Landscape Mode Fix (Short Screens) */
-@media (max-height: 700px) and (orientation: landscape) {
-    .finish-content {
-        padding: clamp(15px, 2vw, 25px);
-        max-height: 90vh;
-    }
-
-    .title-header {
-        font-size: clamp(1.2rem, 3.5vw, 2rem);
-        margin-bottom: clamp(10px, 2vw, 15px);
-    }
-
-    .progress-comment {
-        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-        line-height: 1.3;
-        margin-bottom: clamp(12px, 2vw, 20px);
-    }
-
-    .finish-button {
-        gap: clamp(6px, 1.5vw, 8px);
-    }
-}
-
-/* Very Short Landscape Screens */
 @media (max-height: 500px) and (orientation: landscape) {
     .finish-content {
-        padding: clamp(8px, 1.5vw, 15px) 0;
+        padding: 10px 16px;
+        max-height: 95vh;
     }
 
     .title-header {
-        font-size: clamp(1rem, 2.5vw, 1.6rem);
-        margin-bottom: clamp(8px, 1vw, 12px);
+        font-size: clamp(1.2rem, 3vw, 1.6rem);
+        margin-bottom: 8px;
     }
 
     .progress-comment {
-        font-size: clamp(0.8rem, 2vw, 0.95rem);
-        line-height: 1.2;
-        margin-bottom: clamp(8px, 1.5vw, 15px);
-    }
-
-    .finish-button {
-        gap: clamp(4px, 1vw, 6px);
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        margin-bottom: 12px;
     }
 }

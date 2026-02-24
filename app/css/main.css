@@ -1,5 +1,6 @@
 /* ========================================
    GLOBAL STYLES FOR VOCABVENTURE
+   REFACTORED - FULL MOBILE RESPONSIVENESS
    Mobile-First Responsive Design
    ======================================== */
 
@@ -14,6 +15,10 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 :root {
     --primary-yellow: #FFD93D;
     --orange-accent: #FF6B35;
@@ -23,39 +28,36 @@ html {
     --light-gray: #f8f8f8;
     --border-light: #e5e5e5;
     
-    /* Responsive Typography Defaults (mobile) */
-    --font-size-base: 16px;
-    --font-size-sm: 14px;
-    --font-size-lg: 18px;
-    --font-size-xl: 20px;
-    --font-size-2xl: 24px;
-    --font-size-3xl: 28px;
-    --font-size-4xl: 32px;
-    --font-size-5xl: 36px;
+    /* Responsive Typography */
+    --font-size-base: clamp(14px, 3.5vw, 16px);
+    --font-size-sm: clamp(12px, 3vw, 14px);
+    --font-size-lg: clamp(16px, 4vw, 18px);
+    --font-size-xl: clamp(18px, 4.5vw, 20px);
+    --font-size-2xl: clamp(20px, 5vw, 24px);
+    --font-size-3xl: clamp(24px, 6vw, 28px);
+    --font-size-4xl: clamp(28px, 7vw, 32px);
+    --font-size-5xl: clamp(32px, 8vw, 36px);
     
     /* Spacing */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 12px;
-    --spacing-lg: 16px;
-    --spacing-xl: 20px;
-    --spacing-2xl: 24px;
-    --spacing-3xl: 32px;
-    --spacing-4xl: 40px;
+    --spacing-xs: clamp(3px, 1vw, 4px);
+    --spacing-sm: clamp(6px, 1.5vw, 8px);
+    --spacing-md: clamp(10px, 2.5vw, 12px);
+    --spacing-lg: clamp(14px, 3vw, 16px);
+    --spacing-xl: clamp(18px, 4vw, 20px);
+    --spacing-2xl: clamp(22px, 5vw, 24px);
+    --spacing-3xl: clamp(28px, 6vw, 32px);
+    --spacing-4xl: clamp(36px, 8vw, 40px);
 }
 
 body {
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--dark-text);
-    overflow-x: hidden;
     font-size: var(--font-size-base);
     line-height: 1.6;
     background-color: #fff;
 }
 
-/* ========================================
-   TYPOGRAPHY & UTILITY CLASSES
-   ======================================== */
+/* TYPOGRAPHY & UTILITY CLASSES */
 
 .title-font {
     font-family: 'Baloo 2', cursive;
@@ -88,9 +90,7 @@ body {
     border: 0;
 }
 
-/* ========================================
-   CONTAINER & LAYOUT (Mobile-First)
-   ======================================== */
+/* CONTAINER & LAYOUT (Mobile-First) */
 
 .container {
     width: 100%;
@@ -99,9 +99,7 @@ body {
     padding: var(--spacing-lg);
 }
 
-/* ========================================
-   BUTTONS (Mobile-First, Touch-Friendly)
-   ======================================== */
+/* BUTTONS (Mobile-First, Touch-Friendly) */
 
 .btn {
     display: inline-flex;
@@ -110,7 +108,7 @@ body {
     padding: var(--spacing-md) var(--spacing-xl);
     min-height: 44px;
     min-width: 44px;
-    border-radius: 10px;
+    border-radius: clamp(8px, 2vw, 10px);
     border: none;
     font-weight: 600;
     cursor: pointer;
@@ -168,13 +166,11 @@ body {
     min-height: 48px;
 }
 
-/* ========================================
-   CARD STYLES (Responsive)
-   ======================================== */
+/* CARD STYLES (Responsive) */
 
 .card {
     background: white;
-    border-radius: 15px;
+    border-radius: clamp(12px, 3vw, 15px);
     padding: var(--spacing-xl);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -189,9 +185,7 @@ body {
     padding: var(--spacing-lg);
 }
 
-/* ========================================
-   GRID SYSTEM (Mobile-First)
-   ======================================== */
+/* GRID SYSTEM (Mobile-First) */
 
 .grid {
     display: grid;
@@ -211,9 +205,7 @@ body {
     grid-template-columns: 1fr;
 }
 
-/* ========================================
-   FLEXBOX UTILITIES
-   ======================================== */
+/* FLEXBOX UTILITIES */
 
 .flex {
     display: flex;
@@ -237,13 +229,11 @@ body {
     gap: var(--spacing-lg);
 }
 
-/* ========================================
-   PROGRESS BAR
-   ======================================== */
+/* PROGRESS BAR */
 
 .progress-bar {
     width: 100%;
-    height: 24px;
+    height: clamp(20px, 5vw, 24px);
     background: var(--light-gray);
     border-radius: 12px;
     overflow: hidden;
@@ -263,14 +253,12 @@ body {
     font-size: var(--font-size-sm);
 }
 
-/* ========================================
-   BADGE STYLES
-   ======================================== */
+/* BADGE STYLES */
 
 .badge {
     display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
+    padding: clamp(5px, 1.2vw, 6px) clamp(10px, 2.5vw, 12px);
+    border-radius: clamp(16px, 4vw, 20px);
     font-size: var(--font-size-sm);
     font-weight: 600;
     text-align: center;
@@ -292,16 +280,14 @@ body {
     color: white;
 }
 
-/* ========================================
-   LOADING SPINNER
-   ======================================== */
+/* LOADING SPINNER */
 
 .spinner {
     border: 4px solid var(--light-gray);
     border-top: 4px solid var(--orange-accent);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: clamp(35px, 8vw, 40px);
+    height: clamp(35px, 8vw, 40px);
     animation: spin 1s linear infinite;
     margin: var(--spacing-xl) auto;
 }
@@ -311,16 +297,14 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* ========================================
-   RESPONSIVE VIDEO CONTAINERS
-   ======================================== */
+/* RESPONSIVE VIDEO CONTAINERS */
 
 .video-container {
     position: relative;
     width: 100%;
     max-width: 100%;
     background: #000;
-    border-radius: 10px;
+    border-radius: clamp(8px, 2vw, 10px);
     overflow: hidden;
     margin: var(--spacing-xl) 0;
 }
@@ -351,9 +335,7 @@ video {
     aspect-ratio: 16 / 9;
 }
 
-/* ========================================
-   IMAGES & MEDIA
-   ======================================== */
+/* IMAGES & MEDIA */
 
 img {
     max-width: 100%;
@@ -372,60 +354,10 @@ img[loading="lazy"] {
     100% { background-position: -200% 0; }
 }
 
-/* ========================================
-   RESPONSIVE TYPOGRAPHY
-   SMALL MOBILE: 320px - 480px
-   ======================================== */
+/* RESPONSIVE BREAKPOINTS */
 
-@media (max-width: 480px) {
-    :root {
-        --font-size-base: 15px;
-        --font-size-sm: 13px;
-        --font-size-lg: 17px;
-        --font-size-xl: 18px;
-        --font-size-2xl: 22px;
-        --font-size-3xl: 26px;
-        --font-size-4xl: 28px;
-        --font-size-5xl: 32px;
-        
-        --spacing-lg: 12px;
-        --spacing-xl: 16px;
-        --spacing-2xl: 20px;
-    }
-    
-    .container {
-        padding: var(--spacing-lg);
-    }
-    
-    .card {
-        border-radius: 12px;
-        padding: var(--spacing-lg);
-    }
-    
-    .btn {
-        padding: 10px 16px;
-        min-height: 44px;
-        font-size: var(--font-size-sm);
-        border-radius: 8px;
-    }
-}
-
-/* ========================================
-   LARGE MOBILE: 481px - 767px
-   ======================================== */
-
-@media (min-width: 481px) and (max-width: 767px) {
-    :root {
-        --font-size-base: 16px;
-        --font-size-sm: 14px;
-        --font-size-lg: 18px;
-        --font-size-xl: 20px;
-        --font-size-2xl: 24px;
-        --font-size-3xl: 28px;
-        --font-size-4xl: 32px;
-        --font-size-5xl: 36px;
-    }
-    
+/* Large Mobile: 481px - 767px */
+@media (min-width: 481px) {
     .container {
         padding: var(--spacing-xl);
     }
@@ -435,62 +367,10 @@ img[loading="lazy"] {
     }
 }
 
-/* ========================================
-   TABLET PORTRAIT: 768px - 1023px
-   ======================================== */
-
+/* Tablet Portrait: 768px - 1023px */
 @media (min-width: 768px) {
-    :root {
-        --font-size-base: 16px;
-        --font-size-sm: 14px;
-        --font-size-lg: 18px;
-        --font-size-xl: 20px;
-        --font-size-2xl: 26px;
-        --font-size-3xl: 30px;
-        --font-size-4xl: 36px;
-        --font-size-5xl: 42px;
-        
-        --spacing-lg: 16px;
-        --spacing-xl: 20px;
-        --spacing-2xl: 28px;
-    }
-    
     .container {
         max-width: 750px;
-        padding: var(--spacing-xl);
-    }
-    
-    .grid-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .grid-3 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .grid-4 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* ========================================
-   TABLET LANDSCAPE: 1024px - 1279px
-   ======================================== */
-
-@media (min-width: 1024px) {
-    :root {
-        --font-size-base: 17px;
-        --font-size-sm: 14px;
-        --font-size-lg: 19px;
-        --font-size-xl: 21px;
-        --font-size-2xl: 28px;
-        --font-size-3xl: 32px;
-        --font-size-4xl: 40px;
-        --font-size-5xl: 48px;
-    }
-    
-    .container {
-        max-width: 1000px;
         padding: var(--spacing-2xl);
     }
     
@@ -507,22 +387,21 @@ img[loading="lazy"] {
     }
 }
 
-/* ========================================
-   LAPTOP: 1280px - 1439px
-   ======================================== */
+/* Tablet Landscape: 1024px - 1279px */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1000px;
+    }
+    
+    .grid-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 
+/* Laptop: 1280px - 1439px */
 @media (min-width: 1280px) {
     .container {
         max-width: 1200px;
-        padding: var(--spacing-2xl);
-    }
-    
-    .grid-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .grid-3 {
-        grid-template-columns: repeat(3, 1fr);
     }
     
     .grid-4 {
@@ -530,10 +409,7 @@ img[loading="lazy"] {
     }
 }
 
-/* ========================================
-   DESKTOP: 1440px - 1919px
-   ======================================== */
-
+/* Desktop: 1440px - 1919px */
 @media (min-width: 1440px) {
     .container {
         max-width: 1320px;
@@ -541,10 +417,7 @@ img[loading="lazy"] {
     }
 }
 
-/* ========================================
-   ULTRA-WIDE MONITOR: 1920px+
-   ======================================== */
-
+/* Ultra-wide: 1920px+ */
 @media (min-width: 1920px) {
     .container {
         max-width: 1400px;
