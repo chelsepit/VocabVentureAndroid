@@ -125,20 +125,33 @@ function getBadgeImagePath(badgeType) {
     return paths[badgeType] || '../../assets/images/badges/bronze-badge.png';
 }
 
-function formatBadgeLabel(badge) {
-    const storyId = badge.story_id;
-    const category = badge.badge_category;
-    const type = badge.badge_type;
-    
-    if (category === 'story-completion') {
-        return `Story ${storyId} Complete`;
-    } else if (category === 'quiz-1') {
-        return `Story ${storyId} - Quiz 1`;
-    } else if (category === 'quiz-2') {
-        return `Story ${storyId} - Quiz 2`;
+let storyTitles = {};
+
+async function loadStoryTitles() {
+    try {
+        const response = await fetch('../../data/stories-index.json');
+        const data = await response.json();
+        data.stories.forEach(story => {
+            storyTitles[story.id] = story.title;
+        });
+    } catch (err) {
+        console.error('Could not load story titles:', err);
     }
-    
-    return `Story ${storyId}`;
+}
+
+function formatBadgeLabel(badge) {
+    const title = storyTitles[badge.story_id] || `Story ${badge.story_id}`;
+    const category = badge.badge_category;
+
+    if (category === 'story-completion') {
+        return `${title} Complete`;
+    } else if (category === 'quiz-1') {
+        return `${title} - Quiz 1`;
+    } else if (category === 'quiz-2') {
+        return `${title} - Quiz 2`;
+    }
+
+    return title;
 }
 
 function formatDate(dateString) {
@@ -321,6 +334,12 @@ function goToLibrary() {
 // ============================================
 // INITIALIZE ON PAGE LOAD
 // ============================================
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadStoryTitles();
+    // then load badges...
+});
+
 window.addEventListener('DOMContentLoaded', () => {
     loadBadges();
 });
@@ -331,3 +350,4 @@ document.addEventListener('keydown', (e) => {
         closeBadgeModal();
     }
 });
+

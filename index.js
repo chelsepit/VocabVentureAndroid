@@ -48,8 +48,18 @@ function createWindow() {
 // APP LIFECYCLE
 // ============================================
 
-app.whenReady().then(() => {
-    db = new VocabVentureDB();   
+app.whenReady().then(async () => {
+    db = new VocabVentureDB();
+
+    // ⚡ Nuclear cache clear — wipes ALL cached assets before window loads
+    // This ensures replaced audio/image files are always served fresh from disk
+    const { session } = require('electron');
+    await session.defaultSession.clearCache();
+    await session.defaultSession.clearStorageData({
+        storages: ['cachestorage', 'shadercache', 'serviceworkers']
+    });
+    console.log('✅ All caches cleared');
+
     createWindow();
 
     app.on('activate', () => {
@@ -459,42 +469,4 @@ process.on('uncaughtException', (error) => {
 
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled rejection:', error);
-});
-
-// ============================================
-// ADD THESE THREE HANDLERS TO index.js
-// (alongside your existing quiz:save handler)
-// ============================================
-
-// Save partial quiz progress mid-quiz (does NOT affect completion status or score)
-ipcMain.handle('quiz:savePartial', async (event, { userId, storyId, quizNumber, partialScore, partialQuestionIndex }) => {
-    try {
-        db.savePartialQuizProgress(userId, storyId, quizNumber, partialScore, partialQuestionIndex);
-        return { success: true };
-    } catch (error) {
-        console.error('Error saving partial quiz progress:', error);
-        return { success: false, error: error.message };
-    }
-});
-
-// Get partial quiz progress for resume modal
-ipcMain.handle('quiz:getPartial', async (event, { userId, storyId, quizNumber }) => {
-    try {
-        const partial = db.getPartialQuizProgress(userId, storyId, quizNumber);
-        return partial; // { partialScore, partialQuestionIndex } or null
-    } catch (error) {
-        console.error('Error getting partial quiz progress:', error);
-        return null;
-    }
-});
-
-// Clear partial quiz progress (called on finish or start-over)
-ipcMain.handle('quiz:clearPartial', async (event, { userId, storyId, quizNumber }) => {
-    try {
-        db.clearPartialQuizProgress(userId, storyId, quizNumber);
-        return { success: true };
-    } catch (error) {
-        console.error('Error clearing partial quiz progress:', error);
-        return { success: false, error: error.message };
-    }
 });
