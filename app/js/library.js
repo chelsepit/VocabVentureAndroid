@@ -146,8 +146,8 @@ function getTotalSegments(storyId) {
         if (stories.length === 0) {
             libraryContainer.innerHTML = `
                 <div style="text-align: center; padding: 60px 20px;">
-                    <h2 style="color: #6e4324; font-size: 1.5rem; margin-bottom: 10px;">No stories found</h2>
-                    <p style="color: #999; font-size: 1rem;">Try a different search term or genre</p>
+                    <h2 style="color: #000000; font-size: 1.5rem; margin-bottom: 10px;">No stories found</h2>
+                    <p style="color: #000000; font-size: 1rem;">Try a different search term or genre</p>
                 </div>
             `;
             return;
@@ -358,7 +358,3 @@ function attachBookClicks() {
         }
     });
 }
-
-// ============================================
-// SEARCH AND FILTER
-// ============================================

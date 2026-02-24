@@ -259,8 +259,8 @@ function renderOrganizedBooks() {
     } else {
         recentReadsContainer.innerHTML = `
             <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                <p style="color: #6b7280; font-size: 1.1rem;">No books in progress yet!</p>
-                <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 10px;">Start reading from the Library</p>
+                <p style="color: #000000; font-size: 1.1rem;">No books in progress yet!</p>
+                <p style="color: #000000; font-size: 0.9rem; margin-top: 10px;">Start reading from the Library</p>
             </div>
         `;
     }
@@ -283,8 +283,8 @@ function renderOrganizedBooks() {
     } else {
         completedBooksContainer.innerHTML = `
             <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                <p style="color: #6b7280; font-size: 1.1rem;">No completed books yet!</p>
-                <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 10px;">Finish stories to see them here</p>
+                <p style="color: #000000; font-size: 1.1rem;">No completed books yet!</p>
+                <p style="color: #000000; font-size: 0.9rem; margin-top: 10px;">Finish stories to see them here</p>
             </div>
         `;
     }

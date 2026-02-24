@@ -1,6 +1,16 @@
 /* =========================
-   BACKGROUND
+   GAME RESULT - REFACTORED
+   FULL MOBILE RESPONSIVENESS
    ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
 .finish-background {
     position: fixed;
     top: 0;
@@ -10,17 +20,11 @@
     background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
-    /* Darker overlay so text pops */
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.3);
     filter: blur(4px);
-    transform: scale(1.1); /* Removes blur edges */
+    transform: scale(1.1);
 }
 
-/* =========================
-   MAIN CONTENT CARD
-   ========================= */
-
-/* Main Content Card */
 .finish-content {
     position: absolute;
     top: 50%;
@@ -34,16 +38,15 @@
     text-align: center;
     
     background: #5DADE2;
-    backdrop-filter: none;
-    padding: 50px 30px;
-    border-radius: 40px;
+    padding: clamp(30px, 5vw, 50px) clamp(20px, 4vw, 30px);
+    border-radius: clamp(28px, 5vw, 40px);
     border: 3px solid rgba(255, 255, 255, 0.781);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    width: 90%;
+    width: clamp(90%, 90vw, 90%);
     max-width: 700px;
-    overflow: hidden; /* prevents children from escaping */
-    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -52,20 +55,17 @@
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* =========================
-   TITLE
-   ========================= */
 .title-header {
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'header-font', cursive; 
-    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-size: clamp(2rem, 6vw, 4rem);
     font-weight: 700; 
     color: #FFEB3B; 
     -webkit-text-stroke: 1px white;
-    text-shadow: 4px 4px 0px #F57F17;
-    margin-bottom: 15px;
+    text-shadow: 3px 3px 0px #F57F17;
+    margin-bottom: clamp(12px, 2.5vw, 15px);
     animation: float 3s ease-in-out infinite;
 }
 
@@ -74,61 +74,51 @@
     50% { transform: translateY(-10px); }
 }
 
-/* =========================
-   TEXT
-   ========================= */
 .progress-comment {
     font-family: 'Nunito', sans-serif;
     font-weight: 700;
     color: white;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    max-width: 80%;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    margin-bottom: clamp(16px, 3vw, 20px);
+    max-width: 85%;
 }
 
 .score {
     color: white;
-    font-size: 2.5rem;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
     font-family: 'title-font', arial;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 4vw, 30px);
 }
 
-/* =========================
-   BUTTONS
-   ========================= */
 .finish-button {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: clamp(12px, 2.5vw, 15px);
     width: 100%;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap; /* wraps if too wide */
-    box-sizing: border-box;
+    flex-wrap: wrap;
 }
 
-/* All buttons */
 .finish-button button {
     flex: 1 1 auto;
-    min-width: 80px;
-    max-width: 200px;
+    min-width: clamp(100px, 25vw, 120px);
+    max-width: clamp(180px, 40vw, 200px);
     height: auto;
-    min-height: 60px;
-    padding: 12px 16px;
+    min-height: 44px;
+    padding: clamp(10px, 2.5vw, 12px) clamp(14px, 3vw, 16px);
     border-radius: 50px;
     font-family: 'Baloo 2', sans-serif;
     font-weight: 800;
-    font-size: clamp(0.75rem, 2vw, 1.2rem);
+    font-size: clamp(0.85rem, 2.5vw, 1.2rem);
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-sizing: border-box;
 }
 
-/* Exit Button */
 .exit-button {
     background: white;
     color: #000000;
@@ -146,7 +136,6 @@
     box-shadow: 0 6px 0 rgba(0,0,0,0.2);
 }
 
-/* Proceed Button */
 .proceed-button {
     background: #FFA500;
     color: white;
@@ -155,7 +144,6 @@
 
 .proceed-button:hover {
     background: #FFB84D;
-    border-color: #FFB84D !important;
     transform: translateY(-2px);
     box-shadow: 0 10px 0 rgba(0,0,0,0.2);
 }
@@ -165,111 +153,70 @@
     box-shadow: 0 6px 0 rgba(0,0,0,0.2);
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
-
-/* Tablets */
-/* Tablets */
-@media (max-width: 768px) {
-    .finish-content {
-        padding: 40px 20px;
-        width: 85%;
-    }
-
-    .title-header {
-        font-size: 2rem;
-    }
-
-    .progress-comment {
-        font-size: 1.4rem;
-        max-width: 100%;
-    }
-
-    .score {
-        font-size: 2rem;
-        margin-bottom: 25px;
-    }
-
-    .finish-button {
-        flex-direction: row;
-        gap: 15px;
-    }
-
-    .finish-button button {
-        width: clamp(120px, 35vw, 200px);
-        min-height: 55px;
-        height: auto;
-        padding: 12px 15px;
-        font-size: clamp(0.85rem, 2.5vw, 1.2rem);
-    }
-}
-
-/* Small Phones */
+/* Small Mobile */
 @media (max-width: 480px) {
     .finish-content {
-        padding: 30px 15px;
-        border-radius: 25px;
+        padding: clamp(24px, 5vw, 30px) clamp(14px, 3vw, 18px);
+        width: 94%;
+        border-radius: 22px;
     }
 
     .title-header {
-        font-size: 1.8rem;
+        font-size: clamp(1.6rem, 5vw, 1.8rem);
         margin-bottom: 10px;
     }
 
     .progress-comment {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+        font-size: clamp(1.1rem, 3vw, 1.2rem);
+        margin-bottom: 14px;
+        max-width: 100%;
     }
 
     .score {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
+        font-size: clamp(1.6rem, 4.5vw, 1.8rem);
+        margin-bottom: 18px;
     }
 
     .finish-button {
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
     }
 
     .finish-button button {
-        width: 80%;
+        width: 85%;
         max-width: 280px;
-        min-height: 50px;
-        height: auto;
-        padding: 12px 20px;
-        font-size: 1rem;
+        min-height: 48px;
+        padding: 12px 18px;
+        font-size: clamp(0.95rem, 2.8vw, 1rem);
     }
 }
 
-/* Landscape Mode Fix (Short Screens) */
-@media (max-height: 600px) {
+/* Landscape */
+@media (max-height: 600px) and (orientation: landscape) {
     .finish-content {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
+        padding: clamp(16px, 3vh, 20px);
+        max-height: 94vh;
     }
 
     .title-header {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
+        font-size: clamp(1.4rem, 3.5vh, 1.8rem);
+        margin-bottom: 8px;
     }
 
     .progress-comment {
-        font-size: 1rem;
+        font-size: clamp(1rem, 2.5vh, 1.2rem);
         margin-bottom: 10px;
     }
 
     .score {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
+        font-size: clamp(1.4rem, 3vh, 1.6rem);
+        margin-bottom: 14px;
     }
 
     .finish-button button {
-        min-height: 44px;
-        height: auto;
-        padding: 10px 20px;
-        font-size: 0.9rem;
+        min-height: 40px;
+        padding: 9px 16px;
+        font-size: clamp(0.85rem, 2vh, 1rem);
     }
 }

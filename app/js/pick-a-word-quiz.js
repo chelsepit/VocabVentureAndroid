@@ -264,9 +264,9 @@ function showFeedback(isCorrect, explanation) {
   if (isCorrect) {
     feedbackElement.innerHTML = `
             <div style="color: #ffffff;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">✓</div>
-                <div style="font-size: 2.3rem;">Correct!</div>
-                <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                <div style="font-size: clamp(1.8rem, 3.5vh, 1.8rem);; margin-bottom: 10px;">✓</div>
+                <div style="font-size: clamp(1.5rem, 3.5vh, 1.8rem);;">Correct!</div>
+                <div style="font-size: clamp(1.3rem, 3.5vh, 1.8rem);; margin-top: 10px; font-weight: normal; opacity: 0.9;">
                     ${explanation}
                 </div>
             </div>
@@ -276,9 +276,9 @@ function showFeedback(isCorrect, explanation) {
   } else {
     feedbackElement.innerHTML = `
             <div style="color: #ffffff;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">✗</div>
-                <div style="font-size: 2.3rem;">Not quite!</div>
-                <div style="font-size: 1.8rem; margin-top: 10px; font-weight: normal; opacity: 0.9;">
+                <div style="font-size: clamp(1.8rem, 3.5vh, 1.8rem); margin-bottom: 10px;">✗</div>
+                <div style="font-size: clamp(1.5rem, 3.5vh, 1.8rem);">Not quite!</div>
+                <div style="font-size: clamp(1.3rem, 3.5vh, 1.8rem); margin-top: 10px; font-weight: normal; opacity: 0.9;">
                     ${explanation}
                 </div>
             </div>
