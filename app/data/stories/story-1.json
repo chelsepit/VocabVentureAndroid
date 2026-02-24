@@ -62,7 +62,7 @@
     },
     {
       "id": 5,
-      "text": "...and he sent one of his servants, Kaboniyan, to the earth to teach them many things.",
+      "text": "and he sent one of his servants, Kaboniyan, to the earth to teach them many things.. and it happened this way.",
       "vocabulary": [
         {
           "word": "servants",
@@ -79,7 +79,7 @@
     },
     {
       "id": 6,
-      "text": "Dayapan, a woman who lived in Caalang, had been sick for seven years. One day when she went to the spring to bathe.",
+      "text": "Dayapan, a woman who lived in Caalang, had been sick for seven years. One day when she went to the spring to bathe...",
       "vocabulary": [],
       "audio-boy": "assets/audio/story-1/boy/segment-6.mp3",
       "audio-girl": "assets/audio/story-1/girl/segment-6.mp3",
@@ -162,7 +162,7 @@
     },
     {
       "id": 11.1,
-      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished, she was cured.",
+      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished, and she was cured...",
       "vocabulary": [
         {
           "word": "ceremony",
@@ -182,7 +182,7 @@
         }
       ],
       "audio-boy": "assets/audio/story-1/boy/segment-11.1.mp3",
-      "audio-girl": "assets/audio/story-1/girl/segment-11.1mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-11.1.mp3",
       "illustration": "assets/videos/story-1/segment-11.mp4"
     },
     {
