@@ -48,14 +48,16 @@ function createWindow() {
 // ============================================================
 
 app.whenReady().then(async () => {
-    try {
-        const adapter = createElectronAdapter();
-        db = new VocabVentureDB(adapter);
-        await db.initialize();
-        console.log('✅ Database ready');
-    } catch (err) {
-        console.error('❌ Database initialization failed:', err);
-    }
+    db = new VocabVentureDB();
+
+    // ⚡ Nuclear cache clear — wipes ALL cached assets before window loads
+    // This ensures replaced audio/image files are always served fresh from disk
+    const { session } = require('electron');
+    await session.defaultSession.clearCache();
+    await session.defaultSession.clearStorageData({
+        storages: ['cachestorage', 'shadercache', 'serviceworkers']
+    });
+    console.log('✅ All caches cleared');
 
     createWindow();
 

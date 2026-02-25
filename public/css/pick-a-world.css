@@ -1,6 +1,16 @@
 /* =========================
-   BACKGROUND
+   PICK A WORLD - REFACTORED
+   FULL MOBILE RESPONSIVENESS
    ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
 .finish-background {
     position: fixed;
     top: 0;
@@ -13,9 +23,6 @@
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
-/* =========================
-   MAIN CONTENT CARD
-   ========================= */
 .finish-content {
     color: white;
     position: absolute;
@@ -30,18 +37,15 @@
     text-align: center;
     
     background: #5DADE2;
-    backdrop-filter: none;
     
-    /* Reduced padding to match 'Decode' compactness */
-    padding: 30px 40px;
-    border-radius: 40px;
-    border: none;
+    padding: clamp(20px, 5vw, 40px);
+    border-radius: clamp(28px, 5vw, 40px);
     border: 3px solid rgba(255, 255, 255, 0.781);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     
-    width: 95%;
-    max-width: 900px; /* Tighter width like Decode */
-    max-height: 90vh;
+    width: clamp(92%, 95vw, 95%);
+    max-width: 900px;
+    max-height: 92vh;
     overflow-y: auto;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -51,23 +55,19 @@
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* =========================
-   TITLE HEADER
-   ========================= */
 .title-header {
     font-family: 'header-font', cursive; 
-    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-size: clamp(2rem, 6vw, 3.5rem);
     font-weight: 800; 
 
     color: #FFEB3B; 
-    -webkit-text-stroke: 3px white;
-    text-shadow: 4px 4px 0px #F57F17; 
+    -webkit-text-stroke: clamp(2px, 0.4vw, 3px) white;
+    text-shadow: 3px 3px 0px #F57F17; 
     
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Reduced margin to keep it close to the question number */
     margin-bottom: 0px; 
     line-height: 1.1;
     animation: float 3s ease-in-out infinite;
@@ -78,30 +78,25 @@
     50% { transform: translateY(-8px); }
 }
 
-/* Question Counter (1/5) */
 .progress-indicator {
     margin-top: 5px;
-    margin-bottom: 5px; /* Keep close to image */
+    margin-bottom: 5px;
 }
 
-/* =========================
-   IMAGE AREA
-   ========================= */
 .image-display-area {
     display: flex;
     justify-content: center;
     width: 100%;
     
-    /* Spacing: Close to progress above, close to text below */
-    margin-top: 30px;
-    margin-bottom: 15px; 
+    margin-top: clamp(20px, 5vw, 30px);
+    margin-bottom: clamp(12px, 3vw, 15px); 
 }
 
 .image-bubble {
     background: rgba(255, 255, 255, 0.25);
-    width: 180px; 
-    height: 140px;
-    border-radius: 30px;
+    width: clamp(140px, 30vw, 180px); 
+    height: clamp(110px, 23vw, 140px);
+    border-radius: clamp(22px, 5vw, 30px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -122,32 +117,24 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-/* =========================
-   TEXT & QUESTION (UPDATED SIZE)
-   ========================= */
 .progress-comment {
     font-family: 'Nunito', sans-serif;
     color: white;
     
-    /* UPDATED: Bigger Font Size (approx 2rem) */
-    font-size: clamp(1.8rem, 5vw, 2.2rem); 
-    font-weight: 800; /* Bolder text */
+    font-size: clamp(1.5rem, 4.5vw, 2.2rem); 
+    font-weight: 800;
     
     line-height: 1.3;
     max-width: 100%;
     
-    /* Spacing */
-    margin-top: 20px;
-    margin-bottom: 20px; 
+    margin-top: clamp(16px, 3vw, 20px);
+    margin-bottom: clamp(16px, 3vw, 20px); 
 }
 
-/* =========================
-   BUTTONS
-   ========================= */
 .finish-button {
     margin-top: 10px;
     display: flex;
-    gap: 15px;
+    gap: clamp(12px, 3vw, 15px);
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
@@ -155,13 +142,12 @@
 }
 
 .finish-button button {
-    /* Larger padding for better touch targets */
-    padding: clamp(15px, 3vw, 20px) clamp(30px, 4vw, 50px);
+    padding: clamp(12px, 3vw, 20px) clamp(24px, 5vw, 50px);
     
     font-family: 'Baloo 2', cursive; 
     font-weight: 800;
-    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
-    text-transform: uppercase;
+    font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+    text-transform: lowercase;
     letter-spacing: 1px;
     color: white;
     text-shadow: 0px 2px 2px rgba(0,0,0,0.1); 
@@ -171,11 +157,11 @@
     cursor: pointer;
     white-space: nowrap;
     
-    /* Ensure uniform height */
     display: inline-flex; 
     align-items: center;
     justify-content: center;
-    min-width: 150px;
+    min-width: clamp(130px, 30vw, 150px);
+    min-height: 44px;
     
     background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
     box-shadow: 0 6px 0 #E65100, 0 10px 15px rgba(0,0,0,0.2);
@@ -193,37 +179,26 @@
     box-shadow: 0 4px 0 #E65100, 0 5px 10px rgba(0,0,0,0.2);
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-   ========================= */
-
-/* Tablets */
-@media (max-width: 768px) {
-    .finish-content {
-        padding: 30px 20px;
-        width: 90%;
-    }
-}
-
-/* Small Phones */
+/* Small Mobile */
 @media (max-width: 480px) {
     .finish-content {
-        padding: 20px 15px;
+        padding: clamp(18px, 4vw, 22px);
+        width: 96%;
     }
 
     .title-header {
-        font-size: 2.5rem;
+        font-size: clamp(1.8rem, 5.5vw, 2.5rem);
         margin-bottom: 5px;
     }
 
     .progress-comment {
-        font-size: 1.5rem; /* Slightly smaller on very small screens so it fits */
-        margin-bottom: 15px;
+        font-size: clamp(1.3rem, 4vw, 1.6rem);
+        margin-bottom: 14px;
     }
 
     .image-bubble {
-        width: 140px;
-        height: 110px;
+        width: clamp(120px, 28vw, 140px);
+        height: clamp(95px, 21vw, 110px);
     }
 
     .finish-button {
@@ -233,27 +208,45 @@
 
     .finish-button button {
         width: 100%;
+        max-width: none;
+        min-width: auto;
     }
 }
 
-/* Landscape Mode Fix */
-@media (max-height: 600px) {
+/* Landscape */
+@media (max-height: 600px) and (orientation: landscape) {
     .finish-content {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 15px;
+        padding: clamp(14px, 2.5vh, 18px);
+        max-height: 94vh;
+    }
+
+    .title-header {
+        font-size: clamp(1.6rem, 3.5vh, 2rem);
+        margin-bottom: 4px;
     }
 
     .image-display-area {
-        margin-bottom: 5px;
+        margin-top: 12px;
+        margin-bottom: 8px;
     }
     
     .image-bubble {
-        width: 120px;
-        height: 100px;
+        width: clamp(100px, 18vw, 120px);
+        height: clamp(80px, 15vw, 100px);
     }
 
     .progress-comment {
+        font-size: clamp(1.2rem, 2.8vh, 1.5rem);
+        margin-top: 10px;
         margin-bottom: 10px;
+    }
+
+    .finish-button {
+        gap: 10px;
+    }
+
+    .finish-button button {
+        padding: 10px 18px;
+        font-size: clamp(1rem, 2.5vh, 1.3rem);
     }
 }

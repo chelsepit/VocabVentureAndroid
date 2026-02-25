@@ -43,6 +43,8 @@
                 .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
+        
+       loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
     </script>

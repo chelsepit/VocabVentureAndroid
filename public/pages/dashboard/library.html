@@ -23,7 +23,7 @@
     <div class="library-container">
         <div class="library-header">
             <div class="library-title-wrapper">
-                <h1 class="header-font text-4xl md:text-5xl text-white drop-shadow-lg">
+                <h1 class="library-head-text">
                     What do you want to <span class="italic title-font">read</span> today?
                 </h1>
             </div>
@@ -63,8 +63,13 @@
                 .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
+
+        // Load the files (Paths are relative to THIS file)
+        // We go up one level (..) to 'pages', then into 'components'
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
+        loadComponent('libraryContent', '../components/selected-genre.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>

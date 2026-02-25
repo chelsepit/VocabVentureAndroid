@@ -37,7 +37,7 @@
     },
     {
       "id": 3,
-      "text": "Neither did they know how to cure people who became ill or were injured by evil spirits ...",
+      "text": "Neither did they know how to cure people who became ill or were injured by evil spirits.",
       "vocabulary": [],
       "audio-boy": "assets/audio/story-1/boy/segment-3.mp3",
       "audio-girl": "assets/audio/story-1/girl/segment-3.mp3",
@@ -45,7 +45,7 @@
     },
     {
       "id": 4,
-      "text": "Then Kadaklan, the Great Spirit who lives in the sky, saw that the people often were hungry and sick...",
+      "text": "Then Kadaklan, the Great Spirit who lives in the sky, saw that the people often were hungry and sick.",
       "vocabulary": [
         {
           "word": "spirit",
@@ -62,7 +62,7 @@
     },
     {
       "id": 5,
-      "text": "...and he sent one of his servants, Kaboniyan, to the earth to teach them many things.",
+      "text": "and he sent one of his servants, Kaboniyan, to the earth to teach them many things.. and it happened this way.",
       "vocabulary": [
         {
           "word": "servants",
@@ -87,7 +87,7 @@
     },
     {
       "id": 7.1,
-      "text": "there entered her body a spirit who had rice and sugar-cane with him, and he said to her: \"Dayapan, take these to your home and plant them in the ground, and after a while they will grow large enough to reap.",
+      "text": "There entered her body a spirit who had rice and sugar-cane with him, and he said to her: \"Dayapan, take these to your home and plant them in the ground, and after a while they will grow large enough to reap.",
       "vocabulary": [
         {
           "word": "sugar-cane",
@@ -145,7 +145,7 @@
     },
     {
       "id": 10,
-      "text": "Since then, the Tinguian have planted crops every year and because they do as Kaboniyan taught the woman... they have plenty to eat.",
+      "text": "Since then, the Tinguian have planted crops every year and because they do as Kaboniyan taught the woman, they have plenty to eat.",
       "vocabulary": [
         {
           "word": "plenty",
@@ -161,8 +161,8 @@
       "illustration": "assets/videos/story-1/segment-10.mp4"
     },
     {
-      "id": 11,
-      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished and she was cured, he told her to take a dog and a cock and go to bathe in the river as a sign that the ceremony was finish. So, she went to the river and tied the dg and the cock near the water.",
+      "id": 11.1,
+      "text": "When Dayapan had reaped the first rice and cane, she began to make the ceremony Sayung, and the Spirit came again and directed her. And when it was finished, and she was cured...",
       "vocabulary": [
         {
           "word": "ceremony",
@@ -181,8 +181,33 @@
           "audio-girl": "assets/audio/story-1/girl/cured.mp3"
         }
       ],
-      "audio-boy": "assets/audio/story-1/boy/segment-11.mp3",
-      "audio-girl": "assets/audio/story-1/girl/segment-11.mp3",
+      "audio-boy": "assets/audio/story-1/boy/segment-11.1.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-11.1.mp3",
+      "illustration": "assets/videos/story-1/segment-11.mp4"
+    },
+    {
+      "id": 11.2,
+      "text": "He told her to take a dog and a cock and go to bathe in the river as a sign that the ceremony was finish. So, she went to the river and tied the dog and the cock near the water.",
+      "vocabulary": [
+        {
+          "word": "ceremony",
+          "pronunciation": "cer·e·mo·​ny",
+          "definition": "A special event with traditions or rituals",
+          "synonym": "Ritual",
+          "audio-boy": "assets/audio/story-1/boy/ceremony.mp3",
+          "audio-girl": "assets/audio/story-1/girl/ceremony.mp3"
+        },
+        {
+          "word": "cured",
+          "pronunciation": "cured",
+          "definition": "Made well after being sick",
+          "synonym": "Healed",
+          "audio-boy": "assets/audio/story-1/boy/cured.mp3",
+          "audio-girl": "assets/audio/story-1/girl/cured.mp3"
+        }
+      ],
+      "audio-boy": "assets/audio/story-1/boy/segment-11.2.mp3",
+      "audio-girl": "assets/audio/story-1/girl/segment-11.2.mp3",
       "illustration": "assets/videos/story-1/segment-11.mp4"
     },
     {

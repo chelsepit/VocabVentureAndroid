@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Butterfly & The Caterpillar</title>
+    <title>The Butterfly & The Caterpillar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -13,12 +14,20 @@
 
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/stories.css">
+    <link rel="stylesheet" href="../../css/stories.css">
     <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/book-stories.css">0
+    <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/book-stories.css">0
     <link rel="stylesheet" href="../../css/font.css">
 </head>
 
 <body>
+    <div class="video-background">
+        <video autoplay muted loop playsinline poster="/app/assets/videos/fables/TBTC1.mp4">
+            <source src="/app/assets/videos/fables/TBTC1.mp4" type="video/mp4">
+        </video>
+    </div>
     <div class="video-background">
         <video autoplay muted loop playsinline poster="/app/assets/videos/fables/TBTC1.mp4">
             <source src="/app/assets/videos/fables/TBTC1.mp4" type="video/mp4">
@@ -31,7 +40,16 @@
             <div id="burger-container"></div>
         </div>
         <div id="speak-container"></div>
+        <div id="speak-container"></div>
     </div> 
+    <div id="definition-container"></div>
+    <div class="content">
+        <p>One summer morning, a butterfly 
+            <span class="interactive-word"
+                onclick="showDefinition('Rested', 'res-ted', 'Synonym: Relaxed', 'Stopped for a while to regain energy.')">
+                rested
+            </span> 
+        on a beautiful rose</p>
     <div id="definition-container"></div>
     <div class="content">
         <p>One summer morning, a butterfly 
@@ -53,6 +71,8 @@
                     document.getElementById(elementId).innerHTML = data;
                     // After HTML is inserted, initialize the Javascript for buttons
                     // (This calls the function we defined in components.js)
+                    // After HTML is inserted, initialize the Javascript for buttons
+                    // (This calls the function we defined in components.js)
                     if (window.initializeComponents) {
                         window.initializeComponents();
                     }
@@ -61,9 +81,13 @@
         }
         // Load the files (Paths are relative to THIS file)
         // We go up one level (..) to 'pages', then into 'components'
+        // Load the files (Paths are relative to THIS file)
+        // We go up one level (..) to 'pages', then into 'components'
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
         loadComponent('speak-container', '../components/speak-button.html');
+
+        loadComponent('definition-container', '../components/definition-card.html');
 
         loadComponent('definition-container', '../components/definition-card.html');
     </script>
