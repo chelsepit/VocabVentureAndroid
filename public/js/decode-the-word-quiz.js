@@ -15,6 +15,11 @@ function getStoryId() {
     return parseInt(urlParams.get('story') || sessionStorage.getItem('quizStoryId')) || 1;
 }
 
+function getUserId() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  return currentUser?.id || parseInt(localStorage.getItem('lastUserId')) || 'guest';
+}
+
 async function loadQuizData() {
     const storyId = getStoryId();
     try {
@@ -30,7 +35,7 @@ async function loadQuizData() {
     }
 }
 
-function startDecodeWord() {
+window.startDecodeWord = function startDecodeWord() {
     document.getElementById('quizIntro').style.display    = 'none';
     document.getElementById('quizQuestion').style.display = 'block';
     loadQuestion(0);
@@ -49,7 +54,7 @@ function loadQuestion(index) {
     buttonsContainer.innerHTML = '';
     question.options.forEach((option, idx) => {
         const button = document.createElement('button');
-        button.className  = 'start-button';
+        button.className  = 'answer-btn start-button';
         button.textContent = `${String.fromCharCode(65 + idx)}. ${option}`;
         button.onclick    = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);

@@ -159,15 +159,15 @@ function createButtons(passed) {
     }
 }
 
-function exitToLibrary() {
+window.exitToLibrary = function exitToLibrary() {
     ['quiz1Results', 'quiz2Results', 'quizStoryId', 'completedStory'].forEach(k => sessionStorage.removeItem(k));
     window.location.href = 'library.html';
 }
 
-function reviewVocabulary() { window.location.href = `lets-review.html?story=${storyId}`; }
-function proceedToQuiz2()   { window.location.href = `decode-the-word.html?story=${storyId}`; }
+window.reviewVocabulary = function reviewVocabulary() { window.location.href = `lets-review.html?story=${storyId}`; }
+window.proceedToQuiz2 = function proceedToQuiz2()   { window.location.href = `decode-the-word.html?story=${storyId}`; }
 
-function retakeQuiz() {
+window.retakeQuiz = function retakeQuiz() {
     sessionStorage.removeItem(`quiz${currentQuizNumber}Results`);
     window.location.href = currentQuizNumber === 1
         ? `pick-a-word.html?story=${storyId}`

@@ -339,3 +339,8 @@ window.addEventListener('beforeunload', () => {
 
 // Initialize when page loads
 window.addEventListener('DOMContentLoaded', loadStoryData);
+window.goBackToResults = goBackToResults;
+window.nextWord = nextWord;
+window.previousWord = previousWord;
+window.playCurrentWordAudio = playCurrentWordAudio;
+window.loadStoryData = loadStoryData;

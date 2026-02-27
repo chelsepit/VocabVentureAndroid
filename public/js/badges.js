@@ -137,11 +137,11 @@ function showBadgeDetails(badge) {
     modal.addEventListener('click', (e) => { if (e.target === modal) closeBadgeModal(); });
 }
 
-function closeBadgeModal() {
+window.closeBadgeModal = function closeBadgeModal() {
     document.querySelector('.badge-modal')?.remove();
 }
 
-function goToLibrary() {
+window.goToLibrary = function goToLibrary() {
     window.location.href = 'library.html';
 }
 

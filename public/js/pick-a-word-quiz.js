@@ -30,7 +30,7 @@ async function loadQuizData() {
     }
 }
 
-function startPicAWord() {
+window.startPicAWord = function startPicAWord() {
     document.getElementById('quizIntro').style.display    = 'none';
     document.getElementById('quizQuestion').style.display = 'block';
     loadQuestion(0);

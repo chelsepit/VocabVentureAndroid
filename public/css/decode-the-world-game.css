@@ -293,7 +293,7 @@ body {
     .progress-comment {
         font-size: clamp(1.1rem, 3vw, 1.3rem);
     }
-}
+
 
 /* Landscape Short Screens */
 @media (max-height: 700px) and (orientation: landscape) {
