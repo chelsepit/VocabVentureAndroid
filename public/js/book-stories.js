@@ -2,7 +2,7 @@
 
 let currentVocabAudio = null; // Track vocabulary audio
 
-function showDefinition(word, phonetic, synonym, meaning, audioPath = '') {
+window.showDefinition = function showDefinition(word, phonetic, synonym, meaning, audioPath = '') {
     const card = document.getElementById('definition-card');
     const overlay = document.getElementById('overlay');
     
@@ -24,7 +24,7 @@ function showDefinition(word, phonetic, synonym, meaning, audioPath = '') {
     overlay.classList.add('active');
 }
 
-function hideDefinition() {
+window.hideDefinition = function hideDefinition() {
     const card = document.getElementById('definition-card');
     const overlay = document.getElementById('overlay');
     
@@ -36,7 +36,7 @@ function hideDefinition() {
     overlay.classList.remove('active');
 }
 
-function playAudio() {
+window.playAudio = function playAudio() {
     const card = document.getElementById('definition-card');
     const audioPath = card.getAttribute('data-audio-path');
     

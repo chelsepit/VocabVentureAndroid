@@ -33,7 +33,7 @@ function displayBronzeBadge() {
     }
 }
 
-function continueToGames() {
+window.continueToGames = function continueToGames() {
     if (completedStory) {
         sessionStorage.setItem('quizStoryId', completedStory.id);
         window.location.href = `pick-a-word.html?story=${completedStory.id}`;
