@@ -66,7 +66,7 @@ function loadQuestion(index) {
     question.options.forEach((option, idx) => {
         const button = document.createElement('button');
         button.className  = 'start-button';
-        button.textContent = `${String.fromCharCode(65 + idx)}. ${option}`;
+        button.textContent = `${option}`;
         button.onclick    = () => checkAnswer(idx);
         buttonsContainer.appendChild(button);
     });

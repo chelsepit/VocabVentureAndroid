@@ -17,6 +17,7 @@
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -39,6 +40,7 @@
                 .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
     </script>

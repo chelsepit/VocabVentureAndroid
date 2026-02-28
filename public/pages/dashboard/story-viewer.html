@@ -22,6 +22,7 @@
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -52,14 +53,21 @@
                 .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
+
         // Track when resume modal is ready
         window.resumeModalReady = new Promise(resolve => {
             window._resolveResumeModal = resolve;
         });
-        loadComponent('settings-container', '../components/settings-menu.html');
-        loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('speak-container', '../components/speak-button.html');
+
+        // ✅ FIX: was loadComponent('home', ...) — no element with id="home" exists in this page.
+        //         The actual container is id="home-container", so the fetched HTML was
+        //         silently discarded (getElementById returned null) and the button never appeared.
+        loadComponent('home-container',       '../components/home-button.html');
+        loadComponent('settings-container',   '../components/settings-menu.html');
+        loadComponent('burger-container',     '../components/burger-nav.html');
+        loadComponent('speak-container',      '../components/speak-button.html');
         loadComponent('definition-container', '../components/definition-card.html');
+
         // Load resume modal and resolve the promise when done
         fetch('../components/resume-modal.html')
             .then(r => r.text())

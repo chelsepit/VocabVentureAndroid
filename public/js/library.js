@@ -1,5 +1,7 @@
 // library.js - Library Page with Search
-// Uses bridge.js instead of ipcRenderer — works on Electron AND Android.
+// Fixed for Capacitor/Android: replaced bridge.invoke → db calls
+
+import { db } from './db/db-interface.js';   // ✅ FIX #1 & #2: Import db (was missing entirely)
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 if (!currentUser) window.location.href = '../auth/login.html';
@@ -20,16 +22,18 @@ function calculateProgressPercentage(status) {
     return Math.round(progress);
 }
 
+function getTotalSegments(storyId) {
+    const segments = { 1: 13, 2: 14, 3: 10 };
+    return segments[storyId] || 14;
+}
+
 async function loadProgress() {
     try {
         for (let storyId = 1; storyId <= 30; storyId++) {
             try {
                 const totalSegments = getTotalSegments(storyId);
-                const status = await bridge.invoke('story:getCompletionStatus', {
-                    userId: currentUser.id,
-                    storyId,
-                    totalSegments
-                });
+                // ✅ FIX #1: Was bridge.invoke('story:getCompletionStatus', ...) — doesn't exist on Android
+                const status = await db.getStoryCompletionStatus(currentUser.id, storyId, totalSegments);
                 userProgressData[storyId] = calculateProgressPercentage(status);
             } catch (_) {
                 userProgressData[storyId] = 0;
@@ -54,11 +58,6 @@ function applyProgressBars() {
     });
 }
 
-function getTotalSegments(storyId) {
-    const segments = { 1: 13, 2: 14, 3: 10 };
-    return segments[storyId] || 14;
-}
-
 // ── Genre filtering & search ─────────────────────────────────────────────────
 
 (() => {
@@ -68,14 +67,25 @@ function getTotalSegments(storyId) {
 
     if (!libraryContainer) { console.error('libraryContent container not found'); return; }
 
-    fetch(DATA_PATH)
-        .then(res => { if (!res.ok) throw new Error('Failed to fetch stories index'); return res.json(); })
-        .then(data => {
-            allStories = data.stories;
-            renderLibrary(allStories.filter(s => s.genre === 'folktales'));
-            loadProgress();
-        })
-        .catch(err => console.error('Failed to load stories:', err));
+    // ✅ FIX #3: Wait for db:ready before loading progress so DB is initialized first
+    function startApp() {
+        fetch(DATA_PATH)
+            .then(res => { if (!res.ok) throw new Error('Failed to fetch stories index'); return res.json(); })
+            .then(data => {
+                allStories = data.stories;
+                renderLibrary(allStories.filter(s => s.genre === 'folktales'));
+                loadProgress(); // DB is guaranteed ready at this point
+            })
+            .catch(err => console.error('Failed to load stories:', err));
+    }
+
+    if (window.__dbReady) {
+        // DB already initialized (e.g. fast device or web)
+        startApp();
+    } else {
+        // Wait for app-init.js to signal DB is ready
+        document.addEventListener('db:ready', startApp, { once: true });
+    }
 
     function renderLibrary(stories) {
         libraryContainer.innerHTML = '';
@@ -106,6 +116,7 @@ function getTotalSegments(storyId) {
         });
 
         attachBookClicks();
+        // ✅ Apply any already-loaded progress immediately after re-render
         applyProgressBars();
     }
 
@@ -175,11 +186,8 @@ function performSearch(query) {
 
 async function resumeToCorrectPage(storyId, userId) {
     try {
-        const status = await bridge.invoke('story:getCompletionStatus', {
-            userId,
-            storyId,
-            totalSegments: getTotalSegments(storyId)
-        });
+        // ✅ FIX #1: Was bridge.invoke('story:getCompletionStatus', ...) — doesn't exist on Android
+        const status = await db.getStoryCompletionStatus(userId, storyId, getTotalSegments(storyId));
 
         if (!status.storyCompleted) {
             window.location.href = `story-viewer.html?id=${storyId}`;

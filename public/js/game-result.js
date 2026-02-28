@@ -31,7 +31,7 @@ function loadResults() {
 async function displayResults() {
     const score = quizResults.score;
     const total = quizResults.total;
-    const passedQuiz = score >= 4;
+    const passedQuiz = score === total;
 
     document.getElementById('scoreDisplay').textContent = `${score}/${total}`;
 

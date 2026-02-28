@@ -1,6 +1,7 @@
 // story-viewer.js — Capacitor/Android version
-// REMOVED: const { ipcRenderer } = require('electron') (in saveLastViewedSegment & markSegmentAsCompleted)
+// REMOVED: const { ipcRenderer } = require('electron')
 // REPLACED: ipcRenderer.invoke → direct db calls
+// FIXED: wait for db:ready before initStoryViewer so SQLite is ready on Android
 
 import { db } from './db/db-interface.js';
 
@@ -151,7 +152,6 @@ function loadSegment(index) {
     storyTextElement.style.transition = 'none';
     storyTextElement.style.animation = 'none';
 
-    // Video handling — unchanged from Electron version
     const video = document.getElementById('storyVideo');
     if (video) {
         const source = video.querySelector('source');
@@ -302,12 +302,22 @@ function showCompletionScreen() {
     window.location.href = `finish-book.html?story=${storyId}`;
 }
 
+// ✅ FIX: Single DOMContentLoaded handler (was split across two listeners)
+// Also waits for db:ready before calling initStoryViewer so SQLite is
+// guaranteed initialized on Android before any db.save* calls fire.
 document.addEventListener('DOMContentLoaded', () => {
+    // Stop audio when voice selection changes
     setTimeout(() => {
         document.getElementById('boyVoice')?.addEventListener('click',  () => stopCurrentAudio());
         document.getElementById('girlVoice')?.addEventListener('click', () => stopCurrentAudio());
     }, 500);
+
+    // ✅ FIX: Wait for DB before starting the viewer
+    if (window.__dbReady) {
+        initStoryViewer();
+    } else {
+        document.addEventListener('db:ready', () => initStoryViewer(), { once: true });
+    }
 });
 
 window.addEventListener('beforeunload', () => stopCurrentAudio());
-window.addEventListener('DOMContentLoaded', initStoryViewer);
