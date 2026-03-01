@@ -24,6 +24,7 @@ body {
     position: relative;
     min-height: 100vh;
     width: 100%;
+    background-color: #4a7a2a; /* ⚡ instant green while image loads */
     background-image: url('../assets/images/backgrounds/library-bg.png');
     background-repeat: no-repeat;
     background-position: center center;

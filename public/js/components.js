@@ -42,6 +42,22 @@ function init() {
     const settingsMenu = document.getElementById('settingsMenu');
     const burgerBtn = document.getElementById('burgerBtn');
     const burgerMenu = document.getElementById('burgerMenu');
+    // ⚡ Preload library bg and block navigation until ready
+const homeBtn = document.getElementById('homeBtn');
+if (homeBtn) {
+    const img = new Image();
+    img.src = '../../assets/images/backgrounds/library-bg.png';
+    
+    homeBtn.addEventListener('click', async (e) => {
+        if (img.complete) return; // already loaded, navigate immediately
+        e.preventDefault();
+        await new Promise(resolve => {
+            img.onload = resolve;
+            setTimeout(resolve, 3000); // max wait 3s
+        });
+        window.location.href = homeBtn.href;
+    });
+}
     
     // Skip if no components found
     if (!settingsBtn && !burgerBtn) {
