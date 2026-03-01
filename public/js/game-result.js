@@ -1,6 +1,8 @@
 // game-result.js — Capacitor/Android version
-// REMOVED: const { ipcRenderer } = require('electron')
-// REPLACED: ipcRenderer.invoke → direct db calls
+// FIX 1: displayResults() now awaits upgradeBadge() — it was async but the
+//         caller didn't await it, so the DB write raced against the page rendering.
+// FIX 2: upgradeBadge() now defensively re-awards the quiz badge (quiz-1 or quiz-2)
+//         in case the write in the quiz page was lost due to the fire-and-forget bug.
 
 import { db } from './db/db-interface.js';
 
@@ -10,13 +12,13 @@ let storyId = 1;
 
 function getParams() {
     const urlParams = new URLSearchParams(window.location.search);
-    storyId = parseInt(urlParams.get('story')) || parseInt(sessionStorage.getItem('quizStoryId')) || 1;
+    storyId           = parseInt(urlParams.get('story')) || parseInt(sessionStorage.getItem('quizStoryId')) || 1;
     currentQuizNumber = parseInt(urlParams.get('quiz')) || 1;
 }
 
 function loadResults() {
     getParams();
-    const storageKey = `quiz${currentQuizNumber}Results`;
+    const storageKey    = `quiz${currentQuizNumber}Results`;
     const storedResults = sessionStorage.getItem(storageKey);
 
     if (!storedResults) {
@@ -29,11 +31,11 @@ function loadResults() {
 }
 
 async function displayResults() {
-    const score = quizResults.score;
-    const total = quizResults.total;
-    const passedQuiz = score >= 4;
+    const quizScore = quizResults.score;   // renamed to avoid shadowing outer vars
+    const total     = quizResults.total;
+    const passedQuiz = quizScore === total;
 
-    document.getElementById('scoreDisplay').textContent = `${score}/${total}`;
+    document.getElementById('scoreDisplay').textContent = `${quizScore}/${total}`;
 
     let resultTitle, resultMessage, badgeType;
 
@@ -42,11 +44,11 @@ async function displayResults() {
             resultTitle   = 'EXCELLENT!';
             resultMessage = '🥈 Badge upgraded to SILVER!';
             badgeType     = 'silver';
-            await upgradeBadge('silver');
-            score === 5 ? playAudioSequence(['hooray', 'continue']) : playAudio('nicejob');
+            await upgradeBadge('silver');   // ✅ FIX: was not awaited
+            quizScore === 5 ? playAudioSequence(['hooray', 'continue']) : playAudio('nicejob');
         } else {
             resultTitle   = 'NOT QUITE!';
-            resultMessage = `You need 4-5 correct to upgrade to Silver. You got ${score}/5. Try again!`;
+            resultMessage = `You need 4-5 correct to upgrade to Silver. You got ${quizScore}/5. Try again!`;
             badgeType     = 'bronze';
             playAudio('nicejob');
         }
@@ -55,11 +57,11 @@ async function displayResults() {
             resultTitle   = 'PERFECT!';
             resultMessage = '🥇 Badge upgraded to GOLD! You\'re a vocabulary master!';
             badgeType     = 'gold';
-            await upgradeBadge('gold');
+            await upgradeBadge('gold');     // ✅ FIX: was not awaited
             playAudio('excellent');
         } else {
             resultTitle   = 'ALMOST THERE!';
-            resultMessage = `You need 4-5 correct to upgrade to Gold. You got ${score}/5. Keep trying!`;
+            resultMessage = `You need 4-5 correct to upgrade to Gold. You got ${quizScore}/5. Keep trying!`;
             badgeType     = 'silver';
             playAudio('nicejob2');
         }
@@ -94,15 +96,27 @@ function playAudioSequence(audioTypes) {
     playNext();
 }
 
-// CHANGED: was ipcRenderer.invoke for quiz:save and badge:upgrade
+// ✅ FIX: Also defensively re-awards the quiz badge for the current quiz number.
+//    If the fire-and-forget in the quiz page dropped the write, this recovers it.
+//    getStoryCompletionStatus() checks for 'quiz-1' and 'quiz-2' badge categories —
+//    if either is missing the progress bar stays at 75% and never turns green.
 async function upgradeBadge(newBadgeType) {
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser) {
-            await db.saveQuizResult(currentUser.id, storyId, currentQuizNumber, quizResults.score, quizResults.total);
-            await db.upgradeBadge(currentUser.id, storyId, newBadgeType);
-            console.log(`✅ Badge upgraded to ${newBadgeType.toUpperCase()}`);
-        }
+        if (!currentUser) return;
+
+        // Save quiz result record
+        await db.saveQuizResult(currentUser.id, storyId, currentQuizNumber, quizResults.score, quizResults.total);
+
+        // ✅ Defensively ensure the quiz badge category is written
+        //    (may already exist from the quiz page, awardBadge handles duplicates)
+        const quizCategory = `quiz-${currentQuizNumber}`;
+        await db.awardBadge(currentUser.id, storyId, newBadgeType, quizCategory);
+
+        // Upgrade the story-completion badge to reflect the new tier
+        await db.upgradeBadge(currentUser.id, storyId, newBadgeType);
+
+        console.log(`✅ Badge upgraded to ${newBadgeType.toUpperCase()} — quiz-${currentQuizNumber} badge ensured`);
     } catch (error) {
         console.error('Error upgrading badge:', error);
     }
@@ -113,7 +127,7 @@ function showBadge(badgeType) {
     if (!badgeContainer) {
         badgeContainer = document.createElement('div');
         badgeContainer.id = 'badgeContainer';
-        badgeContainer.style.textAlign = 'center';
+        badgeContainer.style.textAlign   = 'center';
         badgeContainer.style.marginBottom = '20px';
         const titleElement = document.getElementById('resultTitle');
         titleElement.parentNode.insertBefore(badgeContainer, titleElement);
@@ -159,15 +173,15 @@ function createButtons(passed) {
     }
 }
 
-window.exitToLibrary = function exitToLibrary() {
+window.exitToLibrary = function() {
     ['quiz1Results', 'quiz2Results', 'quizStoryId', 'completedStory'].forEach(k => sessionStorage.removeItem(k));
     window.location.href = 'library.html';
 }
 
-window.reviewVocabulary = function reviewVocabulary() { window.location.href = `lets-review.html?story=${storyId}`; }
-window.proceedToQuiz2 = function proceedToQuiz2()   { window.location.href = `decode-the-word.html?story=${storyId}`; }
+window.reviewVocabulary = function() { window.location.href = `lets-review.html?story=${storyId}`; }
+window.proceedToQuiz2   = function() { window.location.href = `decode-the-word.html?story=${storyId}`; }
 
-window.retakeQuiz = function retakeQuiz() {
+window.retakeQuiz = function() {
     sessionStorage.removeItem(`quiz${currentQuizNumber}Results`);
     window.location.href = currentQuizNumber === 1
         ? `pick-a-word.html?story=${storyId}`

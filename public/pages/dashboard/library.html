@@ -53,6 +53,10 @@
             </div>
         </div>
 
+        <!-- ✅ FIX #4: Removed loadComponent('libraryContent', ...) below.
+             That call was loading selected-genre.html INTO this div,
+             overwriting whatever library.js rendered. libraryContent
+             is populated entirely by library.js — no component needed. -->
         <div class="library-content-wrapper" id="libraryContent"></div>
     </div>
 
@@ -64,17 +68,15 @@
                 .catch(err => console.error('Error loading component:', err));
         }
 
-        // Load the files (Paths are relative to THIS file)
-        // We go up one level (..) to 'pages', then into 'components'
-        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-        loadComponent('libraryContent', '../components/selected-genre.html');
+        // ✅ REMOVED: loadComponent('libraryContent', '../components/selected-genre.html');
+        // ✅ REMOVED: loadComponent('home-container', ...) — element doesn't exist in this HTML
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/components.js"></script>
-    <script type="module" src="../../js/dashboard-music.js"></script><!-- ⭐ ADDED: Background music -->
+    <script type="module" src="../../js/dashboard-music.js"></script>
     <script type="module" src="../../js/library.js"></script>
 </body>
 </html>

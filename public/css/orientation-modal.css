@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════════════
+   ORIENTATION MODALS — VocabVenture
+   Used on: story-viewer.html (landscape prompt)
+            finish-book.html  (portrait reminder)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Shared backdrop ───────────────────────────────────── */
+.orient-overlay {
+    position: fixed;
+    inset: 0;                          /* top/right/bottom/left: 0 */
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    /* Start hidden — JS adds .orient-overlay--visible to show */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.orient-overlay--visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── Modal card ────────────────────────────────────────── */
+.orient-modal {
+    background: #fff;
+    border-radius: clamp(18px, 4vw, 28px);
+    padding: clamp(28px, 6vw, 44px) clamp(24px, 5vw, 40px);
+    max-width: clamp(280px, 88vw, 420px);
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+
+    /* Pop-in animation */
+    transform: scale(0.88);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.orient-overlay--visible .orient-modal {
+    transform: scale(1);
+}
+
+/* ── Rotate icon ───────────────────────────────────────── */
+.orient-modal__icon {
+    font-size: clamp(3rem, 12vw, 5rem);
+    margin-bottom: clamp(12px, 3vw, 18px);
+    display: block;
+    line-height: 1;
+
+    /* Gentle rotation hint animation */
+    animation: orientRotateHint 2.2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes orientRotateHint {
+    0%, 100% { transform: rotate(0deg);   }
+    30%       { transform: rotate(-25deg); }
+    60%       { transform: rotate(25deg);  }
+    80%       { transform: rotate(-10deg); }
+}
+
+/* Portrait icon doesn't rotate */
+.orient-modal__icon--portrait {
+    animation: none;
+}
+
+/* ── Heading ───────────────────────────────────────────── */
+.orient-modal__title {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(1.3rem, 4.5vw, 1.8rem);
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: clamp(8px, 2vw, 12px);
+    line-height: 1.25;
+}
+
+/* ── Body text ─────────────────────────────────────────── */
+.orient-modal__body {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.95rem, 3.2vw, 1.15rem);
+    color: #555;
+    line-height: 1.55;
+    margin-bottom: clamp(20px, 5vw, 30px);
+}
+
+/* ── Primary action button ─────────────────────────────── */
+.orient-modal__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
+    padding: clamp(13px, 3vw, 17px) clamp(20px, 5vw, 32px);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.4px;
+
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    box-shadow: 0 6px 0 #E65100, 0 10px 20px rgba(0, 0, 0, 0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    min-height: 52px;  /* comfortable touch target */
+}
+
+.orient-modal__btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #E65100, 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Portrait variant — blue button */
+.orient-modal__btn--portrait {
+    background: linear-gradient(180deg, #42A5F5 0%, #1976D2 100%);
+    box-shadow: 0 6px 0 #0D47A1, 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.orient-modal__btn--portrait:active {
+    box-shadow: 0 2px 0 #0D47A1, 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Already-in-correct-orientation state ──────────────── */
+/* Small note shown below button when device is already landscape/portrait */
+.orient-modal__note {
+    margin-top: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.78rem, 2.5vw, 0.9rem);
+    color: #888;
+    font-style: italic;
+}
