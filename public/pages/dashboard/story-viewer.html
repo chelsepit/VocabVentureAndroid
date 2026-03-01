@@ -12,32 +12,27 @@
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/book-stories.css">
     <link rel="stylesheet" href="../../css/font.css">
- 
 </head>
 <body>
 
     <!-- ══════════════════════════════════════════════════════
          RESUME MODAL — inlined to avoid fetch/race conditions
-         on Capacitor Android WebView. Previously loaded via
-         fetch('../components/resume-modal.html') which was
-         silently failing or resolving before DOM was ready.
+         on Capacitor Android WebView.
+         NOTE: NO onclick="" attributes — buttons are wired
+         via addEventListener in story-viewer.js after the
+         module loads to avoid "not defined" errors.
     ═══════════════════════════════════════════════════════ -->
-    <div id="resumeModalOverlay" class="modal-overlay hidden" onclick="handleResumeModalOverlayClick(event)">
+    <div id="resumeModalOverlay" class="modal-overlay hidden">
         <div class="resume-modal" onclick="event.stopPropagation()">
             <h2 class="modal-title">Welcome Back!</h2>
             <p class="modal-desc">Do you want to continue where you left off, or start from the beginning?</p>
             <div class="modal-buttons">
-                <button class="modal-btn btn-restart" onclick="startOver()">
-                    Start Over
-                </button>
-                <button class="modal-btn btn-continue" onclick="continueGame()">
-                    Continue
-                </button>
+                <button class="modal-btn btn-restart">Start Over</button>
+                <button class="modal-btn btn-continue">Continue</button>
             </div>
         </div>
     </div>
 
-   
     <!-- ══════════════════════════════════════════════════════
          VIDEO BACKGROUND
     ═══════════════════════════════════════════════════════ -->
@@ -69,7 +64,7 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════
-         NAV BUTTONS  (inline styles removed — see book-stories.css)
+         NAV BUTTONS
     ═══════════════════════════════════════════════════════ -->
     <div class="nav-btn-container">
         <button id="prevBtn" class="nav-btn">← Previous</button>
