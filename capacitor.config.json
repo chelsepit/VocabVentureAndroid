@@ -9,6 +9,7 @@
     "CapacitorSQLite": {
       "androidIsEncryption": false,
       "androidDatabaseLocation": "default"
-    }
+    },
+    "ScreenOrientation": {}
   }
 }

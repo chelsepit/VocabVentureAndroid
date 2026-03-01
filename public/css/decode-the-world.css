@@ -148,11 +148,11 @@
 /* LONG ANSWER BUTTONS (For Quiz) */
 .answer-btn {
     width: 100%; 
-    padding: clamp(9px, 3vw, 15px) clamp(9px, 3vw, 12px);
+    padding: clamp(9px, 1.2vw, 12px) clamp(12px, 2vw, 18px);
     
     font-family: 'Baloo 2', cursive;
     font-weight: 800;
-    font-size: clamp(1.0rem, 3.5vw, 1.2rem);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     text-transform: lowercase;
     letter-spacing: 0.5px;
     color: white;
@@ -166,7 +166,7 @@
     background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
     box-shadow: 0 6px 0 #E65100, 0 10px 15px rgba(0,0,0,0.2);
     transition: all 0.1s ease;
-    min-height: 44px;
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;

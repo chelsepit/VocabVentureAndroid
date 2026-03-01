@@ -1,7 +1,10 @@
 /* ========================================
    BOOK/STORY PAGES - Mobile-First Responsive
-   REFACTORED FOR FULL MOBILE APP RESPONSIVENESS
-   With Responsive Video Handling
+   FIXES:
+   1. Video no longer overlaps/clips on Android portrait
+   2. Settings button visible (same size as burger)
+   3. Prev/Next buttons smaller and responsive
+   4. Content card repositioned to not fight video
    ======================================== */
 
 * {
@@ -17,7 +20,11 @@ html, body {
 }
 
 /* ========================================
-   RESPONSIVE VIDEO BACKGROUND
+   VIDEO BACKGROUND
+   FIX: Removed aspect-ratio: 16/9 and min-width/min-height
+        which were forcing the video to grow beyond the screen
+        on portrait Android phones, causing clipping.
+        Now uses object-fit: cover cleanly without forcing size.
    ======================================== */
 
 .video-background {
@@ -36,17 +43,73 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    /* FIX: Use percentage dimensions without forcing aspect ratio.
+       object-fit: cover handles filling the frame correctly on all orientations. */
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;
-    aspect-ratio: 16 / 9;
-    min-width: 100%;
-    min-height: 100%;
+
+    /* FIX: Removed aspect-ratio: 16/9, min-width: 100%, min-height: 100%
+       These three properties combined were forcing the video element to
+       calculate a size larger than the viewport, causing overflow/clipping. */
 }
 
 /* ========================================
-   CONTENT OVERLAY (Mobile-First)
+   COMPONENT BAR (home / settings / burger)
+   FIX: Explicit icon sizes so settings button
+        matches burger button on Android.
+   ======================================== */
+
+.components {
+    position: fixed;
+    top: clamp(14px, 3vw, 18px);
+    left: clamp(14px, 3vw, 18px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 10px);
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 10px);
+}
+
+/* FIX: Force all icon containers in the left-group to the same size.
+   Previously settings-container had no dimensions so it collapsed on Android. */
+#home-container,
+#settings-container,
+#burger-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Size matches the burger icon — clamp ensures it's tappable on small screens */
+    width: clamp(36px, 8vw, 48px);
+    height: clamp(36px, 8vw, 48px);
+    flex-shrink: 0;
+}
+
+/* Ensure any img or button inside the containers scales to fill */
+#home-container img,
+#settings-container img,
+#burger-container img,
+#home-container button,
+#settings-container button,
+#burger-container button {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+/* ========================================
+   CONTENT OVERLAY
+   FIX: Pushed down slightly so it doesn't
+        eat into the top nav area, and given
+        a tighter max-height so it doesn't
+        crowd the nav buttons at the bottom.
    ======================================== */
 
 .content {
@@ -55,22 +118,29 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
-    background-color: rgba(255, 255, 255, 0.85);
+
+    background-color: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(8px);
     color: #000000;
     font-family: 'Nunito', sans-serif;
-    width: clamp(92%, 95vw, 98%);
-    max-width: 1000px;
-    padding: clamp(16px, 4vw, 40px);
-    font-size: clamp(1.6rem, 5.5vw, 3rem);
-    border-radius: clamp(18px, 4vw, 24px);
+
+    width: clamp(88%, 92vw, 96%);
+    max-width: 900px;
+
+    /* FIX: Tighter max-height — leaves room for nav buttons (≈90px) at bottom
+       and component bar (≈60px) at top, preventing content from overlapping both. */
+    max-height: clamp(55vh, 62vh, 65vh);
+    overflow-y: auto;
+
+    padding: clamp(14px, 3.5vw, 32px);
+    font-size: clamp(1.3rem, 4.5vw, 2.4rem);
+    border-radius: clamp(16px, 4vw, 24px);
     text-align: center;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    line-height: 1.8;
-    max-height: clamp(85vh, 80vh, 80vh);
-    overflow-y: auto;
-    opacity: 0;  
-    transition: opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);  
+    line-height: 1.7;
+
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .content h1,
@@ -78,13 +148,13 @@ html, body {
 .content h3 {
     font-family: 'Baloo 2', cursive;
     font-weight: 800;
-    margin-bottom: clamp(10px, 2.5vw, 12px);
-    font-size: clamp(1.8rem, 6.5vw, 3.6rem);
+    margin-bottom: clamp(8px, 2vw, 12px);
+    font-size: clamp(1.5rem, 5.5vw, 3rem);
 }
 
 .content p {
-    margin-bottom: clamp(10px, 2.5vw, 12px);
-    font-size: clamp(1.6rem, 5.5vw, 3rem);
+    margin-bottom: clamp(8px, 2vw, 12px);
+    font-size: clamp(1.3rem, 4.5vw, 2.4rem);
 }
 
 .content p:last-child {
@@ -92,207 +162,78 @@ html, body {
 }
 
 /* ========================================
-   RESPONSIVE VIDEO ASPECT RATIO HANDLING
+   NAVIGATION BUTTONS
+   FIX: Removed all inline styles from HTML.
+        Buttons are now smaller and fully
+        responsive via CSS only.
    ======================================== */
 
-@media (aspect-ratio: 16/9) {
-    .video-background video {
-        width: 100%;
-        height: auto;
-    }
+/* Wrapper — centered at bottom, above the safe area */
+.nav-btn-container {
+    position: fixed;
+    bottom: clamp(16px, 4vh, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    gap: clamp(10px, 3vw, 20px);
+    align-items: center;
 }
 
-@media (max-aspect-ratio: 16/9) {
-    .video-background video {
-        width: auto;
-        height: 100%;
-    }
+.nav-btn {
+    /* FIX: Smaller padding — was clamp(10px…18px) × clamp(20px…36px),
+       now reduced by ~30% so buttons feel proportional on a phone screen. */
+    padding: clamp(7px, 1.8vw, 12px) clamp(14px, 3.5vw, 24px);
+    background: rgba(255, 255, 255, 0.92);
+    border: 2px solid #FF6B35;
+    border-radius: clamp(10px, 2vw, 14px);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: clamp(0.85rem, 2.8vw, 1.2rem);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 40px;       /* still tappable on Android */
+    min-width: 90px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-@media (min-aspect-ratio: 16/9) {
-    .video-background video {
-        width: 100%;
-        height: auto;
-    }
+.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+#nextBtn {
+    background: #FFD93D;
+    border-color: #e6b800;
 }
 
 /* ========================================
-   RESPONSIVE BREAKPOINTS
+   PROGRESS INDICATOR
    ======================================== */
 
-/* Small Mobile: 320px - 480px */
-@media (max-width: 480px) {
-    .content {
-        width: 94%;
-        padding: clamp(14px, 3.5vw, 18px);
-        border-radius: 16px;
-        font-size: clamp(1.4rem, 5vw, 2rem);
-        max-height: 88vh;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 8px;
-        font-size: clamp(1.6rem, 6vw, 2.2rem);
-    }
-    
-    .content p {
-        margin-bottom: 8px;
-        font-size: clamp(1.4rem, 5vw, 2rem);
-        line-height: 1.6;
-    }
-}
-
-/* Large Mobile: 481px - 767px */
-@media (min-width: 481px) {
-    .content {
-        max-width: 700px;
-        padding: clamp(20px, 4vw, 24px);
-        border-radius: 24px;
-        font-size: clamp(2rem, 5.5vw, 2.4rem);
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 12px;
-        font-size: clamp(2.2rem, 6vw, 2.8rem);
-    }
-    
-    .content p {
-        margin-bottom: 12px;
-        font-size: clamp(2rem, 5.5vw, 2.4rem);
-    }
-}
-
-/* Tablet Portrait: 768px - 1023px */
-@media (min-width: 768px) {
-    .content {
-        width: 95%;
-        max-width: 800px;
-        padding: 24px;
-        border-radius: 28px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-        max-height: 78vh;
-        font-size: 2.6rem;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 14px;
-        font-size: 3.2rem;
-    }
-    
-    .content p {
-        margin-bottom: 12px;
-        line-height: 1.7;
-        font-size: 2.6rem;
-    }
-}
-
-/* Tablet Landscape: 1024px - 1279px */
-@media (min-width: 1024px) {
-    .content {
-        max-width: 700px;
-        padding: 28px;
-        border-radius: 32px;
-        font-size: 2.8rem;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 16px;
-        font-size: 3.4rem;
-    }
-    
-    .content p {
-        margin-bottom: 14px;
-        font-size: 2.8rem;
-    }
-}
-
-/* Laptop: 1280px - 1439px */
-@media (min-width: 1280px) {
-    .content {
-        max-width: 1100px;
-        padding: 36px;
-        border-radius: 36px;
-        font-size: 3rem;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 18px;
-        font-size: 3.6rem;
-    }
-    
-    .content p {
-        margin-bottom: 14px;
-        line-height: 1.8;
-        font-size: 3rem;
-    }
-}
-
-/* Desktop: 1440px+ */
-@media (min-width: 1440px) {
-    .content {
-        max-width: 1200px;
-        padding: 44px;
-        font-size: 3.2rem;
-    }
-    
-    .content h1,
-    .content h2 {
-        font-size: 3.8rem;
-    }
-    
-    .content p {
-        font-size: 3.2rem;
-    }
-}
-
-/* ========================================
-   LANDSCAPE MODE OPTIMIZATION
-   ======================================== */
-
-@media (max-height: 700px) and (orientation: landscape) {
-    .content {
-        max-height: 92vh;
-        padding: clamp(12px, 2.5vw, 18px) clamp(18px, 3.5vw, 24px);
-        font-size: clamp(1.6rem, 4vw, 2rem);
-        width: 96%;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 8px;
-        font-size: clamp(1.8rem, 5vw, 2.4rem);
-    }
-    
-    .content p {
-        margin-bottom: 8px;
-        line-height: 1.5;
-        font-size: clamp(1.6rem, 4vw, 2rem);
-    }
-}
-
-@media (max-height: 500px) and (orientation: landscape) {
-    .content {
-        padding: 10px 16px;
-        max-height: 94vh;
-        font-size: 1.4rem;
-    }
-    
-    .content h1,
-    .content h2 {
-        margin-bottom: 6px;
-        font-size: 1.8rem;
-    }
-    
-    .content p {
-        margin-bottom: 6px;
-        line-height: 1.4;
-        font-size: 1.4rem;
-    }
+.progress-indicator {
+    opacity: 0;
+    position: fixed;
+    top: clamp(70px, 13vh, 90px);
+    right: clamp(14px, 4vw, 24px);
+    background: rgba(255, 255, 255, 0.92);
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 18px);
+    border-radius: clamp(10px, 2vw, 14px);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    color: #6e4324;
+    font-size: clamp(0.7rem, 2.2vw, 0.95rem);
 }
 
 /* ========================================
@@ -300,65 +241,34 @@ html, body {
    ======================================== */
 
 @keyframes gentleFloat {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
 }
 
 @keyframes subtleBounce {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-5px);
-    }
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-5px); }
 }
 
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes waveIn {
-    0% {
-        opacity: 0;
-        transform: translateY(50px) scale(0.9) rotateX(20deg);
-    }
-    50% {
-        opacity: 0.8;
-        transform: translateY(-10px) scale(1.02) rotateX(-5deg);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotateX(0deg);
-    }
+    0%   { opacity: 0; transform: translateY(50px) scale(0.9) rotateX(20deg); }
+    50%  { opacity: 0.8; transform: translateY(-10px) scale(1.02) rotateX(-5deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
 }
 
 @keyframes breathe {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.01);
-    }
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.01); }
 }
 
 @keyframes textGlow {
-    0%, 100% {
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    50% {
-        text-shadow: 0 2px 20px rgba(255, 215, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+    0%, 100% { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+    50%       { text-shadow: 0 2px 20px rgba(255, 215, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1); }
 }
 
 #storyText {
@@ -393,75 +303,229 @@ html, body {
     width: 100%;
 }
 
-.gentle-float {
-    animation: gentleFloat 3s ease-in-out infinite;
-}
+.gentle-float  { animation: gentleFloat 3s ease-in-out infinite; }
+.subtle-bounce { animation: subtleBounce 2s ease-in-out infinite; }
+.breathe-effect{ animation: breathe 4s ease-in-out infinite; }
+.wave-in       { animation: waveIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards; }
+.text-glow     { animation: textGlow 2s ease-in-out infinite; }
 
-.subtle-bounce {
-    animation: subtleBounce 2s ease-in-out infinite;
-}
+/* ========================================
+   PORTRAIT — small phones (≤ 480px wide)
+   ======================================== */
 
-.breathe-effect {
-    animation: breathe 4s ease-in-out infinite;
-}
+@media (max-width: 480px) {
+    .content {
+        width: 92%;
+        padding: clamp(12px, 3vw, 16px);
+        border-radius: 14px;
+        font-size: clamp(1.2rem, 4.5vw, 1.7rem);
+        /* FIX: On small portrait phones the content card was too tall.
+           Capped at 58vh so there's always space for the nav buttons below. */
+        max-height: 58vh;
+    }
 
-.wave-in {
-    animation: waveIn 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-}
+    .content h1,
+    .content h2 {
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
+        margin-bottom: 6px;
+    }
 
-.text-glow {
-    animation: textGlow 2s ease-in-out infinite;
+    .content p {
+        font-size: clamp(1.2rem, 4.5vw, 1.7rem);
+        line-height: 1.6;
+        margin-bottom: 6px;
+    }
+
+    .nav-btn {
+        font-size: clamp(0.8rem, 3vw, 1rem);
+        padding: 8px 14px;
+        min-width: 80px;
+        min-height: 38px;
+    }
+
+    .progress-indicator {
+        font-size: clamp(0.65rem, 2vw, 0.8rem);
+        padding: 7px 10px;
+    }
 }
 
 /* ========================================
-   NAVIGATION BUTTONS
+   LANDSCAPE — all orientations (FIX: ensure buttons match across all landscape)
+   FIX: In landscape the video is wide but short.
+        Content card shrinks, nav buttons go smaller,
+        settings/burger stay visible.
    ======================================== */
 
-.nav-btn {
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #FF6B35;
-    padding: clamp(10px, 2.5vw, 18px) clamp(20px, 4.5vw, 36px);
-    border-radius: clamp(12px, 2.5vw, 15px);
-    font-weight: bold;
-    cursor: pointer;
-    font-size: clamp(1.1rem, 4vw, 1.8rem);
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 44px;
+@media (orientation: landscape) {
+    #home-container,
+    #settings-container,
+    #burger-container {
+        width: clamp(32px, 7vw, 40px);
+        height: clamp(32px, 7vw, 40px);
+    }
+    
+    /* FIX: Speaker button 2x bigger */
+    #speak-container {
+        width: clamp(64px, 14vw, 80px);
+        height: clamp(64px, 14vw, 80px);
+    }
+    
+    /* FIX: Override button sizes from components.css in landscape */
+    #home-container .home-button,
+    #settings-container .settings-button,
+    #burger-container .burger-button {
+        width: clamp(32px, 7vw, 40px) !important;
+        height: clamp(32px, 7vw, 40px) !important;
+        padding: 4px !important;
+    }
+    
+    /* FIX: Speaker button 2x bigger */
+    #speak-container .speak-button {
+        width: clamp(64px, 14vw, 80px) !important;
+        height: clamp(64px, 14vw, 80px) !important;
+        padding: 8px !important;
+    }
+    
+    /* FIX: Icons inside buttons same size in landscape */
+    #home-container .home-button img,
+    #settings-container .settings-button img,
+    #burger-container .burger-button img,
+    #speak-container .speak-button-icon {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    /* FIX: Resize settings menu for landscape — smaller and NO scroll */
+    .settings-menu {
+        max-width: min(250px, 85vw);
+        min-width: 200px;
+        max-height: none;
+        height: auto;
+        overflow: visible;
+        overflow-y: visible;
+        overflow-x: hidden;
+        padding: 14px;
+    }
 }
 
-.nav-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
+@media (max-height: 500px) and (orientation: landscape) {
+    .content {
+        /* FIX: In landscape the viewport height is ~360–500px.
+           A 65vh card would be 234–325px — enough for 2-3 lines.
+           Reduce font size aggressively so text still fits. */
+        max-height: 62vh;
+        padding: 10px 16px;
+        font-size: clamp(1rem, 2.8vw, 1.4rem);
+        width: 72%;        /* narrower so nav buttons have room at the sides */
+        max-width: 600px;
+    }
 
-.nav-btn:active {
-    transform: scale(0.95);
-}
+    .content h1,
+    .content h2 {
+        font-size: clamp(1.1rem, 3.2vw, 1.6rem);
+        margin-bottom: 4px;
+    }
 
-#nextBtn {
-    background: #FFD93D;
+    .content p {
+        font-size: clamp(1rem, 2.8vw, 1.4rem);
+        line-height: 1.4;
+        margin-bottom: 4px;
+    }
+
+    .nav-btn-container {
+        bottom: clamp(8px, 2vh, 14px);
+        gap: clamp(8px, 2vw, 14px);
+    }
+
+    .nav-btn {
+        padding: 6px 12px;
+        font-size: clamp(0.75rem, 2.2vw, 0.95rem);
+        min-height: 34px;
+        min-width: 76px;
+    }
+
+    .progress-indicator {
+        top: clamp(44px, 10vh, 60px);
+        font-size: 0.65rem;
+        padding: 5px 8px;
+    }
 }
 
 /* ========================================
-   PROGRESS INDICATOR
+   LANDSCAPE — medium height (500–700px)
    ======================================== */
 
-.progress-indicator {
-    opacity: 0;
-    position: fixed;
-    top: clamp(80px, 15vh, 100px);
-    right: clamp(20px, 5vw, 30px);
-    background: rgba(255, 255, 255, 0.9);
-    padding: clamp(12px, 2.5vw, 15px) clamp(16px, 3.5vw, 20px);
-    border-radius: clamp(12px, 2.5vw, 15px);
-    z-index: 1000;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    color: #6e4324;
-    font-size: clamp(0.7rem, 2vw, 1rem);
+@media (min-height: 501px) and (max-height: 700px) and (orientation: landscape) {
+    .content {
+        max-height: 64vh;
+        padding: clamp(10px, 2vh, 18px) clamp(16px, 3vw, 24px);
+        font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+        width: 80%;
+    }
+
+    .content p {
+        font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+        line-height: 1.5;
+    }
+
+    .nav-btn {
+        font-size: clamp(0.8rem, 2.4vw, 1rem);
+        padding: 7px 14px;
+        min-height: 36px;
+    }
+}
+
+/* ========================================
+   TABLET PORTRAIT (768px+)
+   ======================================== */
+
+@media (min-width: 768px) {
+    .content {
+        max-width: 800px;
+        padding: 24px;
+        font-size: 2.2rem;
+        max-height: 62vh;
+    }
+
+    .content h1,
+    .content h2 {
+        font-size: 2.8rem;
+    }
+
+    .content p {
+        font-size: 2.2rem;
+    }
+
+    .nav-btn {
+        font-size: 1.1rem;
+        padding: 10px 22px;
+        min-height: 44px;
+    }
+}
+
+/* ========================================
+   DESKTOP (1280px+)
+   ======================================== */
+
+@media (min-width: 1280px) {
+    .content {
+        max-width: 1100px;
+        padding: 36px;
+        font-size: 2.6rem;
+        max-height: 60vh;
+    }
+
+    .content h1,
+    .content h2 {
+        font-size: 3.2rem;
+    }
+
+    .content p {
+        font-size: 2.6rem;
+    }
+
+    .nav-btn {
+        font-size: 1.3rem;
+        padding: 12px 28px;
+    }
 }

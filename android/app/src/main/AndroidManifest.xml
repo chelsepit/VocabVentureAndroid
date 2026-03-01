@@ -15,7 +15,20 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"
-            android:exported="true">
+            android:exported="true"
+
+            android:screenOrientation="fullSensor">
+            <!--
+                WHY fullSensor?
+                ─────────────────────────────────────────────────────────────────
+                The Capacitor ScreenOrientation plugin works by calling
+                Activity.setRequestedOrientation() at runtime. For that call
+                to take effect, the manifest must NOT hard-lock the activity to
+                a single orientation (e.g. "portrait"). "fullSensor" tells Android
+                "let the activity — or the plugin — decide at runtime", which is
+                exactly what we need. Without this the plugin's lock calls are
+                silently ignored by Android.
+            -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,8 +47,6 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
     </application>
-
-    <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

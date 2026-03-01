@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/pick-a-world.css">
+    <link rel="stylesheet" href="../../css/pick-a-word-quiz.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
@@ -20,7 +20,6 @@
             <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
-            
         </div>
     </div>
 
@@ -40,16 +39,16 @@
     <!-- Quiz Question Screen -->
     <div id="quizQuestion" class="finish-content" style="display: none;">
         <div class="title-header">Pic-a-Word!</div>
-        <div style="text-align: center; margin-bottom: 20px;">
-            <span style="font-family: 'Nunito', sans-serif; font-weight: 700; color: rgb(0,0,0); font-size: 1.5rem;">
-                Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
-            </span>
+        <div class="question-counter">
+            Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
         </div>
-        <div class="progress-comment">
-            <div class="sentence-with-image" id="questionText"></div>
-        </div>
+
+        <!-- Image and sentence are now OUTSIDE .progress-comment, in their own containers -->
+        <div class="vocab-image-container" id="vocabImageWrapper"></div>
+        <div class="question-sentence-container" id="questionText"></div>
+
         <div class="finish-button" id="answerButtons"></div>
-        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;"></div>
+        <div id="feedbackMessage" class="feedback-message" style="display: none;"></div>
     </div>
 
     <!-- Resume Modal -->
@@ -68,10 +67,9 @@
                 .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
                 .catch(err => console.error('Error loading component:', err));
         }
-      loadComponent('home-container', '../components/home-button.html');
+        loadComponent('home-container', '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container', '../components/burger-nav.html');
-      //  loadComponent('speak-container', '../components/speak-button.html');
         loadComponent('resume-modal-container', '../components/resume-modal.html');
     </script>
 

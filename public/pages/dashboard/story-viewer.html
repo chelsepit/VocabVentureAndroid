@@ -12,14 +12,47 @@
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/book-stories.css">
     <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/orientation-modal.css">
 </head>
 <body>
+
+    <!-- ══════════════════════════════════════════════════════
+         LANDSCAPE PROMPT MODAL
+         Shown on entry. Dismissed only after orientation is
+         locked to landscape via the plugin.
+         z-index: 9999 — sits above video background and all UI.
+    ═══════════════════════════════════════════════════════ -->
+    <div id="landscapeOverlay" class="orient-overlay" role="dialog" aria-modal="true" aria-labelledby="landscapeTitle">
+        <div class="orient-modal">
+            <span class="orient-modal__icon" aria-hidden="true">📱</span>
+            <h2 class="orient-modal__title" id="landscapeTitle">
+                Rotate Your Device
+            </h2>
+            <p class="orient-modal__body">
+                For the best story experience, please switch to
+                <strong>Landscape mode</strong>.
+            </p>
+            <button class="orient-modal__btn" id="switchLandscapeBtn">
+                🔄 Switch to Landscape
+            </button>
+            <p class="orient-modal__note" id="alreadyLandscapeNote" style="display:none;">
+                ✅ You're already in landscape — tap above to continue.
+            </p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         VIDEO BACKGROUND
+    ═══════════════════════════════════════════════════════ -->
     <div class="video-background">
         <video id="storyVideo" autoplay muted playsinline>
             <source id="videoSource" src="" type="video/mp4">
         </video>
     </div>
 
+    <!-- ══════════════════════════════════════════════════════
+         TOP COMPONENTS BAR
+    ═══════════════════════════════════════════════════════ -->
     <div class="components">
         <div class="left-group">
             <div id="home-container"></div>
@@ -31,11 +64,17 @@
 
     <div id="definition-container"></div>
 
+    <!-- ══════════════════════════════════════════════════════
+         STORY CONTENT CARD
+    ═══════════════════════════════════════════════════════ -->
     <div class="content" id="storyContent">
         <p id="storyText">Loading story...</p>
     </div>
 
-    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 20px;">
+    <!-- ══════════════════════════════════════════════════════
+         NAV BUTTONS  (inline styles removed — see book-stories.css)
+    ═══════════════════════════════════════════════════════ -->
+    <div class="nav-btn-container">
         <button id="prevBtn" class="nav-btn">← Previous</button>
         <button id="nextBtn" class="nav-btn">Next →</button>
     </div>
@@ -46,29 +85,30 @@
         </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════════════
+         COMPONENT LOADER
+    ═══════════════════════════════════════════════════════ -->
     <script>
         function loadComponent(elementId, filePath) {
             fetch(filePath)
                 .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
-                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                    if (window.initializeComponents) window.initializeComponents();
+                })
                 .catch(err => console.error('Error loading component:', err));
         }
 
-        // Track when resume modal is ready
         window.resumeModalReady = new Promise(resolve => {
             window._resolveResumeModal = resolve;
         });
 
-        // ✅ FIX: was loadComponent('home', ...) — no element with id="home" exists in this page.
-        //         The actual container is id="home-container", so the fetched HTML was
-        //         silently discarded (getElementById returned null) and the button never appeared.
         loadComponent('home-container',       '../components/home-button.html');
         loadComponent('settings-container',   '../components/settings-menu.html');
         loadComponent('burger-container',     '../components/burger-nav.html');
         loadComponent('speak-container',      '../components/speak-button.html');
         loadComponent('definition-container', '../components/definition-card.html');
 
-        // Load resume modal and resolve the promise when done
         fetch('../components/resume-modal.html')
             .then(r => r.text())
             .then(data => {

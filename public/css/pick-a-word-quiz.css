@@ -1,248 +1,395 @@
-/* =========================
-   PICK-A-WORD QUIZ - REFACTORED
-   FULL MOBILE RESPONSIVENESS
-   ========================= */
+/* ================================================
+   PICK-A-WORD QUIZ
+   ================================================ */
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     overflow-x: hidden;
 }
 
+/* ─────────────────────────────────────────────
+   BACKGROUND
+───────────────────────────────────────────── */
 .finish-background {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: url('../assets/images/backgrounds/game-bg.svg') no-repeat center center;
     background-size: cover;
     z-index: -1;
     box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.15);
 }
 
+/* ─────────────────────────────────────────────
+   CARD — portrait default
+───────────────────────────────────────────── */
 .finish-content {
-    color: white;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
-    
-    background: rgba(255, 255, 255, 0.215);
-    backdrop-filter: blur(10px);
-    padding: clamp(30px, 6vw, 50px);
-    border-radius: clamp(28px, 5vw, 40px);
-    border: clamp(3px, 0.5vw, 4px) solid rgba(255, 255, 255, 0.527);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    
-    width: clamp(94%, 98vw, 98%);
-    max-width: 1100px;
-    max-height: 90vh;
+
+    color: white;
+    background: #5DADE2;
+
+    padding: clamp(22px, 5vw, 40px) clamp(18px, 5vw, 40px);
+    gap: clamp(14px, 3.5vw, 22px);
+
+    border-radius: clamp(24px, 5vw, 40px);
+    border: 3px solid rgba(255, 255, 255, 0.78);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+
+    width: clamp(92%, 96vw, 96%);
+    max-width: 680px;
+    max-height: 92vh;
     overflow-y: auto;
+
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes popIn {
-    from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    from { opacity: 0; transform: translate(-50%, -44%) scale(0.9); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
+/* ─────────────────────────────────────────────
+   TITLE
+───────────────────────────────────────────── */
 .title-header {
-    font-family: 'header-font', arial;
-    font-size: clamp(1.4rem, 4.5vw, 2.5rem);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: clamp(18px, 4vw, 25px);
+    font-family: 'header-font', 'Baloo 2', cursive;
+    font-size: clamp(1.7rem, 5.5vw, 3rem);
+    font-weight: 800;
+    color: #FFEB3B;
+    -webkit-text-stroke: clamp(1.5px, 0.35vw, 2.5px) white;
+    text-shadow: 3px 3px 0px #F57F17;
+    line-height: 1.1;
+    width: 100%;
     animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50%       { transform: translateY(-7px); }
 }
 
-.progress-comment {
-    font-family: 'body-font', sans-serif; 
-    color: white;
-    font-size: clamp(1.1rem, 3.5vw, 1.8rem);
-    line-height: 1.4;
+/* ─────────────────────────────────────────────
+   QUESTION COUNTER
+───────────────────────────────────────────── */
+.question-counter {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 3.2vw, 1.45rem);
+    color: rgba(0, 0, 0, 0.75);
     width: 100%;
-    max-width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-wrap: wrap;
 }
 
-.sentence-with-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(10px, 2.5vw, 15px);
-    flex-wrap: wrap;
-    width: 100%; 
-    text-align: center;
-    padding: 0 10px; 
-}
-
-#questionText {
-    width: 100% !important;
-    max-width: 100% !important;
-}
-
-#questionText.sentence-with-image {
+/* ─────────────────────────────────────────────
+   IMAGE CONTAINER — portrait & landscape
+───────────────────────────────────────────── */
+.vocab-image-container {
     width: 100%;
+    display: flex;
     justify-content: center;
-    text-align: center;
     align-items: center;
+    align-self: center;
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: clamp(16px, 4vw, 24px);
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    padding: clamp(10px, 2.5vw, 18px);
 }
 
-#questionText .vocab-image-container {
-    flex: 0 0 auto;
-    display: inline-flex;
-    vertical-align: middle;
-}
-
-.sentence-part {
-    display: inline;
-    line-height: 1.4;
-}
-
-.image-placeholder {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(6px, 1.5vw, 8px);
-    margin-bottom: -5px; 
-}
-
-.image-placeholder img {
-    width: clamp(70px, 15vw, 100px);
+/* ─────────────────────────────────────────────
+   VOCAB IMAGE — portrait
+───────────────────────────────────────────── */
+.vocab-image {
+    display: block;
+    width: auto;
     height: auto;
-    border-radius: clamp(8px, 2vw, 10px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    max-width:  clamp(130px, 38vmin, 220px);
+    max-height: clamp(130px, 38vmin, 220px);
+    object-fit: contain;
+    border-radius: clamp(10px, 2.5vw, 16px);
+    animation: popImage 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.blank-line {
-    display: inline-block;
-    border-bottom: 3px solid white;
-    min-width: clamp(100px, 25vw, 140px);
-    height: 0.3em;
-    vertical-align: baseline;
+@keyframes popImage {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
 }
 
-.finish-button {
-    margin-top: clamp(20px, 5vw, 30px);
-    display: flex;
-    gap: clamp(10px, 2.5vw, 20px);
+/* ─────────────────────────────────────────────
+   QUESTION SENTENCE
+───────────────────────────────────────────── */
+.question-sentence-container {
     width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0 clamp(8px, 2vw, 12px);
+    text-align: center;
+    font-family: 'body-font', 'Nunito', sans-serif;
+    font-size: clamp(1.2rem, 4vw, 1.85rem);
+    font-weight: 700;
+    color: white;
+    line-height: 1.55;
+    padding: 0 4px;
 }
 
-.finish-button button {
-    padding: clamp(10px, 2vw, 15px) clamp(18px, 4vw, 30px);
-    font-weight: 800;
-    font-size: clamp(0.9rem, 3vw, 1.5rem);
-    border-radius: 50px;
-    font-family: 'title-font', sans-serif; 
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.1);
-    white-space: nowrap;
+/* ─────────────────────────────────────────────
+   BLANK UNDERLINE
+───────────────────────────────────────────── */
+.blank-underline {
     display: inline-block;
-    min-width: fit-content;
-    min-height: 44px;
+    border-bottom: 3.5px solid white;
+    min-width: clamp(90px, 20vw, 140px);
+    height: 0.2em;
+    vertical-align: baseline;
+    margin: 0 6px;
 }
 
-/* Small Mobile */
+/* ─────────────────────────────────────────────
+   ANSWER BUTTONS
+───────────────────────────────────────────── */
+.finish-button {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 2.5vw, 14px);
+    width: 100%;
+    align-items: center;
+}
+
+.finish-button button,
+.start-button {
+    width: 100%;
+    max-width: 440px;
+    padding: clamp(13px, 2.8vw, 20px) clamp(20px, 4vw, 40px);
+    font-family: 'Baloo 2', cursive;
+    font-weight: 800;
+    font-size: clamp(1.05rem, 3.2vw, 1.55rem);
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+    color: white;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    min-height: 50px;
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    box-shadow: 0 6px 0 #E65100, 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.15s ease;
+}
+
+.finish-button button:hover,
+.start-button:hover {
+    background: linear-gradient(180deg, #FFCC80 0%, #FFA726 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #E65100, 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+.finish-button button:active,
+.start-button:active {
+    transform: translateY(4px);
+    box-shadow: 0 3px 0 #E65100, 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ─────────────────────────────────────────────
+   FEEDBACK MESSAGE
+───────────────────────────────────────────── */
+.feedback-message {
+    width: 100%;
+    padding: clamp(10px, 2.5vw, 16px) clamp(12px, 3vw, 20px);
+    border-radius: 14px;
+    text-align: center;
+    font-size: clamp(0.92rem, 2.6vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.feedback-message > div > div:nth-child(1) { font-size: 1.5rem  !important; }
+.feedback-message > div > div:nth-child(2) { font-size: 1.15rem !important; }
+.feedback-message > div > div:nth-child(3) { font-size: 0.98rem !important; }
+
+/* ─────────────────────────────────────────────
+   INTRO BODY TEXT
+───────────────────────────────────────────── */
+.progress-comment {
+    font-family: 'body-font', 'Nunito', sans-serif;
+    color: white;
+    font-size: clamp(1.05rem, 3.4vw, 1.55rem);
+    line-height: 1.55;
+    width: 100%;
+    text-align: center;
+}
+
+/* ─────────────────────────────────────────────
+   PORTRAIT NARROW  <= 480px
+───────────────────────────────────────────── */
 @media (max-width: 480px) {
     .finish-content {
-        padding: clamp(24px, 5vw, 32px) clamp(14px, 3vw, 18px);
-        width: 96%;
-        border-radius: 22px;
+        padding: clamp(20px, 5vw, 28px) clamp(16px, 4vw, 22px);
+        gap: clamp(12px, 3vw, 18px);
     }
 
     .title-header {
-        font-size: clamp(1.3rem, 4vw, 1.6rem);
-        margin-bottom: 16px;
+        font-size: clamp(1.5rem, 5.5vw, 2.2rem);
     }
 
-    .progress-comment {
-        font-size: clamp(1rem, 3.2vw, 1.3rem);
-        max-width: 100%;
+    .vocab-image {
+        max-width:  clamp(120px, 40vmin, 180px);
+        max-height: clamp(120px, 40vmin, 180px);
     }
 
-    .sentence-with-image {
-        gap: 8px;
-    }
-    
-    .image-placeholder img {
-        width: clamp(60px, 14vw, 70px);
-    }
-    
-    .blank-line {
-        min-width: clamp(80px, 20vw, 100px);
+    .question-sentence-container {
+        font-size: clamp(1.1rem, 4.2vw, 1.5rem);
     }
 
-    .finish-button {
-        flex-direction: row;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-
-    .finish-button button {
-        padding: 10px 18px;
-        font-size: clamp(0.85rem, 2.8vw, 1.1rem);
-        min-width: clamp(120px, 28vw, 160px);
+    .finish-button button,
+    .start-button {
+        font-size: clamp(1rem, 3.5vw, 1.3rem);
+        padding: 13px 22px;
+        min-height: 48px;
     }
 }
 
-/* Landscape */
-@media (max-height: 600px) and (orientation: landscape) {
-    .finish-content {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: clamp(18px, 3vh, 24px) clamp(16px, 3vw, 24px);
-        max-height: 94vh;
+/* ─────────────────────────────────────────────
+   LANDSCAPE — ALL heights
+   
+   Single column centered layout:
+     - Image CENTERED at top
+     - Question below image
+     - Buttons below question
+   
+   IMAGE SIZE: Compact to fit within viewport height
+───────────────────────────────────────────── */
+@media (orientation: landscape) {
+
+    /* Single column centered layout */
+    #quizQuestion.finish-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: clamp(12px, 1.5vw, 18px);
+        padding: clamp(12px, 1.8vw, 16px);
+        max-height: 98vh;
+        max-width: min(98vw, 900px);
+        width: 98vw;
+        overflow-y: auto;
+        text-align: center;
     }
 
-    .title-header {
-        font-size: clamp(1.2rem, 3.5vh, 1.6rem);
-        margin-bottom: 12px;
+    /* Title centered at top */
+    #quizQuestion .title-header {
+        font-size: clamp(1.2rem, 3vw, 1.8rem);
+        animation: none;
+        width: 100%;
+        margin-bottom: clamp(4px, 0.8vw, 8px);
     }
 
-    .progress-comment {
-        font-size: clamp(0.95rem, 2.5vh, 1.2rem);
+    /* Counter centered */
+    #quizQuestion .question-counter {
+        width: 100%;
+        font-size: clamp(0.9rem, 2.2vw, 1rem);
+        margin-bottom: clamp(4px, 0.8vw, 8px);
     }
 
-    .image-placeholder img {
-        width: clamp(50px, 10vw, 70px);
+    /* IMAGE CENTERED — CRITICAL: Full width container with centered flex */
+    #quizQuestion .vocab-image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        padding: clamp(8px, 1.2vw, 12px);
+        margin: 0 auto clamp(6px, 0.8vw, 10px) auto;
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: clamp(12px, 2vw, 16px);
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
     }
 
-    .finish-button {
-        margin-top: 16px;
-        gap: 8px;
+    /* Reduced image size for landscape — fits in viewport */
+    #quizQuestion .vocab-image {
+        max-width:  clamp(100px, 20vh, 160px);
+        max-height: clamp(100px, 20vh, 160px);
+        border-radius: clamp(10px, 1.8vw, 16px);
     }
 
-    .finish-button button {
-        padding: 8px 16px;
-        font-size: clamp(0.85rem, 2vh, 1.1rem);
+    /* Question text smaller in landscape */
+    #quizQuestion .question-sentence-container {
+        text-align: center;
+        font-size: clamp(0.95rem, 2.4vw, 1.3rem);
+        padding: 0;
+        width: 100%;
+        margin-bottom: clamp(6px, 0.8vw, 10px);
+        line-height: 1.4;
+    }
+
+    /* Compact button container — CENTER aligned */
+    #quizQuestion .finish-button {
+        flex-direction: column;
+        width: 100%;
+        max-width: 95%;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(6px, 1vw, 10px);
+        margin: 0 auto clamp(4px, 0.6vw, 8px) auto;
+    }
+
+    /* Smaller buttons for landscape — reduced height */
+    #quizQuestion .finish-button button {
+        width: 100%;
+        padding: clamp(6px, 0.9vw, 8px) clamp(12px, 2vw, 18px);
+        font-family: 'Baloo 2', cursive;
+        font-weight: 800;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        text-transform: lowercase;
+        letter-spacing: 0.5px;
+        min-height: 36px;
+    }
+
+    /* Compact feedback message */
+    #quizQuestion .feedback-message {
+        width: 100%;
+        max-width: 95%;
+        padding: clamp(6px, 1vw, 10px) clamp(10px, 1.8vw, 14px);
+        font-size: clamp(0.85rem, 1.8vw, 0.95rem) !important;
+        margin-bottom: clamp(4px, 0.6vw, 8px);
+    }
+
+    #quizQuestion .feedback-message > div > div:nth-child(1) { font-size: 1.1rem  !important; }
+    #quizQuestion .feedback-message > div > div:nth-child(2) { font-size: 0.95rem !important; }
+    #quizQuestion .feedback-message > div > div:nth-child(3) { font-size: 0.82rem !important; }
+
+    /* Intro stays centered in landscape */
+    #quizIntro.finish-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: min(95vw, 650px);
+        max-height: 98vh;
+        overflow-y: auto;
+        gap: clamp(10px, 1.8vw, 16px);
+        padding: clamp(12px, 2vw, 18px);
+        justify-content: center;
+    }
+
+    #quizIntro .progress-comment {
+        font-size: clamp(0.95rem, 2.4vw, 1.3rem);
+    }
+
+    #quizIntro .start-button {
+        width: auto;
+        min-width: 160px;
+        padding: clamp(9px, 1.2vw, 12px) clamp(20px, 3vw, 28px);
+        font-size: clamp(0.95rem, 2vw, 1.1rem);
     }
 }

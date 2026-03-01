@@ -234,18 +234,20 @@ body {
 /* Answer Buttons */
 .answer-btn {
     width: 100%;
-    padding: clamp(12px, 3vw, 16px) clamp(14px, 3vw, 18px);
-    margin-bottom: clamp(10px, 2vw, 12px);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
-    color: #333;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    border-radius: clamp(8px, 2vw, 12px);
-    font-family: 'Nunito', sans-serif;
-    font-size: clamp(14px, 3.5vw, 15px);
-    font-weight: 600;
+    padding: clamp(9px, 1.2vw, 12px) clamp(12px, 2vw, 18px);
+    margin-bottom: clamp(3px, 0.5vw, 5px);
+    background: linear-gradient(180deg, #FFB74D 0%, #FF9800 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 800;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 44px;
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -255,15 +257,14 @@ body {
 }
 
 .answer-btn:hover:not(:disabled) {
-    background: white;
+    background: linear-gradient(180deg, #FFCC80 0%, #FFA726 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 0 #E65100, 0 15px 20px rgba(0,0,0,0.2);
 }
 
 .answer-btn:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #E65100, 0 5px 10px rgba(0,0,0,0.2);
 }
 
 .answer-btn:disabled {
@@ -274,7 +275,7 @@ body {
 @media (max-height: 600px) and (orientation: landscape) {
     .answer-btn {
         padding: clamp(8px, 1.5vh, 10px) clamp(12px, 2vw, 14px);
-        margin-bottom: clamp(6px, 1.2vh, 8px);
+        margin-bottom: clamp(3px, 0.6vh, 4px);
         font-size: clamp(13px, 2.5vw, 14px);
         min-height: 40px;
     }
