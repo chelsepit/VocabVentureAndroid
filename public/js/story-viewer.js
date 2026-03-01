@@ -170,9 +170,14 @@ function loadSegment(index) {
 
     const video = document.getElementById('storyVideo');
     if (video) {
+        const storyId = getStoryIdFromUrl();
+
+        // ⚡ Set poster immediately — shows while video loads, kills the ugly play button
+        video.poster = `../../assets/videos/story-${storyId}/segment-${index + 1}-poster.jpg`;
+
         const source = video.querySelector('source');
         if (source) {
-            source.src = `../../assets/videos/story-${getStoryIdFromUrl()}/segment-${index + 1}.mp4`;
+            source.src = `../../assets/videos/story-${storyId}/segment-${index + 1}.mp4`;
         }
         video.load();
         video.loop = false;

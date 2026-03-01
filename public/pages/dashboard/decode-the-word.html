@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="../../js/preloader.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/decode-the-world.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
-
 <body>
     <div class="finish-background"></div>
 
@@ -29,13 +24,10 @@
         </div>
     </div>
 
-    <!-- Resume Modal -->
-    <div id="resume-modal-container"></div>
-
     <!-- Intro Screen -->
     <div id="quizIntro" class="finish-content">
         <div class="title-header">Decode the Word!</div>
-        <div class="progress-comment" style="margin-top: 20px;"> 
+        <div class="progress-comment" style="margin-top: 20px;">
             Figure out the word's meaning in the sentence.<br>
             <em>Let's start your word adventure!</em>
         </div>
@@ -46,13 +38,10 @@
 
     <!-- Quiz Question Screen (hidden initially) -->
     <div id="quizQuestion" class="finish-content" style="display: none;">
-        
         <div class="title-header">Decode the Word!</div>
-
         <div class="progress-indicator">
             <span class="progress-text">Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
         </div>
-
         <div class="progress-comment">
             <div class="sentence-text">
                 <span id="sentenceText">The king commanded his soldiers to guard the castle.</span>
@@ -61,38 +50,37 @@
                 <span id="questionPrompt">What does commanded mean?</span>
             </div>
         </div>
-        
-        <div class="finish-button" id="answerButtons">
-            </div>
-
+        <div class="finish-button" id="answerButtons"></div>
         <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;"></div>
     </div>
 
     <script>
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) {
-                        window.initializeComponents();
-                    }
-                })
-                .catch(err => console.error('Error loading component:', err));
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
         }
-        loadComponent('home-container', '../components/home-button.html');
+
+        loadComponent('home-container',     '../components/home-button.html');
         loadComponent('settings-container', '../components/settings-menu.html');
-        loadComponent('burger-container', '../components/burger-nav.html');
-      //  loadComponent('speak-container', '../components/speak-button.html');
-        loadComponent('resume-modal-container', '../components/resume-modal.html');
+        loadComponent('burger-container',   '../components/burger-nav.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/components.js"></script>
     <script type="module" src="../../js/decode-the-word-quiz.js"></script>
 </body>
-
 </html>
