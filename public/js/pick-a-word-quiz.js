@@ -20,10 +20,17 @@ function getStoryId() {
 async function loadQuizData() {
     const storyId = getStoryId();
     try {
-        const response = await fetch(`../../data/stories/story-${storyId}.json`);
-        if (!response.ok) throw new Error('Story not found');
-        storyData = await response.json();
-        quizData  = storyData.quiz1;
+        const cacheKey = `storyData_${storyId}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            storyData = JSON.parse(cached);
+        } else {
+            const response = await fetch(`../../data/stories/story-${storyId}.json`);
+            if (!response.ok) throw new Error('Story not found');
+            storyData = await response.json();
+            sessionStorage.setItem(cacheKey, JSON.stringify(storyData));
+        }
+        quizData = storyData.quiz1;
         document.getElementById('totalQuestions').textContent = quizData.questions.length;
     } catch (error) {
         console.error('Error loading quiz:', error);
@@ -31,7 +38,6 @@ async function loadQuizData() {
         window.location.href = 'library.html';
     }
 }
-
 window.startPicAWord = function startPicAWord() {
     document.getElementById('quizIntro').style.display    = 'none';
     document.getElementById('quizQuestion').style.display = 'block';

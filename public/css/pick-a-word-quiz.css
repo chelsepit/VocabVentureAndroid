@@ -54,12 +54,13 @@ body {
     max-height: 92vh;
     overflow-y: auto;
 
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: popIn 0.25s ease-out;
 }
 
+/* REPLACE WITH THIS: */
 @keyframes popIn {
-    from { opacity: 0; transform: translate(-50%, -44%) scale(0.9); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    from { opacity: 0; transform: translate(-50%, -50%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
 }
 
 /* ─────────────────────────────────────────────

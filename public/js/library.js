@@ -29,31 +29,40 @@ function getTotalSegments(storyId) {
 
 async function loadProgress() {
     try {
+        const promises = [];
         for (let storyId = 1; storyId <= 30; storyId++) {
-            try {
-                const totalSegments = getTotalSegments(storyId);
-                // ✅ FIX #1: Was bridge.invoke('story:getCompletionStatus', ...) — doesn't exist on Android
-                const status = await db.getStoryCompletionStatus(currentUser.id, storyId, totalSegments);
-                userProgressData[storyId] = calculateProgressPercentage(status);
-            } catch (_) {
-                userProgressData[storyId] = 0;
-            }
+            const totalSegments = getTotalSegments(storyId);
+            promises.push(
+                db.getStoryCompletionStatus(currentUser.id, storyId, totalSegments)
+                  .then(status => ({ storyId, pct: calculateProgressPercentage(status) }))
+                  .catch(() => ({ storyId, pct: 0 }))
+            );
         }
+        const results = await Promise.all(promises);
+        results.forEach(({ storyId, pct }) => { userProgressData[storyId] = pct; });
         applyProgressBars();
     } catch (error) {
         console.error('Error loading progress:', error);
     }
 }
-
 function applyProgressBars() {
     Object.keys(userProgressData).forEach(storyId => {
         const percentage = userProgressData[storyId];
         document.querySelectorAll(`[data-progress="${storyId}"]`).forEach(bar => {
-            bar.style.width = percentage + '%';
+            // Set instantly first (no transition), then enable smooth transition
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+
             if (percentage === 100)      bar.style.background = 'linear-gradient(to right, #4ade80, #22c55e)';
             else if (percentage >= 50)   bar.style.background = 'linear-gradient(to right, #fbbf24, #f59e0b)';
             else if (percentage > 0)     bar.style.background = 'linear-gradient(to right, #60a5fa, #3b82f6)';
-            else                         bar.style.width = '0%';
+
+            // Force reflow so the transition fires properly
+            bar.offsetHeight;
+
+            // Now animate to final width
+            bar.style.transition = 'width 0.4s ease';
+            bar.style.width = percentage + '%';
         });
     });
 }
@@ -131,21 +140,31 @@ function applyProgressBars() {
                     ${locked ? '<div class="coming-soon">Coming Soon</div>' : ''}
                 </div>
                 <div class="progress-container">
-                    <div class="progress-fill" style="width:0%" data-progress="${story.id}"></div>
+                    <div class="progress-fill" style="width:0%;transition:none;" data-progress="${story.id}"></div>
                 </div>
             </div>`;
     }
 
-    genreTags.forEach(tag => {
-        tag.addEventListener('click', () => {
-            genreTags.forEach(t => t.classList.remove('active'));
-            tag.classList.add('active');
-            currentGenre = tag.dataset.genre;
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) searchInput.value = '';
-            renderLibrary(allStories.filter(s => s.genre === currentGenre));
-        });
+  genreTags.forEach(tag => {
+    tag.addEventListener('click', () => {
+        genreTags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        currentGenre = tag.dataset.genre;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+
+       // Clear instantly so old bars never flash, then fade new content in
+    libraryContainer.style.transition = 'none';
+    libraryContainer.style.opacity = '0';
+    libraryContainer.innerHTML = '';          // wipe old DOM immediately
+
+    requestAnimationFrame(() => {
+        renderLibrary(allStories.filter(s => s.genre === currentGenre));
+        libraryContainer.style.transition = 'opacity 0.2s ease';
+        libraryContainer.style.opacity = '1';
+});
     });
+});
 
     window.renderLibrarySearch = renderLibrary;
 })();
@@ -207,17 +226,40 @@ async function resumeToCorrectPage(storyId, userId) {
 
 function attachBookClicks() {
     document.querySelectorAll('.book-item').forEach(book => {
+        // Prevent attaching duplicate listeners on re-render
+        if (book.dataset.clickAttached === 'true') return;
+        book.dataset.clickAttached = 'true';
+
+        if (book.dataset.active !== 'true') return;
+
+        book.style.cursor = 'pointer';
+
+        book.addEventListener('mouseenter', () => {
+            book.style.transform = 'translateY(-5px)';
+            book.style.transition = 'transform 0.3s ease';
+        });
+        book.addEventListener('mouseleave', () => {
+            book.style.transform = 'translateY(0)';
+        });
+
         book.addEventListener('click', async () => {
-            if (book.dataset.active !== 'true') return;
+            // Prevent double-tap firing
+            if (book.dataset.navigating === 'true') return;
+            book.dataset.navigating = 'true';
+
+            // Visual feedback
+            book.style.opacity = '0.6';
+            book.style.transform = 'scale(0.96)';
+            book.style.transition = 'opacity 0.1s, transform 0.1s';
+
             const id     = parseInt(book.dataset.id);
             const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
             await resumeToCorrectPage(id, userId);
-        });
 
-        if (book.dataset.active === 'true') {
-            book.style.cursor = 'pointer';
-            book.addEventListener('mouseenter', () => { book.style.transform = 'translateY(-5px)'; book.style.transition = 'transform 0.3s ease'; });
-            book.addEventListener('mouseleave', () => { book.style.transform = 'translateY(0)'; });
-        }
+            // Reset in case navigation fails
+            book.dataset.navigating = 'false';
+            book.style.opacity = '1';
+            book.style.transform = 'translateY(0)';
+        });
     });
 }
