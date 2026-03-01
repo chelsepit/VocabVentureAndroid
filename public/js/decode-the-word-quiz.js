@@ -25,10 +25,17 @@ function getUserId() {
 async function loadQuizData() {
     const storyId = getStoryId();
     try {
-        const response = await fetch(`../../data/stories/story-${storyId}.json`);
-        if (!response.ok) throw new Error('Story not found');
-        storyData = await response.json();
-        quizData  = storyData.quiz2;
+        const cacheKey = `storyData_${storyId}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            storyData = JSON.parse(cached);
+        } else {
+            const response = await fetch(`../../data/stories/story-${storyId}.json`);
+            if (!response.ok) throw new Error('Story not found');
+            storyData = await response.json();
+            sessionStorage.setItem(cacheKey, JSON.stringify(storyData));
+        }
+        quizData = storyData.quiz2;
         document.getElementById('totalQuestions').textContent = quizData.questions.length;
     } catch (error) {
         console.error('Error loading quiz:', error);

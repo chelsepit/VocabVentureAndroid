@@ -423,3 +423,11 @@ img[loading="lazy"] {
         max-width: 1400px;
     }
 }
+/* Page fade-in on load */
+body {
+    animation: pageFadeIn 0.15s ease-out;
+}
+@keyframes pageFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
