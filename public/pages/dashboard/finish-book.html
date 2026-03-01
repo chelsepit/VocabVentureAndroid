@@ -15,22 +15,12 @@
 </head>
 <body>
 
-    <!-- ══════════════════════════════════════════════════════
-         PORTRAIT REMINDER MODAL
-         Only shown if the device is NOT already in portrait
-         when this page loads (e.g. user navigated here while
-         still physically holding the phone in landscape).
-         Hidden by default — finish-book.js shows it if needed.
-    ═══════════════════════════════════════════════════════ -->
     <div id="portraitOverlay" class="orient-overlay" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
         <div class="orient-modal">
             <span class="orient-modal__icon orient-modal__icon--portrait" aria-hidden="true">📱</span>
-            <h2 class="orient-modal__title" id="portraitTitle">
-                Story Complete! 🎉
-            </h2>
+            <h2 class="orient-modal__title" id="portraitTitle">Story Complete! 🎉</h2>
             <p class="orient-modal__body">
-                Please return to <strong>Portrait mode</strong>
-                to continue to the quiz.
+                Please return to <strong>Portrait mode</strong> to continue to the quiz.
             </p>
             <button class="orient-modal__btn orient-modal__btn--portrait" id="continuePortraitBtn">
                 Continue →
@@ -62,14 +52,23 @@
     </div>
 
     <script>
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) window.initializeComponents();
-                })
-                .catch(err => console.error('Error loading component:', err));
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
         }
 
         loadComponent('settings-container', '../components/settings-menu.html');
@@ -79,6 +78,6 @@
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/components.js"></script>
     <script type="module" src="../../js/finish-book.js"></script>
-     <script type="module" src="../../js/finish-book-orientation.js"></script>
+    <script type="module" src="../../js/finish-book-orientation.js"></script>
 </body>
 </html>

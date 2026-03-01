@@ -29,17 +29,28 @@ function getTotalSegments(storyId) {
 
 async function loadProgress() {
     try {
-        const promises = [];
+        // ⚡ OPTIMIZED: 3 bulk queries instead of 90 individual ones
+        const { progressMap, badgeMap } = await db.getAllStoriesCompletionStatus(currentUser.id);
+
         for (let storyId = 1; storyId <= 30; storyId++) {
             const totalSegments = getTotalSegments(storyId);
-            promises.push(
-                db.getStoryCompletionStatus(currentUser.id, storyId, totalSegments)
-                  .then(status => ({ storyId, pct: calculateProgressPercentage(status) }))
-                  .catch(() => ({ storyId, pct: 0 }))
-            );
+            const prog  = progressMap[storyId];
+            const badge = badgeMap[storyId] ?? {};
+
+            const completedSegments = prog?.completedSegments ?? 0;
+            const storyCompleted    = completedSegments >= totalSegments;
+
+            const status = {
+                completedSegments,
+                totalSegments,
+                storyCompleted,
+                quiz1Completed: !!badge['quiz-1'],
+                quiz2Completed: !!badge['quiz-2']
+            };
+
+            userProgressData[storyId] = calculateProgressPercentage(status);
         }
-        const results = await Promise.all(promises);
-        results.forEach(({ storyId, pct }) => { userProgressData[storyId] = pct; });
+
         applyProgressBars();
     } catch (error) {
         console.error('Error loading progress:', error);

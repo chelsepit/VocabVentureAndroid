@@ -12,44 +12,26 @@
     <link rel="stylesheet" href="../../css/components.css">
     <link rel="stylesheet" href="../../css/book-stories.css">
     <link rel="stylesheet" href="../../css/font.css">
- 
 </head>
 <body>
 
-    <!-- ══════════════════════════════════════════════════════
-         RESUME MODAL — inlined to avoid fetch/race conditions
-         on Capacitor Android WebView. Previously loaded via
-         fetch('../components/resume-modal.html') which was
-         silently failing or resolving before DOM was ready.
-    ═══════════════════════════════════════════════════════ -->
-    <div id="resumeModalOverlay" class="modal-overlay hidden" onclick="handleResumeModalOverlayClick(event)">
+    <div id="resumeModalOverlay" class="modal-overlay hidden">
         <div class="resume-modal" onclick="event.stopPropagation()">
             <h2 class="modal-title">Welcome Back!</h2>
             <p class="modal-desc">Do you want to continue where you left off, or start from the beginning?</p>
             <div class="modal-buttons">
-                <button class="modal-btn btn-restart" onclick="startOver()">
-                    Start Over
-                </button>
-                <button class="modal-btn btn-continue" onclick="continueGame()">
-                    Continue
-                </button>
+                <button class="modal-btn btn-restart">Start Over</button>
+                <button class="modal-btn btn-continue">Continue</button>
             </div>
         </div>
     </div>
 
-   
-    <!-- ══════════════════════════════════════════════════════
-         VIDEO BACKGROUND
-    ═══════════════════════════════════════════════════════ -->
     <div class="video-background">
         <video id="storyVideo" autoplay muted playsinline>
             <source id="videoSource" src="" type="video/mp4">
         </video>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         TOP COMPONENTS BAR
-    ═══════════════════════════════════════════════════════ -->
     <div class="components">
         <div class="left-group">
             <div id="home-container"></div>
@@ -61,16 +43,10 @@
 
     <div id="definition-container"></div>
 
-    <!-- ══════════════════════════════════════════════════════
-         STORY CONTENT CARD
-    ═══════════════════════════════════════════════════════ -->
     <div class="content" id="storyContent">
         <p id="storyText">Loading story...</p>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         NAV BUTTONS  (inline styles removed — see book-stories.css)
-    ═══════════════════════════════════════════════════════ -->
     <div class="nav-btn-container">
         <button id="prevBtn" class="nav-btn">← Previous</button>
         <button id="nextBtn" class="nav-btn">Next →</button>
@@ -82,21 +58,26 @@
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         COMPONENT LOADER
-    ═══════════════════════════════════════════════════════ -->
     <script>
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
-                .then(data => {
-                    document.getElementById(elementId).innerHTML = data;
-                    if (window.initializeComponents) window.initializeComponents();
-                })
-                .catch(err => console.error('Error loading component:', err));
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
         }
 
-        // Resume modal is inlined above — always immediately available
         window.resumeModalReady = Promise.resolve(true);
 
         loadComponent('home-container',       '../components/home-button.html');
