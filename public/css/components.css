@@ -49,8 +49,8 @@
 }
 
 .home-button {
-    width: 48px;
-    height: 48px;
+    width: clamp(36px, 8vw, 48px);
+    height: clamp(36px, 8vw, 48px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,13 +62,12 @@
     pointer-events: auto;
     z-index: 1001;
     padding: 2px;
-    min-touch-target: 48px;
     flex-shrink: 0;
 }
 
 .home-button img {
-    width: 40px;
-    height: 40px;
+    width: clamp(28px, 6vw, 36px);
+    height: clamp(28px, 6vw, 36px);
     object-fit: contain;
     pointer-events: none;
 }
@@ -92,8 +91,8 @@
 }
 
 .settings-button {
-    width: 48px;
-    height: 48px;
+    width: clamp(36px, 8vw, 48px);
+    height: clamp(36px, 8vw, 48px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,8 +109,8 @@
 }
 
 .settings-button img {
-    width: 40px;
-    height: 40px;
+    width: clamp(28px, 6vw, 36px);
+    height: clamp(28px, 6vw, 36px);
     object-fit: contain;
     transition: transform 0.5s ease;
     pointer-events: none;
@@ -155,18 +154,17 @@
 
     background: rgba(255, 255, 255, 0.98);
     border: 2px solid #6e4324;
-    border-radius: 16px;
-    padding: 16px;
+    border-radius: 12px;
+    padding: clamp(8px, 2vw, 12px);
 
-    min-width: 260px;
-    width: max-content;          /* shrinks to content, never wider than needed */
-    max-width: min(320px, 92vw); /* FIX: hard cap at 92vw prevents off-screen overflow */
+    min-width: clamp(160px, 45vw, 220px);
+    width: max-content;
+    max-width: min(240px, 88vw);
 
-    /* FIX: cap height and enable scroll */
-    max-height: min(70vh, 70dvh);
-    overflow-y: auto;
+    /* No scroll — everything fits via smaller sizing */
+    max-height: none;
+    overflow-y: visible;
     overflow-x: hidden;
-    -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
 
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     pointer-events: auto;
@@ -177,22 +175,67 @@
     z-index: 1002;
 }
 
-.settings-menu.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: fadeIn 0.2s ease-out;
+/* ── Settings menu interior — compact responsive sizing ── */
+.settings-menu .text-gray-800,
+.settings-menu .font-bold {
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
 }
 
-/*
-  FIX: When the settings button is close to the right edge of the screen
-  (common on small phones), left:0 causes the menu to overflow right.
-  This rule flips the anchor to right:0 so the menu grows leftward instead.
-  It applies whenever the viewport is narrow enough that a 260px menu
-  at left:0 would push past the screen edge.
-  We use a safe universal rule: on screens narrower than 400px always
-  anchor to right:0, and let max-width:92vw handle the sizing.
-*/
+.settings-menu .text-sm,
+.settings-menu .text-gray-600 {
+    font-size: clamp(0.65rem, 1.8vw, 0.78rem);
+}
+
+.settings-menu .mb-6 {
+    margin-bottom: 0.5rem;
+}
+
+.settings-menu .mb-2 {
+    margin-bottom: 0.2rem;
+}
+
+/* Toggle switch — half size */
+.settings-menu .toggle-switch {
+    width: 36px;
+    height: 20px;
+}
+
+.settings-menu .toggle-slider:before {
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+}
+
+.settings-menu input:checked + .toggle-slider:before {
+    transform: translateX(16px);
+}
+
+/* Volume slider */
+.settings-menu .volume-slider {
+    height: 4px;
+    margin-top: 5px;
+}
+
+.settings-menu .volume-slider::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+}
+
+.settings-menu .volume-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+}
+
+/* Voice buttons */
+.settings-menu .voice-btn {
+    padding: 6px 8px;
+    font-size: clamp(0.65rem, 1.8vw, 0.78rem);
+    min-height: 30px;
+    border-radius: 8px;
+}
+
+
 @media (max-width: 400px) {
     .settings-menu {
         left: auto;
@@ -254,8 +297,8 @@
 }
 
 .burger-button {
-    width: 48px;
-    height: 48px;
+    width: clamp(36px, 8vw, 48px);
+    height: clamp(36px, 8vw, 48px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,8 +314,8 @@
 }
 
 .burger-button img {
-    width: 40px;
-    height: 40px;
+    width: clamp(28px, 6vw, 36px);
+    height: clamp(28px, 6vw, 36px);
     object-fit: contain;
     pointer-events: none;
 }
@@ -942,21 +985,25 @@ input:checked + .toggle-slider:before {
         font-size: 24px;
     }
 
-    .home-button,
+     .home-button,
     .settings-button,
-    .burger-button,
+    .burger-button {
+        width: clamp(36px, 8vw, 44px);
+        height: clamp(36px, 8vw, 44px);
+    }
+
+    .home-button img,
+    .settings-button img,
+    .burger-button img {
+        width: clamp(26px, 6vw, 32px);
+        height: clamp(26px, 6vw, 32px);
+    }
+
     .speak-button {
         width: 50px;
         height: 50px;
     }
 
-    .home-button img,
-    .settings-button img {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .burger-button img,
     .speak-button-icon {
         width: 30px;
         height: 30px;
@@ -1021,25 +1068,22 @@ input:checked + .toggle-slider:before {
         min-height: 44px;
     }
 
-    .home-button,
+     .home-button,
     .settings-button,
-    .burger-button,
-    .speak-button {
-        width: 50px;
-        height: 50px;
+    .burger-button {
+        width: clamp(36px, 8vw, 48px);
+        height: clamp(36px, 8vw, 48px);
     }
 
     .home-button img,
-    .settings-button img {
-        width: 30px;
-        height: 30px;
+    .settings-button img,
+    .burger-button img {
+        width: clamp(28px, 6vw, 36px);
+        height: clamp(28px, 6vw, 36px);
     }
-    
-    .burger-button img,
-    .speak-button-icon {
-        width: 30px;
-        height: 30px;
-    }
+
+    .speak-button { width: 50px; height: 50px; }
+    .speak-button-icon { width: 30px; height: 30px; }
 }
 @media (min-width: 768px) {
     .components {

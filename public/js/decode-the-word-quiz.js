@@ -113,11 +113,11 @@ function checkAnswer(selectedIndex) {
 
 function showFeedback(isCorrect, explanation) {
     const el = document.getElementById('feedbackMessage');
-    el.innerHTML = `
+   el.innerHTML = `
         <div style="color:#000;">
-            <div style="font-size:2rem;margin-bottom:10px;">${isCorrect ? '✓' : '✗'}</div>
-            <div style="font-size:2.3rem;">${isCorrect ? 'Correct!' : 'Not quite!'}</div>
-            <div style="font-size:1.8rem;margin-top:10px;font-weight:normal;opacity:0.9;">${explanation}</div>
+            <div style="font-size:1.2rem;margin-bottom:6px;">${isCorrect ? '✓' : '✗'}</div>
+            <div style="font-size:1.15rem;font-weight:600;">${isCorrect ? 'Correct!' : 'Not quite!'}</div>
+            <div style="font-size:0.95rem;margin-top:6px;font-weight:normal;opacity:0.9;line-height:1.4;">${explanation}</div>
         </div>`;
     el.style.background = isCorrect ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)';
     el.style.border     = isCorrect ? '2px solid #4ade80'    : '2px solid #ef4444';

@@ -30,6 +30,27 @@ let storyData = null;
 let currentAudio = null;
 let isSpeaking = false;
 
+// without overflowing. Runs after every segment load.
+function fitTextToContainer() {
+    const container = document.getElementById('storyContent');
+    const textEl    = document.getElementById('storyText');
+    if (!container || !textEl) return;
+
+    // Reset to base size first so we always measure from the top
+    textEl.style.fontSize = '';
+
+    const minSize = 12; // px — never go below this
+    let currentSize = parseFloat(
+        window.getComputedStyle(textEl).fontSize
+    );
+
+    // Walk down 0.5px at a time until text fits or we hit the floor
+    while (textEl.scrollHeight > container.clientHeight && currentSize > minSize) {
+        currentSize -= 0.5;
+        textEl.style.fontSize = currentSize + 'px';
+    }
+}
+
 // ── URL helpers ───────────────────────────────────────────────────────────────
 
 function getStoryIdFromUrl() {
@@ -290,6 +311,7 @@ function updateStoryText(segment) {
         });
     }
     storyTextElement.innerHTML = textHtml;
+    requestAnimationFrame(() => fitTextToContainer());
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
@@ -444,7 +466,7 @@ async function initStoryViewer() {
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
       enforceStoryOrientation();
-      
+
     document.getElementById('boyVoice')?.addEventListener('click',  () => stopCurrentAudio());
     document.getElementById('girlVoice')?.addEventListener('click', () => stopCurrentAudio());
 
@@ -456,3 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('beforeunload', () => stopCurrentAudio());
+window.addEventListener('resize', () => {
+    requestAnimationFrame(() => fitTextToContainer());
+});
