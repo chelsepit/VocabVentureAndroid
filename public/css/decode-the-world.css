@@ -104,7 +104,7 @@
     display: flex;
     flex-direction: column; 
     align-items: center; 
-    gap: clamp(15px, 3vw, 25px); 
+    gap: clamp(8px, 1.5vw, 13px);
     width: 100%;
     max-width: 100%; 
     margin-bottom: clamp(15px, 3vw, 20px);

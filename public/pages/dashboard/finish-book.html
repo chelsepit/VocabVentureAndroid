@@ -11,27 +11,16 @@
     <link rel="stylesheet" href="../../css/finish-book.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
-    <link rel="stylesheet" href="../../css/orientation-modal.css">
+    
 </head>
 <body>
 
-    <div id="portraitOverlay" class="orient-overlay" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
-        <div class="orient-modal">
-            <span class="orient-modal__icon orient-modal__icon--portrait" aria-hidden="true">📱</span>
-            <h2 class="orient-modal__title" id="portraitTitle">Story Complete! 🎉</h2>
-            <p class="orient-modal__body">
-                Please return to <strong>Portrait mode</strong> to continue to the quiz.
-            </p>
-            <button class="orient-modal__btn orient-modal__btn--portrait" id="continuePortraitBtn">
-                Continue →
-            </button>
-        </div>
-    </div>
-
+   
     <div class="finish-background"></div>
 
     <div class="components">
         <div class="left-group">
+            <div id="home-container"></div>
             <div id="settings-container"></div>
             <div id="burger-container"></div>
         </div>
@@ -70,7 +59,7 @@
                 console.error('Error loading component:', err);
             }
         }
-
+        loadComponent('home-container', '../components/library.html');
         loadComponent('settings-container', '../components/settings-menu.html');
         loadComponent('burger-container',   '../components/burger-nav.html');
     </script>
