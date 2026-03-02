@@ -4,8 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library - VocabVenture</title>
+        <style>
+        html, body {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('../../assets/images/backgrounds/library-bg.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ⚡ PREWARM: prefetch segment-1 video for the last viewed story -->
+    <script>
+        (function() {
+            var sid = sessionStorage.getItem('lastStoryId') || '1';
+            var l = document.createElement('link');
+            l.rel = 'prefetch'; l.as = 'video';
+            l.href = '../../assets/videos/story-' + sid + '/segment-1.mp4';
+            document.head.appendChild(l);
+        })();
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/stories.css">
@@ -53,25 +83,31 @@
             </div>
         </div>
 
-        <!-- ✅ FIX #4: Removed loadComponent('libraryContent', ...) below.
-             That call was loading selected-genre.html INTO this div,
-             overwriting whatever library.js rendered. libraryContent
-             is populated entirely by library.js — no component needed. -->
         <div class="library-content-wrapper" id="libraryContent"></div>
     </div>
 
     <script>
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
-                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
-                .catch(err => console.error('Error loading component:', err));
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
         }
 
         loadComponent('settings-container', '../components/settings-menu.html');
-        loadComponent('burger-container', '../components/burger-nav.html');
-        // ✅ REMOVED: loadComponent('libraryContent', '../components/selected-genre.html');
-        // ✅ REMOVED: loadComponent('home-container', ...) — element doesn't exist in this HTML
+        loadComponent('burger-container',   '../components/burger-nav.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>

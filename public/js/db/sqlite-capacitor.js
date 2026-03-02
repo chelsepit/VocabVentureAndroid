@@ -36,9 +36,16 @@ export const capacitorDB = {
                 }
             }
 
-            await plugin.open({ database: DB_NAME, readonly: false });
-            await this._initializeTables();
-            console.log('✅ Capacitor SQLite initialized');
+                    await plugin.open({ database: DB_NAME, readonly: false });
+
+            // ⚡ Only run table creation once per session, not every page load
+            const alreadySetup = sessionStorage.getItem('db:tables_ready');
+            if (!alreadySetup) {
+                await this._initializeTables();
+                sessionStorage.setItem('db:tables_ready', '1');
+            }
+
+console.log('✅ Capacitor SQLite initialized');
         } catch (error) {
             console.error('❌ DB init error:', error);
             throw error;
@@ -250,6 +257,48 @@ export const capacitorDB = {
             quiz2Completed: quiz2Badge !== null,
             lastAccessed: lastAccessRows[0]?.lastAccessed ?? null
         };
+    },
+
+    // ============================================
+    // BULK STORY COMPLETION STATUS (library page)
+    // Replaces 90 individual queries with 3 bulk queries
+    // ============================================
+    async getAllStoriesCompletionStatus(userId) {
+        // Query 1: all completed segments grouped by story
+        const progressRows = await this.query(
+            `SELECT story_id,
+                    COUNT(*) as completed_segments,
+                    MAX(completed_at) as lastAccessed
+             FROM progress
+             WHERE user_id = ? AND completed = 1
+             GROUP BY story_id`,
+            [userId]
+        );
+
+        // Query 2: all quiz badges for this user at once
+        const badgeRows = await this.query(
+            `SELECT story_id, badge_category
+             FROM user_badges
+             WHERE user_id = ? AND badge_category IN ('quiz-1', 'quiz-2')`,
+            [userId]
+        );
+
+        // Build lookup maps from results
+        const progressMap = {};
+        progressRows.forEach(r => {
+            progressMap[r.story_id] = {
+                completedSegments: r.completed_segments,
+                lastAccessed: r.lastAccessed
+            };
+        });
+
+        const badgeMap = {};
+        badgeRows.forEach(r => {
+            if (!badgeMap[r.story_id]) badgeMap[r.story_id] = {};
+            badgeMap[r.story_id][r.badge_category] = true;
+        });
+
+        return { progressMap, badgeMap };
     },
 
     // ============================================

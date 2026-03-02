@@ -72,14 +72,27 @@
     </div>
 
     <script>
-        function loadComponent(elementId, filePath) {
-            fetch(filePath)
-                .then(r => { if (!r.ok) throw new Error('Not ok'); return r.text(); })
-                .then(data => { document.getElementById(elementId).innerHTML = data; if (window.initializeComponents) window.initializeComponents(); })
-                .catch(err => console.error('Error loading component:', err));
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
         }
+
         loadComponent('settings-container', '../components/settings-menu.html');
-        loadComponent('burger-container', '../components/burger-nav.html');
+        loadComponent('burger-container',   '../components/burger-nav.html');
     </script>
 
     <script type="module" src="../../js/app-init.js"></script>

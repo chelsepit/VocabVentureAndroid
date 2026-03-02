@@ -1,25 +1,4 @@
 // story-viewer.js — Capacitor/Android version
-// ─────────────────────────────────────────────────────────────────────────────
-// ORIENTATION CHANGES (new in this version):
-//
-//   1. showLandscapeModal()  — called on DOMContentLoaded.
-//      Detects current orientation. If already landscape, shows the modal
-//      with a "you're already in landscape" note so the user still taps
-//      confirm (ensuring the plugin lock fires — not just assumed).
-//
-//   2. lockLandscape()       — imported from orientation.js.
-//      Called when the user taps "Switch to Landscape". The story viewer
-//      and all navigation are hidden behind the modal until this fires.
-//
-//   3. showCompletionScreen() — now calls lockPortrait() before navigating.
-//      This ensures the portrait lock is in place before finish-book.html
-//      loads, so there is no gap between pages where the user could rotate.
-//
-// WHY THE MODAL GATES THE ENTIRE STORY:
-//   The overlay has pointer-events blocked until dismissed, and the story
-//   content, video, and nav buttons all start hidden (opacity:0 via CSS).
-//   This prevents the user from tapping Next before landscape is locked.
-// ─────────────────────────────────────────────────────────────────────────────
 
 import { db } from './db/db-interface.js';
 import { lockLandscape, lockPortrait, enforceStoryOrientation } from './orientation.js';
@@ -29,6 +8,7 @@ let currentSegmentIndex = 0;
 let storyData = null;
 let currentAudio = null;
 let isSpeaking = false;
+let savedResumeSegment = 0;
 
 // without overflowing. Runs after every segment load.
 function fitTextToContainer() {
@@ -129,6 +109,7 @@ function setupSpeakButton() {
                 e.stopPropagation();
                 toggleSpeak();
             });
+            console.log('✅ Speak button initialized (MUTED)');
         } else if (++attempts < 10) {
             setTimeout(trySetup, 300);
         }
@@ -192,6 +173,8 @@ function loadSegment(index) {
     currentSegmentIndex = index;
     const segment = currentStory.segments[index];
 
+    console.log('Loading segment:', index + 1, segment);
+
     saveLastViewedSegment(index + 1);
     markSegmentAsCompleted(index + 1);
 
@@ -208,9 +191,14 @@ function loadSegment(index) {
 
     const video = document.getElementById('storyVideo');
     if (video) {
+        const storyId = getStoryIdFromUrl();
+
+        // ⚡ Set poster immediately — shows while video loads, kills the ugly play button
+        video.poster = `../../assets/videos/story-${storyId}/segment-${index + 1}-poster.jpg`;
+
         const source = video.querySelector('source');
         if (source) {
-            source.src = `../../assets/videos/story-${getStoryIdFromUrl()}/segment-${index + 1}.mp4`;
+            source.src = `../../assets/videos/story-${storyId}/segment-${index + 1}.mp4`;
         }
         video.load();
         video.loop = false;
@@ -231,7 +219,7 @@ function loadSegment(index) {
             }, 300);
         };
 
-        video.play();
+        video.play().catch(err => console.warn('Video play error:', err));
     }
 
     updateStoryText(segment);
@@ -253,8 +241,8 @@ function preloadNextSegment(currentIndex) {
     link.as = 'video';
     link.href = `../../assets/videos/story-${storyId}/segment-${nextIndex + 1}.mp4`;
     document.head.appendChild(link);
+    console.log(`⚡ Preloading video for segment ${nextIndex + 1}: ${link.href}`);
 }
-
 
 // ── DB writes ─────────────────────────────────────────────────────────────────
 
@@ -264,6 +252,7 @@ async function saveLastViewedSegment(segmentNumber) {
         const storyId = getStoryIdFromUrl();
         if (currentUser) {
             await db.saveLastViewedSegment(currentUser.id, storyId, segmentNumber);
+            console.log(`📍 Last viewed segment saved: ${segmentNumber}`);
         }
     } catch (error) {
         console.error('Error saving last viewed segment:', error);
@@ -276,6 +265,7 @@ async function markSegmentAsCompleted(segmentNumber) {
         const storyId = getStoryIdFromUrl();
         if (currentUser) {
             await db.markSegmentComplete(currentUser.id, storyId, segmentNumber);
+            console.log(`✅ Segment ${segmentNumber} marked as completed`);
         }
     } catch (error) {
         console.error('Error marking segment as completed:', error);
@@ -359,7 +349,7 @@ function updateNavigationButtons() {
 
 async function showCompletionScreen() {
     stopCurrentAudio();
-  await lockPortrait();   
+    await lockPortrait();
 
     const storyId    = currentStory.id;
     const storyTitle = currentStory.title;
@@ -374,45 +364,26 @@ async function showCompletionScreen() {
     window.location.href = `finish-book.html?story=${storyId}`;
 }
 
-// ── ORIENTATION MODAL ─────────────────────────────────────────────────────────
-//
-// Strategy:
-//   • Show the modal immediately on page load (before the story starts).
-//   • Detect if the device is already in landscape using window.screen.orientation
-//     or the legacy window.orientation fallback (some Android WebViews).
-//   • If already landscape → show a note and change button text to "Continue".
-//   • When the button is tapped → call lockLandscape() from orientation.js,
-//     then dismiss the modal.
-//
-// WHY WE STILL CALL lockLandscape() EVEN WHEN ALREADY IN LANDSCAPE:
-//   screen.orientation.type can return 'landscape-primary' but the Capacitor
-//   plugin lock may not have been applied yet (e.g. user rotated manually).
-//   Without the plugin lock, Android will allow the user to rotate back.
-//   Calling lock() even when already in landscape guarantees the OS-level
-//   lock is engaged.
-
-
-
-// ── Resume Modal (Electron-pattern: story loads first, modal shows on top) ────
-
-let savedResumeSegment = 0;
+// ── Resume modal ──────────────────────────────────────────────────────────────
 
 async function checkAndShowResumeModal(storyId) {
-    console.log('🔍 checkAndShowResumeModal, storyId:', storyId);
+    console.log('🔍 checkAndShowResumeModal called, storyId:', storyId);
     try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
+        console.log('👤 userId:', userId);
         if (!userId) return 0;
 
         const lastSegment = await db.getLastViewedSegment(userId, storyId);
-        console.log('📍 lastViewedSegment from DB:', lastSegment);
+        console.log('📍 lastSegment from DB:', lastSegment);
+        console.log('📊 currentStory.totalSegments:', currentStory?.totalSegments);
 
         if (lastSegment && lastSegment > 1 && lastSegment <= currentStory.totalSegments) {
             savedResumeSegment = lastSegment;
             const modal = document.getElementById('resumeModalOverlay');
             if (modal) {
                 modal.classList.remove('hidden');
-                console.log('📻 Resume modal shown — saved at segment:', lastSegment);
+                console.log('✅ Resume modal shown');
                 return lastSegment;
             } else {
                 console.warn('⚠️ resumeModalOverlay not found in DOM');
@@ -424,11 +395,37 @@ async function checkAndShowResumeModal(storyId) {
     return 0;
 }
 
+function hideResumeModal() {
+    const modal = document.getElementById('resumeModalOverlay');
+    if (modal) modal.classList.add('hidden');
+}
+
+function startOver() {
+    console.log('🔄 Starting over from beginning');
+    hideResumeModal();
+    currentSegmentIndex = 0;
+    if (currentStory) loadSegment(0);
+}
+
+function continueGame() {
+    console.log('▶️ Continuing from last viewed segment:', savedResumeSegment);
+    hideResumeModal();
+    if (currentStory && savedResumeSegment > 0) {
+        const segmentIndex = savedResumeSegment - 1;
+        if (segmentIndex >= 0 && segmentIndex < currentStory.segments.length) {
+            currentSegmentIndex = segmentIndex;
+            loadSegment(segmentIndex);
+            console.log(`📍 Resumed at segment ${savedResumeSegment}`);
+        } else {
+            loadSegment(0);
+        }
+    }
+}
 
 // ── Main init ─────────────────────────────────────────────────────────────────
 
 async function initStoryViewer() {
-   lockLandscape().catch(() => {});
+    lockLandscape().catch(() => {});
 
     const storyId = getStoryIdFromUrl();
     const story   = await loadStoryData(storyId);
@@ -443,41 +440,59 @@ async function initStoryViewer() {
     setupVolumeControl();
     setupSpeakButton();
 
-    // ── Step 1: Check DB and show resume modal if needed ──────────────────
-    // This follows the Electron pattern: story is ready, modal shows ON TOP.
-    // continueGame() / startOver() call loadSegment() directly — no Promise needed.
     const savedSegment = await checkAndShowResumeModal(storyId);
 
     if (savedSegment && savedSegment > 1) {
-        // Resume modal is visible — load the saved segment silently in background.
-        // The user will see it after they tap Continue or Start Over.
         console.log('📍 Pre-loading saved segment', savedSegment, 'behind resume modal');
         currentSegmentIndex = savedSegment - 1;
         loadSegment(currentSegmentIndex);
-        // Don't show orientation modal yet — continueGame/startOver will trigger it
         return;
     }
 
-    // ── Step 2: No saved progress — show orientation modal then start ──────
-  
     loadSegment(0);
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-      enforceStoryOrientation();
+
+// Cleanup on unload
+window.addEventListener('beforeunload', () => {
+    stopCurrentAudio();
+    if (currentStory && currentSegmentIndex >= 0) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const userId = currentUser?.id || parseInt(localStorage.getItem('lastUserId'));
+        const storyId = getStoryIdFromUrl();
+        if (userId) {
+            db.saveLastViewedSegment(userId, storyId, currentSegmentIndex + 1).catch(() => {});
+        }
+    }
+});
+
+// ✅ Expose on window as safety net
+window.startOver = startOver;
+window.continueGame = continueGame;
+window.hideResumeModal = hideResumeModal;
+
+window.addEventListener('DOMContentLoaded', () => {
+    enforceStoryOrientation();
 
     document.getElementById('boyVoice')?.addEventListener('click',  () => stopCurrentAudio());
     document.getElementById('girlVoice')?.addEventListener('click', () => stopCurrentAudio());
+
+    // ✅ Wire resume modal buttons via addEventListener — avoids inline onclick
+    // race condition with type="module" on Android WebView
+    const btnContinue = document.querySelector('.btn-continue');
+    const btnRestart  = document.querySelector('.btn-restart');
+    const overlay     = document.getElementById('resumeModalOverlay');
+
+    if (btnContinue) btnContinue.addEventListener('click', continueGame);
+    if (btnRestart)  btnRestart.addEventListener('click', startOver);
+    if (overlay)     overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) startOver();
+    });
 
     if (window.__dbReady) {
         initStoryViewer();
     } else {
         document.addEventListener('db:ready', () => initStoryViewer(), { once: true });
     }
-});
-
-window.addEventListener('beforeunload', () => stopCurrentAudio());
-window.addEventListener('resize', () => {
-    requestAnimationFrame(() => fitTextToContainer());
 });

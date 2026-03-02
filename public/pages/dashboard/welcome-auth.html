@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - VocabVenture</title>
+        
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="../../js/preloader.js"></script>
+
+    <!-- ⚡ PREWARM: library bg loads while user reads welcome screen -->
+    <script>new Image().src = '../../assets/images/backgrounds/library-bg.png';</script>
+
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/components.css">
@@ -40,10 +45,28 @@
         </div>
     </div>
 
-    <!-- DB init first, always -->
     <script type="module" src="../../js/app-init.js"></script>
 
     <script type="module">
+        // ── Cached component loader ───────────────────────────────────────────
+        async function loadComponent(elementId, filePath) {
+            const cached = sessionStorage.getItem('comp:' + filePath);
+            if (cached) {
+                document.getElementById(elementId).innerHTML = cached;
+                if (window.initializeComponents) window.initializeComponents();
+                return;
+            }
+            try {
+                const res  = await fetch(filePath);
+                const html = await res.text();
+                sessionStorage.setItem('comp:' + filePath, html);
+                document.getElementById(elementId).innerHTML = html;
+                if (window.initializeComponents) window.initializeComponents();
+            } catch (err) {
+                console.error('Error loading component:', err);
+            }
+        }
+
         // Auth check
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (!currentUser) {
@@ -53,14 +76,7 @@
             document.getElementById('userName').textContent = firstName;
         }
 
-        // Load settings component
-        fetch('../components/settings-menu.html')
-            .then(r => r.text())
-            .then(data => {
-                document.getElementById('settings-container').innerHTML = data;
-                if (window.initializeComponents) window.initializeComponents();
-            })
-            .catch(err => console.error('Error loading component:', err));
+        loadComponent('settings-container', '../components/settings-menu.html');
     </script>
 
     <script type="module" src="../../js/components.js"></script>
