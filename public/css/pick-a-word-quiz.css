@@ -203,19 +203,41 @@ body {
 /* ─────────────────────────────────────────────
    FEEDBACK MESSAGE
 ───────────────────────────────────────────── */
-.feedback-message {
+#feedbackMessage {
     width: 100%;
+    max-width: 440px;
     padding: clamp(10px, 2.5vw, 16px) clamp(12px, 3vw, 20px);
     border-radius: 14px;
+    margin-top: clamp(10px, 2vw, 14px);
+    margin-bottom: clamp(8px, 1.5vw, 12px);
     text-align: center;
-    font-size: clamp(0.92rem, 2.6vw, 1.15rem);
-    font-weight: 600;
-    line-height: 1.4;
+    animation: fadeIn 0.3s ease-out;
 }
 
-.feedback-message > div > div:nth-child(1) { font-size: 1.5rem  !important; }
-.feedback-message > div > div:nth-child(2) { font-size: 1.15rem !important; }
-.feedback-message > div > div:nth-child(3) { font-size: 0.98rem !important; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#feedbackMessage > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(4px, 1vw, 8px);
+}
+
+@media (orientation: landscape) {
+    #feedbackMessage {
+        padding: clamp(8px, 1.5vh, 12px) clamp(10px, 2vw, 16px);
+        margin-top: clamp(6px, 1vh, 10px);
+        margin-bottom: clamp(4px, 0.8vh, 8px);
+        max-width: 95%;
+    }
+
+    #feedbackMessage > div > div:nth-child(1) { font-size: 1.1rem !important; }
+    #feedbackMessage > div > div:nth-child(2) { font-size: 0.95rem !important; }
+    #feedbackMessage > div > div:nth-child(3) { font-size: 0.82rem !important; }
+}
 
 /* ─────────────────────────────────────────────
    INTRO BODY TEXT
@@ -344,9 +366,10 @@ body {
         margin: 0 auto clamp(4px, 0.6vw, 8px) auto;
     }
 
-    /* Smaller buttons for landscape — reduced height */
+    /* Smaller buttons for landscape — full width, reduced height like decode-the-word */
     #quizQuestion .finish-button button {
         width: 100%;
+        max-width: 100%; /* override portrait max-width: 440px */
         padding: clamp(6px, 0.9vw, 8px) clamp(12px, 2vw, 18px);
         font-family: 'Baloo 2', cursive;
         font-weight: 800;
@@ -356,18 +379,18 @@ body {
         min-height: 36px;
     }
 
-    /* Compact feedback message */
-    #quizQuestion .feedback-message {
+    /* Compact feedback message — FIXED: was .feedback-message (class), element uses id */
+    #quizQuestion #feedbackMessage {
         width: 100%;
-        max-width: 95%;
-        padding: clamp(6px, 1vw, 10px) clamp(10px, 1.8vw, 14px);
-        font-size: clamp(0.85rem, 1.8vw, 0.95rem) !important;
-        margin-bottom: clamp(4px, 0.6vw, 8px);
+        max-width: 100%;
+        padding: clamp(6px, 1vh, 10px) clamp(10px, 1.8vw, 14px);
+        margin-top: clamp(4px, 0.6vh, 8px);
+        margin-bottom: clamp(4px, 0.6vh, 8px);
     }
 
-    #quizQuestion .feedback-message > div > div:nth-child(1) { font-size: 1.1rem  !important; }
-    #quizQuestion .feedback-message > div > div:nth-child(2) { font-size: 0.95rem !important; }
-    #quizQuestion .feedback-message > div > div:nth-child(3) { font-size: 0.82rem !important; }
+    #quizQuestion #feedbackMessage > div > div:nth-child(1) { font-size: 1.1rem  !important; }
+    #quizQuestion #feedbackMessage > div > div:nth-child(2) { font-size: 0.95rem !important; }
+    #quizQuestion #feedbackMessage > div > div:nth-child(3) { font-size: 0.82rem !important; }
 
     /* Intro stays centered in landscape */
     #quizIntro.finish-content {
