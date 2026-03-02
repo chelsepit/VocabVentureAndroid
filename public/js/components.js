@@ -210,23 +210,20 @@ function initializeSettingsControls() {
 function initializeBurger(btn, menu, settingsMenu) {
     console.log('🍔 Initializing burger...');
     
-    // Remove existing listeners
     const newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
+
+    // Re-query after clone
+    const freshMenu     = document.getElementById('burgerMenu');
+    const freshSettings = document.getElementById('settingsMenu');
     
-    // Click handler
     newBtn.addEventListener('click', function(e) {
         console.log('🍔 Burger clicked');
         e.preventDefault();
         e.stopPropagation();
         
-        // Toggle menu
-        menu.classList.toggle('active');
-        
-        // Close settings
-        if (settingsMenu) {
-            settingsMenu.classList.remove('active');
-        }
+        if (freshMenu) freshMenu.classList.toggle('active');
+        if (freshSettings) freshSettings.classList.remove('active');
     });
 }
 
@@ -351,9 +348,9 @@ const observer = new MutationObserver(function(mutations) {
         }
     });
     
-    // Only re-init if components found and not already initialized
-    if (hasComponents && !isInitialized) {
-        console.log('🔄 Components detected, initializing...');
+     if (hasComponents) {
+        console.log('🔄 Components detected, re-initializing...');
+        isInitialized = false;
         observerTimeout = setTimeout(function() {
             scheduleInit();
         }, 200);

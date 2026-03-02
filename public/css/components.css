@@ -128,43 +128,34 @@
     transform: rotate(90deg);
 }
 
-/* THE SETTINGS MENU (Mobile-First) */
+/* THE SETTINGS MENU (Mobile-First)
+   POSITIONING STRATEGY:
+   - left:0 means the menu's LEFT edge aligns with the button's LEFT edge,
+     opening RIGHTWARD. This is correct since the button is on the left side
+     of the screen — the menu will always stay within the screen.
+   - We never use right:0 here because that would make it open LEFTWARD
+     off the screen edge.
+*/
 .settings-menu {
-    /*
-      FIX — overflow root causes:
-      1. position:absolute with no max-height meant the menu grew taller
-         than the viewport with no way to scroll.
-      2. left:0 anchors to the button's left edge; on very small screens
-         this pushes the right edge off-screen.
-      3. No overflow-y:auto so content was never scrollable.
-
-      Fix strategy:
-      - Keep position:absolute so it stays near its trigger button.
-      - Cap height with max-height using dvh (dynamic viewport height,
-        accounts for mobile browser chrome) with a px fallback.
-      - Add overflow-y:auto so content scrolls inside the cap.
-      - Use right:auto + left:0 by default but override to right:0
-        via the viewport-edge correction below.
-      - Clamp width so it never exceeds the screen.
-    */
     position: absolute;
-    top: calc(100% + 8px);   /* replaces margin-top:8px so it's part of positioning */
+    top: calc(100% + 8px);
     left: 0;
     right: auto;
 
     background: rgba(255, 255, 255, 0.98);
     border: 2px solid #6e4324;
     border-radius: 12px;
-    padding: clamp(8px, 2vw, 12px);
+    padding: 10px 12px;
 
-    min-width: clamp(160px, 45vw, 220px);
-    width: max-content;
-    max-width: min(240px, 88vw);
+    /* Fixed width — wide enough for content, never overflows phone screen */
+    width: 180px;
+    min-width: 180px;
+    max-width: 180px;
 
-    /* No scroll — everything fits via smaller sizing */
-    max-height: none;
-    overflow-y: visible;
+    max-height: 80vh;
+    overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     pointer-events: auto;
@@ -175,19 +166,36 @@
     z-index: 1002;
 }
 
-/* ── Settings menu interior — compact responsive sizing ── */
+.settings-menu.active {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+    animation: fadeIn 0.2s ease-out;
+    z-index: 9999 !important;
+}
+
+/* ── Settings menu interior — compact sizing ──
+   NOTE: !important needed because settings-menu.html uses
+   inline style="font-size: 1.2rem" on every label which
+   would otherwise override these rules and bloat the menu.
+*/
+.settings-menu label,
 .settings-menu .text-gray-800,
 .settings-menu .font-bold {
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    font-size: 0.78rem !important;
 }
 
 .settings-menu .text-sm,
 .settings-menu .text-gray-600 {
-    font-size: clamp(0.65rem, 1.8vw, 0.78rem);
+    font-size: 0.68rem !important;
 }
 
 .settings-menu .mb-6 {
     margin-bottom: 0.5rem;
+}
+
+.settings-menu .mb-3 {
+    margin-bottom: 0.25rem;
 }
 
 .settings-menu .mb-2 {
@@ -236,12 +244,9 @@
 }
 
 
-@media (max-width: 400px) {
-    .settings-menu {
-        left: auto;
-        right: 0;
-    }
-}
+/* Removed: the old max-width:400px override that set right:0 was causing
+   the menu to open leftward off-screen on portrait phones. Since the button
+   is on the LEFT side of screen, left:0 (opens rightward) is always correct. */
 
 /* ========================================
    BACK BUTTON (Responsive)
@@ -1118,9 +1123,7 @@ input:checked + .toggle-slider:before {
         font-size: 1.4rem;
     }
     
-    .settings-menu {
-        min-width: 250px;
-    }
+    /* settings-menu width stays at 180px fixed — no override here */
     
     .definition-card {
         max-width: 680px;
@@ -1240,5 +1243,95 @@ input:checked + .toggle-slider:before {
     .speaker-icon {
         min-width: 60px;
         min-height: 60px;
+    }
+}
+
+/* ========================================
+   ANDROID PHONE LANDSCAPE — SETTINGS MENU
+   Target: landscape phones (height ≤ 500px)
+   Goal: half-size menu that doesn't overlap
+   ======================================== */
+@media (orientation: landscape) and (max-height: 500px) {
+    .settings-menu {
+        /* Half the width */
+        width: 130px !important;
+        min-width: 130px !important;
+        max-width: 130px !important;
+
+        /* Tighter padding */
+        padding: 6px 8px !important;
+
+        /* Must scroll since landscape height is limited */
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+
+        /* Smaller text — must override inline 1.2rem on labels */
+        font-size: 0.62rem !important;
+    }
+
+    /* Override inline font-size on all labels in landscape */
+    .settings-menu label,
+    .settings-menu .font-bold,
+    .settings-menu .text-gray-800 {
+        font-size: 0.62rem !important;
+    }
+
+    .settings-menu .text-sm,
+    .settings-menu .text-gray-600 {
+        font-size: 0.58rem !important;
+    }
+
+    /* Tighter section spacing */
+    .settings-menu .mb-6 {
+        margin-bottom: 0.3rem !important;
+    }
+
+    .settings-menu .mb-3 {
+        margin-bottom: 0.15rem !important;
+    }
+
+    .settings-menu .mb-2 {
+        margin-bottom: 0.1rem !important;
+    }
+
+    /* Shrink toggle */
+    .settings-menu .toggle-switch {
+        width: 26px !important;
+        height: 15px !important;
+    }
+
+    .settings-menu .toggle-slider:before {
+        height: 9px !important;
+        width: 9px !important;
+        left: 2px !important;
+        bottom: 2px !important;
+    }
+
+    .settings-menu input:checked + .toggle-slider:before {
+        transform: translateX(11px) !important;
+    }
+
+    /* Shrink slider thumb */
+    .settings-menu .volume-slider {
+        height: 3px !important;
+    }
+
+    .settings-menu .volume-slider::-webkit-slider-thumb {
+        width: 10px !important;
+        height: 10px !important;
+    }
+
+    .settings-menu .volume-slider::-moz-range-thumb {
+        width: 10px !important;
+        height: 10px !important;
+    }
+
+    /* Shrink voice buttons */
+    .settings-menu .voice-btn {
+        padding: 3px 5px !important;
+        font-size: 0.58rem !important;
+        min-height: 22px !important;
+        border-radius: 6px !important;
     }
 }
