@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Decode the Word - VocabVenture</title>
+    <title>Let's Review - VocabVenture</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="../../js/preloader.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/decode-the-world.css">
+    <link rel="stylesheet" href="../../css/lets-review.css">
     <link rel="stylesheet" href="../../css/font.css">
     <link rel="stylesheet" href="../../css/components.css">
 </head>
@@ -24,38 +24,43 @@
         </div>
     </div>
 
-    <!-- Intro Screen -->
-    <div id="quizIntro" class="finish-content">
-        <div class="title-header">Decode the Word!</div>
-        <div class="progress-comment" style="margin-top: 20px;">
-            Figure out the word's meaning in the sentence.<br>
-            <em>Let's start your word adventure!</em>
-        </div>
-        <div class="finish-button">
-            <button class="intro-btn" onclick="startDecodeWord()">START</button>
-        </div>
-    </div>
+    <div class="review-container">
+        <div class="title-header">Let's Review!</div>
 
-    <!-- Quiz Question Screen (hidden initially) -->
-    <div id="quizQuestion" class="finish-content" style="display: none;">
-        <div class="title-header">Decode the Word!</div>
-        <div class="progress-indicator">
-            <span class="progress-text">Question <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
-        </div>
-        <div class="progress-comment">
-            <div class="sentence-text">
-                <span id="sentenceText">The king commanded his soldiers to guard the castle.</span>
+        <div class="finish-content">
+
+            <!-- Back button (top-left inside card) -->
+            <button class="back-button" onclick="goBackToResults()">← Back</button>
+
+            <!-- Word counter badge (top-right inside card) -->
+            <div class="word-counter-badge">
+                <span id="currentWordIndex">1</span> / <span id="totalWords">?</span>
             </div>
-            <div class="question-prompt">
-                <span id="questionPrompt">What does commanded mean?</span>
+
+            <!-- Word display area -->
+            <div class="word-display-container">
+                <div class="word-title" id="currentWord">LOADING...</div>
+
+                <!-- Audio button -->
+                <button class="audio-button" onclick="playCurrentWordAudio()" title="Play pronunciation">
+                    <img src="../../assets/images/icons/replay-icon.svg" alt="Play audio"
+                         onerror="this.src='../../assets/images/icons/replay-icon.svg';">
+                </button>
+
+                <!-- Definition -->
+                <div class="review-desc" id="wordDefinition">Loading definition...</div>
             </div>
+
+            <!-- Prev / Next navigation -->
+            <div class="review-nav navigation-buttons">
+                <button id="prevWordBtn" class="prev-button" onclick="previousWord()">← PREV</button>
+                <button id="nextWordBtn" class="next-button" onclick="nextWord()">NEXT →</button>
+            </div>
+
         </div>
-        <div class="finish-button" id="answerButtons"></div>
-        <div id="feedbackMessage" style="display: none; margin-top: 20px; padding: 20px; border-radius: 15px; text-align: center; font-size: 1.2rem; font-weight: bold;"></div>
     </div>
 
     <script>
-        // ── Cached component loader ───────────────────────────────────────────
         async function loadComponent(elementId, filePath) {
             const cached = sessionStorage.getItem('comp:' + filePath);
             if (cached) {
@@ -81,6 +86,6 @@
 
     <script type="module" src="../../js/app-init.js"></script>
     <script type="module" src="../../js/components.js"></script>
-    <script type="module" src="../../js/decode-the-word-quiz.js"></script>
+    <script type="module" src="../../js/lets-review.js"></script>
 </body>
 </html>
